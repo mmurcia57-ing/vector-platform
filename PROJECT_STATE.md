@@ -31,7 +31,7 @@ NOT_READY_FOR_IMPLEMENTATION
 | Product | CLOSED |
 | Domain | CLOSED |
 | Capabilities | CLOSED |
-| Functional | IN_PROGRESS |
+| Functional | CLOSED |
 | Data | NOT_STARTED |
 | Graph | NOT_STARTED |
 | Integrations | NOT_STARTED |
@@ -71,7 +71,7 @@ Step 2 — Scope & Capabilities completed.
 
 Step 3 — Product Boundary / Domain Model completed.
 
-Step 4 — Functional Specification materialized; external Quality Gate review pending.
+Step 4 — Functional Specification closed after external Quality Gate passed.
 
 Product Global Gate: CLOSED.
 
@@ -79,6 +79,6 @@ Scope Global Gate: CLOSED.
 
 Domain Global Gate: CLOSED.
 
-Functional Global Gate: IN_PROGRESS / PRE-AUDIT.
+Functional Global Gate: CLOSED.
 
 SDD status remains NOT_READY_FOR_IMPLEMENTATION. Current phase remains SPECIFICATION. All other Global Gates remain unchanged.

@@ -2,9 +2,9 @@
 
 ## 1. Status
 
-- Status: MATERIALIZED / PRE-AUDIT
+- Status: CLOSED
 - Step: Step 4 — Functional Specification
-- Quality Gate: EXTERNAL REVIEW PENDING
+- Quality Gate: PASSED
 - SDD status: NOT_READY_FOR_IMPLEMENTATION
 - SPEC-BLOCKERS: 0
 
@@ -216,6 +216,6 @@ Coverage result: 18/18 MUST capabilities functionally represented. Orphan MUST c
 
 ## 10. Step 4 Quality Gate
 
-Proposed status: PRE-AUDIT / EXTERNAL REVIEW PENDING
+Status: CLOSED / EXTERNAL QUALITY GATE PASSED
 
-J01–J04 behavior is materialized, all 18 MUST capabilities are represented, no orphan MUST is identified, and the approved domain and cross-journey semantics are preserved. Step 4 is not CLOSED until external Quality Gate review passes.
+J01–J04 behavior is materialized, all 18 MUST capabilities are represented, no orphan MUST is identified, and the approved domain and cross-journey semantics are preserved. Step 4 is CLOSED after the external Quality Gate passed.
