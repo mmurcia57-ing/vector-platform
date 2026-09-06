@@ -25,7 +25,17 @@ Status: BOOTSTRAP / PARTIALLY VALIDATED
 - [ ] Orphan MUST count es cero.
 - [ ] Scope Quality Gate pasa checks semanticos y estructurales.
 
-## 4. Cross-cutting checks
+## 4. Step 3 — Product Boundary / Domain Model
+
+- [ ] Product Boundary y Bounded Context semantic ownership son explicitos.
+- [ ] No se infiere deployment architecture.
+- [ ] El minimo vendor-independent Canonical Domain Model se justifica por capabilities y journeys.
+- [ ] Source Authority, Canonical Representation y Derived Intelligence permanecen distintos.
+- [ ] Identity uncertainty, provenance y Evidence se preservan.
+- [ ] Correlation no se promueve a causation.
+- [ ] J01–J04 son representables y todas las MUST capabilities permanecen soportadas.
+
+## 5. Cross-cutting checks
 
 - [ ] Anti-loop rule aplicada.
 - [ ] Los artifacts previstos para el audit estan dentro del validation scope.
@@ -36,6 +46,6 @@ Status: BOOTSTRAP / PARTIALLY VALIDATED
 - [ ] Mermaid-first rule aplicada.
 - [ ] git diff y staged content inspeccionados antes de commit.
 
-## 5. ROADMAP / NOT YET VALIDATED
+## 6. ROADMAP / NOT YET VALIDATED
 
-- [ ] Steps 3–16: aplicar solo validated governing principles; no se reclama metodologia detallada.
+- [ ] Steps 4–16: aplicar solo validated governing principles; no se reclama metodologia detallada.

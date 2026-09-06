@@ -5,7 +5,7 @@ Status: BOOTSTRAP / PARTIALLY VALIDATED
 
 ## 1. Purpose and validation boundary
 
-This reusable playbook records only SDD methodology exercised in Initialization, Product Definition, and Scope & Capabilities. Steps 0–2 are VALIDATED. Steps 3–16 are ROADMAP / NOT YET VALIDATED and do not authorize implementation.
+This reusable playbook records SDD methodology exercised in Initialization, Product Definition, Scope & Capabilities, and Product Boundary / Domain Model. Steps 0–3 are VALIDATED. Steps 4–16 are ROADMAP / NOT YET VALIDATED and do not authorize implementation.
 
 ## 2. SDD operating model
 
@@ -28,6 +28,10 @@ Materialize Product Problem, Product Mission, Product Outcomes, Target Users, Va
 Create the Master Capability Map. Every capability uses Capability ID, Name, Purpose, Core Question, Expected Outcome, and Depends On. Classify each once as MUST, SHOULD, or POST-V1.
 
 V1 uses minimum useful end-to-end slices: the smallest useful portion required for approved Vertical Journeys, not exhaustive implementation. Define Vertical Journeys, a Capability-to-Journey Coverage Matrix, and orphan MUST detection. Close the Scope Quality Gate only when counts, classifications, IDs, and coverage reconcile.
+
+### Step 3 — Product Boundary / Domain Model
+
+Resolve Product Boundary before detailed Functional Specification when domains could otherwise be conflated. Define Bounded Context semantic ownership without inferring deployment architecture. Define a minimum vendor-independent Canonical Domain Model justified by required capabilities and journeys, preserve Source Authority separately from Canonical Representation, and make identity/correlation uncertainty explicit.
 
 ## 4. Governing rules
 
@@ -96,10 +100,17 @@ GitHub Projects handoff is ROADMAP / PARTIALLY DEFINED: specification blockers r
 - SDD-008 — Repository diagrams are Mermaid-first.
 - SDD-009 — Structural correctness does not guarantee semantic fidelity; audit semantic drift against CLOSED decisions.
 - SDD-010 — Audit Scope Verification: a Quality Gate must verify that the artifacts intended for audit are actually included in the validation scope. A successful validation command is not evidence of quality when the intended artifacts were outside that scope.
+- SDD-011 — Resolve Product Boundary before detailed Functional Specification when multiple domains could otherwise be conflated.
+- SDD-012 — Bounded Context is a semantic ownership boundary, not physical deployment architecture.
+- SDD-013 — Canonical Model is vendor-independent and is justified by required capabilities and journeys, not every source object.
+- SDD-014 — Canonical Representation does not imply Source Authority.
+- SDD-015 — Identity and correlation are separate concepts.
+- SDD-016 — Inferred identity/correlation preserves uncertainty, provenance, and Evidence.
+- SDD-017 — Correlation must not be promoted to causation without sufficient Evidence or approved semantics.
+- SDD-018 — A minimum Canonical Domain Model excludes unrequired source-system objects and individual-performance entities.
 
 ## 7. ROADMAP / NOT YET VALIDATED
 
-- Step 3 Product Boundary / Domain Model
 - Step 4 Functional Specification
 - Step 5 Data Specification
 - Step 6 Graph / Evidence Specification

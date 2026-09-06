@@ -24,6 +24,10 @@ Materialize approved Product Problem, Mission, Outcomes, Users, Value Propositio
 
 Create the Master Capability Map using Capability ID, Name, Purpose, Core Question, Expected Outcome, and Depends On. Classify each capability as MUST, SHOULD, or POST-V1. Define Vertical Journeys and prove every MUST capability has Journey coverage.
 
+### Step 3 — Product Boundary / Domain Model
+
+Resolve Product Boundary and Bounded Context semantic ownership before detailed Functional Specification. Define the minimum vendor-independent Canonical Domain Model, preserve Source Authority and identity uncertainty, and confirm correlation does not imply causation.
+
 ## 3. Audit before closure
 
 - Apply the anti-loop rule: ask whether the absence of the information would force an implementer to invent a relevant decision. If YES, raise SPEC-BLOCKER. If NO, record Backlog / Future Improvement / documented debt. A missing decision is not automatically a SPEC-BLOCKER.
@@ -38,4 +42,4 @@ Pass the applicable Quality Gate, inspect git diff and staged content, then comm
 
 ## 5. ROADMAP / NOT YET VALIDATED
 
-Steps 3–16 are not yet validated. Apply only governing principles, not detailed methodology rules, until those stages are exercised and validated.
+Steps 4–16 are not yet validated. Apply only governing principles, not detailed methodology rules, until those stages are exercised and validated.

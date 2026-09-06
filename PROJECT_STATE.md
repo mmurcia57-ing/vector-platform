@@ -29,7 +29,7 @@ NOT_READY_FOR_IMPLEMENTATION
 | Area | Status |
 |---|---|
 | Product | CLOSED |
-| Domain | NOT_STARTED |
+| Domain | CLOSED |
 | Capabilities | CLOSED |
 | Functional | NOT_STARTED |
 | Data | NOT_STARTED |
@@ -69,8 +69,12 @@ Step 1 — Product Definition completed.
 
 Step 2 — Scope & Capabilities completed.
 
+Step 3 — Product Boundary / Domain Model completed.
+
 Product Global Gate: CLOSED.
 
 Scope Global Gate: CLOSED.
+
+Domain Global Gate: CLOSED.
 
 SDD status remains NOT_READY_FOR_IMPLEMENTATION. Current phase remains SPECIFICATION. All other Global Gates remain unchanged.

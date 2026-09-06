@@ -38,7 +38,7 @@ until the appropriate specification stage.
 
 Status:
 
-OPEN
+RESOLVED
 
 Question:
 
@@ -52,9 +52,13 @@ Resolution stage:
 
 Product Boundary / Domain Modeling
 
+Resolution:
+
+Resolved by DEC-030, DEC-031, and specs/domain-model.md. VECTOR is one platform with Reliability Intelligence and Execution Intelligence as primary functional bounded contexts and Intelligence Core as the shared bounded context.
+
 Current impact:
 
-Not blocking Discovery.
+Resolved for Product Boundary / Domain Modeling.
 
 ---
 
@@ -266,7 +270,7 @@ Functional Specification / Domain Modeling
 
 Current impact:
 
-Potential blocker for Execution Intelligence implementation.
+Corporate Source Authority remains TBD when Commitment is not natively created in VECTOR. VECTOR may be authoritative when Commitment is natively created in VECTOR. This remains open for later Functional Specification / Domain Modeling detail.
 
 ---
 
@@ -407,7 +411,7 @@ Not blocking initial Lab implementation.
 
 Status:
 
-OPEN
+RESOLVED
 
 Question:
 
@@ -429,9 +433,21 @@ Resolution stage:
 
 Domain Model / Data / Graph / Integration Specification
 
+Resolution:
+
+Resolved conceptually by DEC-034 and specs/domain-model.md. Canonical identity is independent from SourceReference; identity resolution distinguishes CONFIRMED, INFERRED, and UNRESOLVED; identity and correlation are separate; correlation is Evidence-backed and does not imply causation.
+
+Later-step TBDs:
+
+- matching algorithms;
+- confidence formulas;
+- thresholds;
+- cardinalities;
+- graph persistence technology.
+
 Current impact:
 
-Will become blocking before correlation implementation.
+Resolved for conceptual domain semantics. Later Data / Graph / Integration implementation details remain TBD.
 
 ---
 
@@ -439,13 +455,13 @@ Will become blocking before correlation implementation.
 
 Status:
 
-OPEN
+RESOLVED
 
 Question:
 
 What are the final canonical entities, relationships and boundaries VECTOR requires?
 
-Current candidates include:
+Historical discovery candidates included:
 
 - Service
 - ConfigurationItem
@@ -468,9 +484,15 @@ Resolution stage:
 
 Product Boundary / Domain Modeling
 
+Resolution:
+
+Resolved by DEC-032 and specs/domain-model.md. VECTOR V1 has exactly 17 mandatory canonical entities and Service is the primary technology correlation anchor.
+
+Repository, PullRequest, Branch, and SREAssessment are candidate extensions associated with non-MUST scope only; they are not mandatory V1 canonical entities. Person, Employee, ProductivityScore, and individual-performance entities are not canonical V1 entities.
+
 Current impact:
 
-Blocking before Data and Integration Contracts are finalized.
+Resolved for Product Boundary / Domain Modeling. Later Data and Integration Contracts remain subject to their own specifications.
 
 ---
 

@@ -19,14 +19,18 @@ Materializa el Master Capability Map aprobado. Para cada capability usa Capabili
 
 Audita este artifact contra Source of Truth. Verifica que los artifacts previstos esten dentro del validation scope; luego revisa semantic fidelity, counts, IDs, references, classifications, coverage, TBDs y CLOSED decision protection. Reporta SPEC-BLOCKER en vez de resolver silenciosamente una contradiction.
 
-## 5. Semantic drift correction
+## 5. Product Boundary / Domain Model materialization
+
+Materializa solo Product Boundary, Bounded Context responsibilities, el minimo Canonical Domain Model, Source Authority y identity/correlation semantics aprobados. No infieras deployment architecture, vendor schemas, matching algorithms, thresholds ni causation. Preserva TBDs y prueba que los journeys y MUST capabilities aprobados son representables.
+
+## 6. Semantic drift correction
 
 Corrige solo el materialization defect. Restaura exactamente approved semantics. No rediseñes scope, introduzcas decisions ni cambies statuses. Repite structural y semantic checks.
 
-## 6. Blocker reporting
+## 7. Blocker reporting
 
 Deten implementation o closure. Registra un SPEC-BLOCKER con conflicting artifacts, authority order, missing decision, impact y required resolution. No inventes una resolucion.
 
-## 7. Model escalation check
+## 8. Model escalation check
 
 Antes de escalar modelos, evalua prompt ambiguity, context size, task breadth y scope reduction. Usa el modelo de menor capacidad que complete confiablemente la tarea. Trata los nombres de modelos como NON-NORMATIVE tooling examples.

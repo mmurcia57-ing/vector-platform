@@ -27,6 +27,10 @@ Confirmar que cada capability tiene el validated definition contract; classifica
 
 Status: ROADMAP / NOT YET VALIDATED. El principio de portability validado es Canonical Model → Integration Contract → Adapter; target-environment details permanecen TBD cuando son desconocidos.
 
-## 6. ROADMAP / NOT YET VALIDATED
+## 6. Step 3 — Product Boundary / Domain Model Quality Gate
 
-Los Quality Gates para Steps 3–16 no estan validados. Pueden usar common audit logic, pero no tienen gate definition detallada en v0.1.
+Confirmar que Product Boundary y Bounded Context responsibilities son explicitos; los boundaries permanecen semanticos y no se convierten en deployment decisions; el minimo vendor-independent Canonical Domain Model se justifica por required capabilities y journeys; Source Authority permanece distinta de Canonical Representation; identity states preservan uncertainty y provenance; correlation es Evidence-backed y no se promueve a causation; J01–J04 son representables; y todas las MUST capabilities permanecen soportadas.
+
+## 7. ROADMAP / NOT YET VALIDATED
+
+Los Quality Gates para Steps 4–16 no estan validados. Pueden usar common audit logic, pero no tienen gate definition detallada en v0.1.

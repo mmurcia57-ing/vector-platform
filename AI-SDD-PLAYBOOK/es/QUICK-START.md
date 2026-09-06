@@ -24,6 +24,10 @@ Materializar Product Problem, Mission, Outcomes, Users, Value Proposition, Non-G
 
 Crear Master Capability Map con Capability ID, Name, Purpose, Core Question, Expected Outcome y Depends On. Clasificar cada capability como MUST, SHOULD o POST-V1. Definir Vertical Journeys y probar que cada MUST tiene Journey coverage.
 
+### Step 3 — Product Boundary / Domain Model
+
+Resolver Product Boundary y Bounded Context semantic ownership antes de detailed Functional Specification. Definir el minimo vendor-independent Canonical Domain Model, preservar Source Authority e identity uncertainty, y confirmar que correlation no implica causation.
+
 ## 3. Audit before closure
 
 - Aplicar anti-loop rule: preguntar si la ausencia de la informacion obligaria al implementer a inventar una relevant decision. Si YES, levantar SPEC-BLOCKER. Si NO, registrar Backlog / Future Improvement / documented debt. Una missing decision no es automaticamente un SPEC-BLOCKER.
@@ -38,4 +42,4 @@ Pasar el Quality Gate aplicable, inspeccionar git diff y staged content, y luego
 
 ## 5. ROADMAP / NOT YET VALIDATED
 
-Los Steps 3–16 no estan validados. Aplicar solo governing principles, no reglas metodologicas detalladas, hasta que esos stages sean ejercidos y validados.
+Los Steps 4–16 no estan validados. Aplicar solo governing principles, no reglas metodologicas detalladas, hasta que esos stages sean ejercidos y validados.

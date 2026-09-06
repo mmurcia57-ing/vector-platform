@@ -19,18 +19,22 @@ Required sections: Document Status; Capability Model; Intelligence Area Capabili
 
 Capability definition: Capability ID; Name; Purpose; Core Question; Expected Outcome; Depends On.
 
-## 4. Decision
+## 4. Domain Model
+
+Required sections: Status; Product Boundary; Bounded Context Responsibilities; Canonical Domain Model; exact entity inventory; semantic entity purposes; primary correlation anchor; conceptual relationships; Source Authority Model; Canonical and Source Identity; CONFIRMED / INFERRED / UNRESOLVED semantics; Identity, Correlation, and Causation; TBDs; Journey and MUST coverage; Quality Gate.
+
+## 5. Decision
 
 Required fields: DEC identifier; Title; Status; explicit Decision.
 
-## 5. Open Question
+## 6. Open Question
 
 Required fields: OQ identifier; Title; Status; Question; Resolution stage; Current impact.
 
-## 6. Quality Gate
+## 7. Quality Gate
 
 Required fields: step; status; Source of Truth and semantic fidelity checks; mathematical/referential consistency checks; scope and TBD checks; SPEC-BLOCKER assessment.
 
-## 7. ROADMAP / NOT YET VALIDATED
+## 8. ROADMAP / NOT YET VALIDATED
 
-No templates for Steps 3–16 are validated in v0.1.
+No templates for Steps 4–16 are validated in v0.1.

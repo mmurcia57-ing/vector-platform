@@ -19,14 +19,18 @@ Materialize the approved Master Capability Map. For every capability use Capabil
 
 Audit this artifact against Source of Truth. Check that intended artifacts are inside the validation scope, then check semantic fidelity, counts, IDs, references, classifications, coverage, TBDs, and CLOSED decision protection. Report SPEC-BLOCKER rather than silently resolving a contradiction.
 
-## 5. Semantic drift correction
+## 5. Product Boundary / Domain Model materialization
+
+Materialize approved Product Boundary, Bounded Context responsibilities, the minimum Canonical Domain Model, Source Authority, and identity/correlation semantics only. Do not infer deployment architecture, vendor schemas, matching algorithms, thresholds, or causation. Preserve TBDs and prove approved journeys and MUST capabilities are representable.
+
+## 6. Semantic drift correction
 
 Correct only the materialization defect. Restore approved semantics exactly. Do not redesign scope, introduce decisions, or change statuses. Re-run structural and semantic checks.
 
-## 6. Blocker reporting
+## 7. Blocker reporting
 
 Stop implementation or closure. Record a SPEC-BLOCKER with conflicting artifacts, authority order, missing decision, impact, and required resolution. Do not invent a resolution.
 
-## 7. Model escalation check
+## 8. Model escalation check
 
 Before escalating models, assess prompt ambiguity, context size, task breadth, and scope reduction. Use the lowest-capability model that can reliably complete the task. Treat model names as NON-NORMATIVE tooling examples.

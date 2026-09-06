@@ -525,6 +525,84 @@ V1 MUST capabilities are implemented through minimum useful end-to-end slices su
 
 ---
 
+---
+
+## DEC-030 — VECTOR Product Boundary
+
+Status: CLOSED
+
+Decision:
+
+VECTOR is one Technology Performance & Reliability Intelligence platform composed of Reliability Intelligence, Execution Intelligence, and Intelligence Core.
+
+Reliability Intelligence and Execution Intelligence are primary functional bounded contexts. Intelligence Core is the shared bounded context.
+
+Bounded contexts define semantic ownership and product responsibilities. They do not imply separate deployable applications, microservices, databases, or physical architecture in V1.
+
+---
+
+## DEC-031 — Bounded Context Responsibilities
+
+Status: CLOSED
+
+Decision:
+
+Reliability Intelligence owns semantics for technology reliability, operational health, degradation, recurrence, change-associated risk, events, and SLO/SLI behavior.
+
+Execution Intelligence owns semantics for commitments, improvement actions, and whether execution produces technology outcomes.
+
+Intelligence Core owns shared Canonical Technology Context, Evidence, Provenance, Source Authority, Cross-Source Correlation, Relationship Graph, Metric/KPI Intelligence, Risk/Finding Intelligence, Explainability, historical context, and Decision Intelligence.
+
+Bounded Context is a semantic boundary, not a deployment boundary.
+
+---
+
+## DEC-032 — Canonical Domain Model
+
+Status: CLOSED
+
+Decision:
+
+VECTOR V1 minimum canonical vocabulary contains exactly 17 canonical entities: AreaDomain, Service, ConfigurationItem, MonitoringEvent, Incident, Problem, Change, Deployment, SLO, SLOObservation, Commitment, ImprovementAction, OutcomeVerification, Evidence, RiskFinding, MetricObservation, and SourceReference.
+
+Service is the primary technology correlation anchor. Canonical entities represent VECTOR semantics independently from vendor schemas.
+
+Repository, PullRequest, Branch, and SREAssessment are candidate extensions associated with non-MUST scope and are not mandatory V1 canonical vocabulary. Person, Employee, ProductivityScore, and individual performance entities are not canonical entities.
+
+---
+
+## DEC-033 — Source Authority Model
+
+Status: CLOSED
+
+Decision:
+
+VECTOR distinguishes Source Authority, Canonical Representation, and Derived Intelligence. Canonicalization never transfers authority from the originating or declared authoritative source to VECTOR.
+
+Relevant external claims preserve provenance and source identity. VECTOR is authoritative for native/derived artifacts it creates, including RiskFinding, OutcomeVerification, and VECTOR Evidence/correlation records.
+
+Authority may be entity-level or claim/attribute-level when needed. Unknown corporate authorities remain explicit TBD. Conflicting non-authoritative claims must not be silently resolved. VECTOR does not indiscriminately duplicate source systems.
+
+---
+
+## DEC-034 — Cross-Source Identity & Correlation
+
+Status: CLOSED
+
+Decision:
+
+Canonical identity is independent from external source identifiers. External identities are represented through SourceReference.
+
+Identity resolution distinguishes CONFIRMED, INFERRED, and UNRESOLVED. INFERRED mappings preserve mapping method, confidence, and Evidence/provenance; they must never be silently promoted to authoritative or CONFIRMED identity.
+
+Identity and correlation are separate concepts. Relationships require explicit semantics rather than generic RELATED_TO-only semantics. Correlation must be explainable and Evidence-backed.
+
+Correlation != Causation. Temporal/contextual association must never be silently promoted to causation.
+
+Exact matching algorithms, confidence formulas, thresholds, cardinalities, and graph persistence technology are not decided here.
+
+---
+
 ## Change Control
 
 When a decision changes:
