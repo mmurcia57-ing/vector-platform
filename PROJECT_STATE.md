@@ -33,7 +33,7 @@ NOT_READY_FOR_IMPLEMENTATION
 | Capabilities | CLOSED |
 | Functional | CLOSED |
 | Data | CLOSED |
-| Graph | NOT_STARTED |
+| Graph | CLOSED |
 | Integrations | NOT_STARTED |
 | UX | NOT_STARTED |
 | Architecture | NOT_STARTED |
@@ -84,5 +84,9 @@ Functional Global Gate: CLOSED.
 Step 5 — Data Specification closed after external Quality Gate passed.
 
 Data Global Gate: CLOSED.
+
+Step 6 — Graph / Evidence Specification closed after external Quality Gate passed.
+
+Graph Global Gate: CLOSED.
 
 SDD status remains NOT_READY_FOR_IMPLEMENTATION. Current phase remains SPECIFICATION. All other Global Gates remain unchanged.

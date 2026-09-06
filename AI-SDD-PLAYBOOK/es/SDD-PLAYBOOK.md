@@ -5,7 +5,7 @@ Status: BOOTSTRAP / PARTIALLY VALIDATED
 
 ## 1. Purpose and validation boundary
 
-Este playbook reusable registra metodologia SDD ejercida hasta Data Specification. Los Steps 0–5 estan VALIDATED. Step 5 esta CLOSED / VALIDATED. Los Steps 6–16 son ROADMAP / NOT YET VALIDATED y no autorizan implementacion.
+Este playbook reusable registra metodologia SDD ejercida hasta Graph / Evidence Specification. Los Steps 0–6 estan VALIDATED. Step 6 esta CLOSED / VALIDATED. Los Steps 7–16 son ROADMAP / NOT YET VALIDATED y no autorizan implementacion.
 
 ## 2. SDD operating model
 
@@ -40,6 +40,10 @@ Status: CLOSED / VALIDATED. Usar Journeys como functional-specification backbone
 ### Step 5 — Data Specification
 
 Status: CLOSED / VALIDATED. Definir Minimum Data Contracts desde functional behavior, preservar canonical/source identity, provenance, Source Authority, temporal semantics cuando sean relevantes y Data Confidence contextual antes de scoring formulas. Cubrir cada canonical entity, Journey y MUST capability sin seleccionar physical persistence.
+
+### Step 6 — Graph / Evidence Specification
+
+Status: CLOSED / VALIDATED. Definir directional, typed semantic relationships y journey traversability; preservar Evidence/provenance y temporal context sin seleccionar graph technology ni promover correlation a causation.
 
 ## 4. Governing rules
 
@@ -119,6 +123,11 @@ GitHub Projects handoff es ROADMAP / PARTIALLY DEFINED: specification blockers p
 - SDD-019 — Minimum Data Contracts se justifican por functional behavior, no por source schemas.
 - SDD-020 — Preservar provenance, temporal semantics y Data Confidence contextual antes de physical persistence o scoring formulas.
 - SDD-021 — Conflicting claims permanecen explicitos cuando no existe un applicable authority rule.
+- SDD-022 — Predicate semantic fidelity requiere una afirmacion verdadera SOURCE + PREDICATE + TARGET.
+- SDD-023 — Traversal direction no cambia la normative predicate direction.
+- SDD-024 — La cobertura pairwise Capability × Journey debe reconciliar con Supports detallados de las relaciones.
+- SDD-025 — Connected semantic subgraphs no deben reducirse a linear narrative edges.
+- SDD-026 — Persistir el cierre de un external Quality Gate en los artifacts Source of Truth del repositorio.
 
 ## 7. ROADMAP / NOT YET VALIDATED
 
