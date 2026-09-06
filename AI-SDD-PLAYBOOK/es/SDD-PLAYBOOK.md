@@ -5,7 +5,7 @@ Status: BOOTSTRAP / PARTIALLY VALIDATED
 
 ## 1. Purpose and validation boundary
 
-Este playbook reusable registra metodologia SDD ejercida hasta Graph / Evidence Specification. Los Steps 0–6 estan VALIDATED. Step 6 esta CLOSED / VALIDATED. Los Steps 7–16 son ROADMAP / NOT YET VALIDATED y no autorizan implementacion.
+Este playbook reusable registra metodologia SDD ejercida hasta Integration Specification. Los Steps 0–6 estan VALIDATED. Step 6 esta CLOSED / VALIDATED. Step 7 esta CLOSED / EXTERNAL QUALITY GATE PASSED. Step 8 es el NEXT; los Steps 9–16 permanecen ROADMAP / NOT YET VALIDATED y ningun step autoriza implementacion por si solo.
 
 ## 2. SDD operating model
 
@@ -45,7 +45,15 @@ Status: CLOSED / VALIDATED. Definir Minimum Data Contracts desde functional beha
 
 Status: CLOSED / VALIDATED. Definir directional, typed semantic relationships y journey traversability; preservar Evidence/provenance y temporal context sin seleccionar graph technology ni promover correlation a causation.
 
+### Step 7 — Integration Specification
+
+Status: CLOSED / EXTERNAL QUALITY GATE PASSED. Definir integration contracts vendor-independent detras de un Adapter / Anti-Corruption Layer; distinguir integration de Source Authority; usar mocks o sandboxes contract-compatible cuando corporate access no este disponible; preservar provenance, incertidumbre de identity/correlation y graceful partial intelligence sin inventar corporate details.
+
 ## 4. Governing rules
+
+### Closed Baseline vs Evolution Backlog
+
+Los Steps 0–6 son una baseline semantica cerrada. Los items del Evolution Backlog registran evolucion futura acotada y no deben reabrir, reinterpretar ni introducir drift semantico en la baseline cerrada.
 
 ### Anti-loop rule
 
@@ -128,12 +136,16 @@ GitHub Projects handoff es ROADMAP / PARTIALLY DEFINED: specification blockers p
 - SDD-024 — La cobertura pairwise Capability × Journey debe reconciliar con Supports detallados de las relaciones.
 - SDD-025 — Connected semantic subgraphs no deben reducirse a linear narrative edges.
 - SDD-026 — Persistir el cierre de un external Quality Gate en los artifacts Source of Truth del repositorio.
+- SDD-027 — Integration no establece Source Authority; la autoridad debe permanecer explicita por claim suministrado o como `TBD`.
+- SDD-028 — Un Adapter / Anti-Corruption Layer protege la semantica del Canonical Model frente a source models vendor-specific.
+- SDD-029 — Un mock o sandbox contract-compatible puede validar una ruta local sin afirmar corporate connectivity, mapping o authority.
+- SDD-030 — Graceful partial integration expone contexto missing, stale, partial y unresolved en lugar de fabricar certeza.
+- SDD-031 — Una recomendacion interna de pasar al Quality Gate externo no equivale a cierre; el estado CLOSED requiere persistir el resultado formal externo en los artifacts Source of Truth del repositorio.
 
 ## 7. ROADMAP / NOT YET VALIDATED
 
-- Step 6 Graph / Evidence Specification
-- Step 7 Integrations
-- Step 8 UX
+- Step 7 Integrations — CLOSED / EXTERNAL QUALITY GATE PASSED
+- Step 8 UX — NEXT
 - Step 9 Architecture
 - Step 10 Security + NFR + Observability
 - Step 11 AI Behavior

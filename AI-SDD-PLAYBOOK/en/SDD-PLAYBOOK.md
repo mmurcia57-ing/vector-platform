@@ -5,7 +5,7 @@ Status: BOOTSTRAP / PARTIALLY VALIDATED
 
 ## 1. Purpose and validation boundary
 
-This reusable playbook records SDD methodology exercised through Graph / Evidence Specification. Steps 0–6 are VALIDATED. Step 6 is CLOSED / VALIDATED. Steps 7–16 are ROADMAP / NOT YET VALIDATED and do not authorize implementation.
+This reusable playbook records SDD methodology exercised through Integration Specification. Steps 0–6 are VALIDATED. Step 6 is CLOSED / VALIDATED. Step 7 is CLOSED / EXTERNAL QUALITY GATE PASSED. Step 8 is NEXT; Steps 9–16 remain ROADMAP / NOT YET VALIDATED and no step authorizes implementation by itself.
 
 ## 2. SDD operating model
 
@@ -45,7 +45,15 @@ Status: CLOSED / VALIDATED. Define Minimum Data Contracts from functional behavi
 
 Status: CLOSED / VALIDATED. Define directional, typed semantic relationships and journey traversability; preserve Evidence/provenance and temporal context without selecting graph technology or promoting correlation to causation.
 
+### Step 7 — Integration Specification
+
+Status: CLOSED / EXTERNAL QUALITY GATE PASSED. Define vendor-independent integration contracts behind an Adapter / Anti-Corruption Layer; distinguish integration from Source Authority; use contract-compatible mocks or sandboxes when corporate access is unavailable; preserve provenance, identity/correlation uncertainty, and graceful partial intelligence without inventing corporate details.
+
 ## 4. Governing rules
+
+### Closed Baseline vs Evolution Backlog
+
+Steps 0–6 are a closed semantic baseline. Evolution Backlog items record bounded future evolution and must not reopen, reinterpret, or introduce semantic drift into the closed baseline.
 
 ### Anti-loop rule
 
@@ -128,12 +136,16 @@ GitHub Projects handoff is ROADMAP / PARTIALLY DEFINED: specification blockers r
 - SDD-024 — Pairwise Capability × Journey coverage must reconcile with detailed relationship Supports declarations.
 - SDD-025 — Connected semantic subgraphs must not be reduced to linear narrative edges.
 - SDD-026 — Persist external Quality Gate closure in repository Source of Truth artifacts.
+- SDD-027 — Integration does not establish Source Authority; authority must remain explicit per supplied claim or `TBD`.
+- SDD-028 — An Adapter / Anti-Corruption Layer protects Canonical Model semantics from vendor-specific source models.
+- SDD-029 — A contract-compatible mock or sandbox can validate a local path without asserting corporate connectivity, mapping, or authority.
+- SDD-030 — Graceful partial integration exposes missing, stale, partial, and unresolved context rather than fabricating certainty.
+- SDD-031 — An internal recommendation to proceed to an external Quality Gate is not closure; CLOSED status requires the formal external result to be persisted in repository Source of Truth artifacts.
 
 ## 7. ROADMAP / NOT YET VALIDATED
 
-- Step 6 Graph / Evidence Specification
-- Step 7 Integrations
-- Step 8 UX
+- Step 7 Integrations — CLOSED / EXTERNAL QUALITY GATE PASSED
+- Step 8 UX — NEXT
 - Step 9 Architecture
 - Step 10 Security + NFR + Observability
 - Step 11 AI Behavior
