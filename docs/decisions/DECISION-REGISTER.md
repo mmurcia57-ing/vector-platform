@@ -448,6 +448,24 @@ A separate fully-English Playbook version may also be maintained.
 
 ---
 
+## DEC-025 — Dual Product Problem
+
+Status: CLOSED
+
+Decision:
+
+VECTOR must address both Reliability Intelligence and Execution Intelligence, correlated through the Intelligence Core.
+
+Reliability Intelligence explains technology reliability, risk, recurrence, debt and impact.
+
+Execution Intelligence explains how effectively technology areas and domains manage risk and convert identified problems and commitments into structural, sustainable and evidence-verifiable improvements.
+
+Area/domain evaluation is within the product vision.
+
+Automated individual performance scoring/ranking is outside V1 and is tracked separately as POST-V1.
+
+---
+
 ## Change Control
 
 When a decision changes:
