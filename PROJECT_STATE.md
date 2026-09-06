@@ -22,7 +22,7 @@ NOT_READY_FOR_IMPLEMENTATION
 - [x] 0.5 Discovery baseline
 - [x] 0.6 Registers
 - [x] 0.7 Quality Gate
-- [ ] 0.8 Initial commit
+- [x] 0.8 Initial commit
 
 ## Global Gates
 
@@ -60,3 +60,7 @@ Historical conversation backup exists under:
 docs/discovery/raw/discovery-chat.txt
 
 This RAW file is historical evidence and is not normative specification.
+
+Step 0 — Initialization completed.
+
+No SPEC-BLOCKERS identified at Initialization Quality Gate.
