@@ -35,7 +35,7 @@ NOT_READY_FOR_IMPLEMENTATION
 | Data | CLOSED |
 | Graph | CLOSED |
 | Integrations | CLOSED |
-| UX | NOT_STARTED |
+| UX | CLOSED |
 | Architecture | NOT_STARTED |
 | Security | NOT_STARTED |
 | NFR | NOT_STARTED |
@@ -92,5 +92,7 @@ Graph Global Gate: CLOSED.
 Step 7 — Integration Specification CLOSED after formal external Quality Gate PASS. SPEC-BLOCKERS: 0. OQ-009 remains OPEN and non-blocking for local V1; OQ-016 remains RESOLVED. Steps 0–7 remain CLOSED. SDD status remains NOT_READY_FOR_IMPLEMENTATION; no implementation authorization is granted. Next Step: Step 8 — UX Specification.
 
 Evolution Backlog EV-001–EV-007 is MATERIALIZED / PRE-AUDIT as bounded future evolution. It does not reopen or alter the Closed Baseline (Steps 0–6).
+
+Step 8 — UX Specification CLOSED after formal external Quality Gate PASS. SPEC-BLOCKERS: 0. OQ-009 remains OPEN and non-blocking for local V1; OQ-016 remains RESOLVED. Steps 0–8 remain CLOSED. SDD status remains NOT_READY_FOR_IMPLEMENTATION; no implementation authorization is granted. Next Step: Step 9 — Architecture Specification.
 
 SDD status remains NOT_READY_FOR_IMPLEMENTATION. Current phase remains SPECIFICATION. All other Global Gates remain unchanged.
