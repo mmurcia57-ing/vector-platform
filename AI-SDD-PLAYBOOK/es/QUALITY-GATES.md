@@ -31,6 +31,10 @@ Status: ROADMAP / NOT YET VALIDATED. El principio de portability validado es Can
 
 Confirmar que Product Boundary y Bounded Context responsibilities son explicitos; los boundaries permanecen semanticos y no se convierten en deployment decisions; el minimo vendor-independent Canonical Domain Model se justifica por required capabilities y journeys; Source Authority permanece distinta de Canonical Representation; identity states preservan uncertainty y provenance; correlation es Evidence-backed y no se promueve a causation; J01–J04 son representables; y todas las MUST capabilities permanecen soportadas.
 
-## 7. ROADMAP / NOT YET VALIDATED
+## 7. Step 4 — Functional Specification Quality Gate
 
-Los Quality Gates para Steps 4–16 no estan validados. Pueden usar common audit logic, pero no tienen gate definition detallada en v0.1.
+Status: PRE-AUDIT / NOT YET VALIDATED. Auditar Journey behavior, Cross-Journey Functional Rules, Evidence/provenance, Explainability, partial/insufficient-data behavior, Correlation != Causation, Execution != Outcome, Source Authority preservation, Functional Coverage Matrix, orphan MUST count, canonical-entity preservation y deferral de formulas y architecture decisions.
+
+## 8. ROADMAP / NOT YET VALIDATED
+
+Los Quality Gates para Steps 5–16 no estan validados. Pueden usar common audit logic, pero no tienen gate definition detallada en v0.1.

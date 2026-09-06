@@ -35,7 +35,15 @@ Status: BOOTSTRAP / PARTIALLY VALIDATED
 - [ ] Correlation is not promoted to causation.
 - [ ] J01–J04 are representable and all MUST capabilities remain supported.
 
-## 5. Cross-cutting checks
+## 5. Step 4 — Functional Specification
+
+- [ ] J01–J04 functional behavior and Cross-Journey Functional Rules are materialized.
+- [ ] Every MUST capability has Functional Coverage Matrix representation.
+- [ ] Partial/insufficient-data behavior and Evidence/Explainability are explicit.
+- [ ] Algorithms, formulas, thresholds, and architecture decisions remain deferred.
+- [ ] Step 4 remains PRE-AUDIT until external Quality Gate review.
+
+## 6. Cross-cutting checks
 
 - [ ] Anti-loop rule applied.
 - [ ] Artifacts intended for audit are inside the validation scope.
@@ -46,6 +54,6 @@ Status: BOOTSTRAP / PARTIALLY VALIDATED
 - [ ] Mermaid-first rule applied.
 - [ ] git diff and staged content inspected before commit.
 
-## 6. ROADMAP / NOT YET VALIDATED
+## 7. ROADMAP / NOT YET VALIDATED
 
-- [ ] Steps 4–16: apply only validated governing principles; no detailed methodology is claimed.
+- [ ] Steps 5–16: apply only validated governing principles; no detailed methodology is claimed.

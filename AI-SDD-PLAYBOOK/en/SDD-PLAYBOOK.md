@@ -5,7 +5,7 @@ Status: BOOTSTRAP / PARTIALLY VALIDATED
 
 ## 1. Purpose and validation boundary
 
-This reusable playbook records SDD methodology exercised in Initialization, Product Definition, Scope & Capabilities, and Product Boundary / Domain Model. Steps 0–3 are VALIDATED. Steps 4–16 are ROADMAP / NOT YET VALIDATED and do not authorize implementation.
+This reusable playbook records SDD methodology exercised in Initialization, Product Definition, Scope & Capabilities, and Product Boundary / Domain Model. Steps 0–3 are VALIDATED. Step 4 is MATERIALIZED / PRE-AUDIT / NOT YET VALIDATED. Steps 5–16 are ROADMAP / NOT YET VALIDATED and do not authorize implementation.
 
 ## 2. SDD operating model
 
@@ -32,6 +32,10 @@ V1 uses minimum useful end-to-end slices: the smallest useful portion required f
 ### Step 3 — Product Boundary / Domain Model
 
 Resolve Product Boundary before detailed Functional Specification when domains could otherwise be conflated. Define Bounded Context semantic ownership without inferring deployment architecture. Define a minimum vendor-independent Canonical Domain Model justified by required capabilities and journeys, preserve Source Authority separately from Canonical Representation, and make identity/correlation uncertainty explicit.
+
+### Step 4 — Functional Specification
+
+Status: MATERIALIZED / PRE-AUDIT / NOT YET VALIDATED. Use Journeys as the functional-specification backbone; define observable behavior, Cross-Journey Functional Rules, insufficient-data behavior, Evidence/Explainability requirements, and a Functional Coverage Matrix. Separate requirements from algorithms, formulas, and architecture decisions. Avoid orphan MUST capabilities and preserve Progressive Specification compatibility.
 
 ## 4. Governing rules
 
@@ -111,7 +115,6 @@ GitHub Projects handoff is ROADMAP / PARTIALLY DEFINED: specification blockers r
 
 ## 7. ROADMAP / NOT YET VALIDATED
 
-- Step 4 Functional Specification
 - Step 5 Data Specification
 - Step 6 Graph / Evidence Specification
 - Step 7 Integrations

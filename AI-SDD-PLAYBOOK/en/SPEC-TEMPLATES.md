@@ -23,18 +23,22 @@ Capability definition: Capability ID; Name; Purpose; Core Question; Expected Out
 
 Required sections: Status; Product Boundary; Bounded Context Responsibilities; Canonical Domain Model; exact entity inventory; semantic entity purposes; primary correlation anchor; conceptual relationships; Source Authority Model; Canonical and Source Identity; CONFIRMED / INFERRED / UNRESOLVED semantics; Identity, Correlation, and Causation; TBDs; Journey and MUST coverage; Quality Gate.
 
-## 5. Decision
+## 5. Functional Specification
+
+Required sections: Status; Journey requirements with stable IDs; Cross-Journey Functional Rules; Functional Coverage Matrix; Deferred Decisions; pre-audit Quality Gate. Each Journey requirement includes ID, Title, Journey, related MUST capabilities, functional behavior, preconditions, observable outcome, partial/insufficient-data behavior, canonical entities, Evidence/Explainability, and deferred details.
+
+## 6. Decision
 
 Required fields: DEC identifier; Title; Status; explicit Decision.
 
-## 6. Open Question
+## 7. Open Question
 
 Required fields: OQ identifier; Title; Status; Question; Resolution stage; Current impact.
 
-## 7. Quality Gate
+## 8. Quality Gate
 
 Required fields: step; status; Source of Truth and semantic fidelity checks; mathematical/referential consistency checks; scope and TBD checks; SPEC-BLOCKER assessment.
 
-## 8. ROADMAP / NOT YET VALIDATED
+## 9. ROADMAP / NOT YET VALIDATED
 
 No templates for Steps 4–16 are validated in v0.1.

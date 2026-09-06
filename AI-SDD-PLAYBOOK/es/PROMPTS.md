@@ -23,14 +23,18 @@ Audita este artifact contra Source of Truth. Verifica que los artifacts previsto
 
 Materializa solo Product Boundary, Bounded Context responsibilities, el minimo Canonical Domain Model, Source Authority y identity/correlation semantics aprobados. No infieras deployment architecture, vendor schemas, matching algorithms, thresholds ni causation. Preserva TBDs y prueba que los journeys y MUST capabilities aprobados son representables.
 
-## 6. Semantic drift correction
+## 6. Functional Specification materialization
+
+Materializa solo Journey behavior y Cross-Journey Functional Rules aprobados. Define observable outcomes, partial/insufficient-data behavior, Evidence/Explainability y Functional Coverage Matrix auditable. No inventes algorithms, formulas, thresholds, schemas, APIs, architecture ni UX design. Mantener Step 4 PRE-AUDIT hasta external Quality Gate review.
+
+## 7. Semantic drift correction
 
 Corrige solo el materialization defect. Restaura exactamente approved semantics. No rediseñes scope, introduzcas decisions ni cambies statuses. Repite structural y semantic checks.
 
-## 7. Blocker reporting
+## 8. Blocker reporting
 
 Deten implementation o closure. Registra un SPEC-BLOCKER con conflicting artifacts, authority order, missing decision, impact y required resolution. No inventes una resolucion.
 
-## 8. Model escalation check
+## 9. Model escalation check
 
 Antes de escalar modelos, evalua prompt ambiguity, context size, task breadth y scope reduction. Usa el modelo de menor capacidad que complete confiablemente la tarea. Trata los nombres de modelos como NON-NORMATIVE tooling examples.

@@ -5,7 +5,7 @@ Status: BOOTSTRAP / PARTIALLY VALIDATED
 
 ## 1. Purpose and validation boundary
 
-Este playbook reusable registra metodologia SDD ejercida en Initialization, Product Definition, Scope & Capabilities y Product Boundary / Domain Model. Los Steps 0–3 estan VALIDATED. Los Steps 4–16 son ROADMAP / NOT YET VALIDATED y no autorizan implementacion.
+Este playbook reusable registra metodologia SDD ejercida en Initialization, Product Definition, Scope & Capabilities y Product Boundary / Domain Model. Los Steps 0–3 estan VALIDATED. Step 4 esta MATERIALIZED / PRE-AUDIT / NOT YET VALIDATED. Los Steps 5–16 son ROADMAP / NOT YET VALIDATED y no autorizan implementacion.
 
 ## 2. SDD operating model
 
@@ -32,6 +32,10 @@ V1 usa minimum useful end-to-end slices: la porcion util minima requerida por lo
 ### Step 3 — Product Boundary / Domain Model
 
 Resolver Product Boundary antes de detailed Functional Specification cuando los domains podrian confundirse. Definir semantic ownership de Bounded Context sin inferir deployment architecture. Definir un minimo vendor-independent Canonical Domain Model justificado por required capabilities y journeys, preservar Source Authority separada de Canonical Representation y hacer explicita la incertidumbre de identity/correlation.
+
+### Step 4 — Functional Specification
+
+Status: MATERIALIZED / PRE-AUDIT / NOT YET VALIDATED. Usar Journeys como functional-specification backbone; definir observable behavior, Cross-Journey Functional Rules, insufficient-data behavior, Evidence/Explainability requirements y Functional Coverage Matrix. Separar requirements de algorithms, formulas y architecture decisions. Evitar orphan MUST capabilities y preservar Progressive Specification compatibility.
 
 ## 4. Governing rules
 
@@ -111,7 +115,6 @@ GitHub Projects handoff es ROADMAP / PARTIALLY DEFINED: specification blockers p
 
 ## 7. ROADMAP / NOT YET VALIDATED
 
-- Step 4 Functional Specification
 - Step 5 Data Specification
 - Step 6 Graph / Evidence Specification
 - Step 7 Integrations

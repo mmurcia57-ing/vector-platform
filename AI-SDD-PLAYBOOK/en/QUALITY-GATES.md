@@ -31,6 +31,10 @@ Status: ROADMAP / NOT YET VALIDATED. The validated portability principle is Cano
 
 Confirm Product Boundary and Bounded Context responsibilities are explicit; boundaries remain semantic rather than deployment decisions; the minimum Canonical Domain Model is vendor-independent and justified by required capabilities and journeys; Source Authority remains distinct from Canonical Representation; identity states preserve uncertainty and provenance; correlation is Evidence-backed and is not promoted to causation; J01–J04 are representable; and all MUST capabilities remain supported.
 
-## 7. ROADMAP / NOT YET VALIDATED
+## 7. Step 4 — Functional Specification Quality Gate
 
-Quality Gates for Steps 4–16 are not yet validated. They may use common audit logic but have no detailed gate definition in v0.1.
+Status: PRE-AUDIT / NOT YET VALIDATED. Audit Journey behavior, Cross-Journey Functional Rules, Evidence/provenance, Explainability, partial/insufficient-data behavior, Correlation != Causation, Execution != Outcome, Source Authority preservation, Functional Coverage Matrix, orphan MUST count, canonical-entity preservation, and deferral of formulas and architecture decisions.
+
+## 8. ROADMAP / NOT YET VALIDATED
+
+Quality Gates for Steps 5–16 are not yet validated. They may use common audit logic but have no detailed gate definition in v0.1.

@@ -28,6 +28,10 @@ Crear Master Capability Map con Capability ID, Name, Purpose, Core Question, Exp
 
 Resolver Product Boundary y Bounded Context semantic ownership antes de detailed Functional Specification. Definir el minimo vendor-independent Canonical Domain Model, preservar Source Authority e identity uncertainty, y confirmar que correlation no implica causation.
 
+### Step 4 — Functional Specification
+
+Materializar Journey behavior, Cross-Journey Functional Rules, observable outcomes, insufficient-data behavior y Functional Coverage Matrix aprobados. Diferir formulas y architecture decisions. Step 4 permanece PRE-AUDIT hasta external Quality Gate review.
+
 ## 3. Audit before closure
 
 - Aplicar anti-loop rule: preguntar si la ausencia de la informacion obligaria al implementer a inventar una relevant decision. Si YES, levantar SPEC-BLOCKER. Si NO, registrar Backlog / Future Improvement / documented debt. Una missing decision no es automaticamente un SPEC-BLOCKER.
@@ -42,4 +46,4 @@ Pasar el Quality Gate aplicable, inspeccionar git diff y staged content, y luego
 
 ## 5. ROADMAP / NOT YET VALIDATED
 
-Los Steps 4–16 no estan validados. Aplicar solo governing principles, no reglas metodologicas detalladas, hasta que esos stages sean ejercidos y validados.
+Step 4 esta MATERIALIZED / PRE-AUDIT / NOT YET VALIDATED. Los Steps 5–16 no estan validados. Aplicar solo governing principles hasta que esos stages sean ejercidos y validados.
