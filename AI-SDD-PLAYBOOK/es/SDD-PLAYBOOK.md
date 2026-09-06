@@ -5,7 +5,7 @@ Status: BOOTSTRAP / PARTIALLY VALIDATED
 
 ## 1. Purpose and validation boundary
 
-Este playbook reusable registra metodologia SDD ejercida en Initialization, Product Definition, Scope & Capabilities y Product Boundary / Domain Model. Los Steps 0–3 estan VALIDATED. Step 4 esta MATERIALIZED / PRE-AUDIT / NOT YET VALIDATED. Los Steps 5–16 son ROADMAP / NOT YET VALIDATED y no autorizan implementacion.
+Este playbook reusable registra metodologia SDD ejercida hasta Data Specification. Los Steps 0–5 estan VALIDATED. Step 5 esta CLOSED / VALIDATED. Los Steps 6–16 son ROADMAP / NOT YET VALIDATED y no autorizan implementacion.
 
 ## 2. SDD operating model
 
@@ -35,7 +35,11 @@ Resolver Product Boundary antes de detailed Functional Specification cuando los 
 
 ### Step 4 — Functional Specification
 
-Status: MATERIALIZED / PRE-AUDIT / NOT YET VALIDATED. Usar Journeys como functional-specification backbone; definir observable behavior, Cross-Journey Functional Rules, insufficient-data behavior, Evidence/Explainability requirements y Functional Coverage Matrix. Separar requirements de algorithms, formulas y architecture decisions. Evitar orphan MUST capabilities y preservar Progressive Specification compatibility.
+Status: CLOSED / VALIDATED. Usar Journeys como functional-specification backbone; definir observable behavior, Cross-Journey Functional Rules, insufficient-data behavior, Evidence/Explainability requirements y Functional Coverage Matrix. Separar requirements de algorithms, formulas y architecture decisions. Evitar orphan MUST capabilities y preservar Progressive Specification compatibility.
+
+### Step 5 — Data Specification
+
+Status: CLOSED / VALIDATED. Definir Minimum Data Contracts desde functional behavior, preservar canonical/source identity, provenance, Source Authority, temporal semantics cuando sean relevantes y Data Confidence contextual antes de scoring formulas. Cubrir cada canonical entity, Journey y MUST capability sin seleccionar physical persistence.
 
 ## 4. Governing rules
 
@@ -112,10 +116,12 @@ GitHub Projects handoff es ROADMAP / PARTIALLY DEFINED: specification blockers p
 - SDD-016 — Inferred identity/correlation preserva uncertainty, provenance y Evidence.
 - SDD-017 — Correlation no debe promoverse a causation sin Evidence suficiente o approved semantics.
 - SDD-018 — Un minimo Canonical Domain Model excluye source-system objects no requeridos e individual-performance entities.
+- SDD-019 — Minimum Data Contracts se justifican por functional behavior, no por source schemas.
+- SDD-020 — Preservar provenance, temporal semantics y Data Confidence contextual antes de physical persistence o scoring formulas.
+- SDD-021 — Conflicting claims permanecen explicitos cuando no existe un applicable authority rule.
 
 ## 7. ROADMAP / NOT YET VALIDATED
 
-- Step 5 Data Specification
 - Step 6 Graph / Evidence Specification
 - Step 7 Integrations
 - Step 8 UX

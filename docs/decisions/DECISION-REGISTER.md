@@ -603,6 +603,18 @@ Exact matching algorithms, confidence formulas, thresholds, cardinalities, and g
 
 ---
 
+## DEC-035 — Source Conflict Semantic Policy
+
+Status: CLOSED
+
+Decision:
+
+VECTOR preserves conflicting claims and their provenance. An explicitly authoritative claim may be selected as canonical representation only under an explicit applicable authority rule. Canonicalization does not transfer Source Authority to VECTOR. Where no sufficient authority or precedence rule exists, VECTOR represents the conflict as unresolved and does not silently select a winner or fabricate consensus.
+
+Corporate precedence, physical representation, and user-visible behavior remain TBD.
+
+---
+
 ## Change Control
 
 When a decision changes:

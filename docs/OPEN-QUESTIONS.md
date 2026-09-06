@@ -266,11 +266,11 @@ Will Commitment data be:
 
 Resolution stage:
 
-Functional Specification / Domain Modeling
+Integration Specification / Corporate Source Authority evidence
 
 Current impact:
 
-Corporate Source Authority remains TBD when Commitment is not natively created in VECTOR. VECTOR may be authoritative when Commitment is natively created in VECTOR. This remains open for later Functional Specification / Domain Modeling detail.
+Corporate Source Authority remains TBD when Commitment is not natively created in VECTOR. VECTOR may be authoritative when Commitment is natively created in VECTOR. External Commitment Source Authority remains unresolved and must be resolved when the authoritative corporate integration/source is specified or evidenced.
 
 ---
 
@@ -500,7 +500,7 @@ Resolved for Product Boundary / Domain Modeling. Later Data and Integration Cont
 
 Status:
 
-OPEN
+RESOLVED
 
 Question:
 
@@ -510,7 +510,11 @@ Known principle:
 
 Preserve provenance and Source Authority.
 
-Still TBD:
+Resolution:
+
+Resolved conceptually by DEC-035 and specs/data-model.md. Conflicting claims and provenance are preserved; an explicitly authoritative claim may be selected only by an explicit applicable authority rule. Without sufficient authority/precedence, VECTOR represents the conflict as unresolved and does not silently select a winner or fabricate consensus.
+
+Later implementation details remain TBD:
 
 - conflict representation;
 - precedence rules;
@@ -519,11 +523,11 @@ Still TBD:
 
 Resolution stage:
 
-Data / Integration Specification
+Data Specification
 
 Current impact:
 
-Not blocking Discovery.
+Resolved for conceptual data semantics. Conflict representation/schema, corporate precedence, and user-visible behavior remain subject to later specifications.
 
 ---
 
