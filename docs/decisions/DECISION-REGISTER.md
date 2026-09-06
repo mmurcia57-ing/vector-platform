@@ -466,6 +466,65 @@ Automated individual performance scoring/ranking is outside V1 and is tracked se
 
 ---
 
+---
+
+## DEC-026 — VECTOR Master Capability Map
+
+Status: CLOSED
+
+Decision:
+
+VECTOR Master Capability Map v1 contains 31 capabilities:
+
+- 10 Reliability Intelligence capabilities;
+- 9 Execution Intelligence capabilities;
+- 12 Intelligence Core capabilities.
+
+---
+
+## DEC-027 — VECTOR V1 Scope Classification
+
+Status: CLOSED
+
+Decision:
+
+V1 MUST = 18.
+
+V1 SHOULD = 7.
+
+POST-V1 = 6.
+
+Total = 31.
+
+POST-V1 capabilities remain part of the Master Capability Map and are candidates for progressive specification.
+
+---
+
+## DEC-028 — VECTOR V1 Vertical Journeys
+
+Status: CLOSED
+
+Decision:
+
+VECTOR V1 is demonstrated through:
+
+- J01 Persistent Reliability Risk;
+- J02 Change-Associated Degradation;
+- J03 Structural Improvement Verification;
+- J04 Area / Domain Decision View.
+
+---
+
+## DEC-029 — Minimum End-to-End Slice Strategy
+
+Status: CLOSED
+
+Decision:
+
+V1 MUST capabilities are implemented through minimum useful end-to-end slices sufficient to execute the approved Vertical Journeys. Exhaustive implementation of each capability is not required for V1.
+
+---
+
 ## Change Control
 
 When a decision changes:

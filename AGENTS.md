@@ -128,6 +128,13 @@ Corporate sources that are not confirmed must remain TBD.
 
 Do not invent corporate implementation details.
 
+## Diagram Documentation Rule
+
+- Prefer Mermaid for normative and explanatory diagrams stored in repository Markdown.
+- Diagrams must remain text-based and versionable.
+- Mermaid diagrams must not introduce architecture, technology or behavior decisions not already approved.
+- ASCII diagrams are non-normative conversational support only.
+
 ## AI Model Policy
 
 Use the lowest-capability model that can reliably perform the task.

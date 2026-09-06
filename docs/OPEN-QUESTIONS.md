@@ -62,7 +62,7 @@ Not blocking Discovery.
 
 Status:
 
-OPEN
+RESOLVED
 
 Question:
 
@@ -72,9 +72,13 @@ Resolution stage:
 
 Scope & Capabilities
 
+Resolution:
+
+Resolved by `specs/capability-map.md`, Step 2 — Scope & Capabilities, and DEC-027. V1 scope is classified as 18 MUST, 7 SHOULD and 6 POST-V1 capabilities.
+
 Current impact:
 
-Will become blocking before V1 implementation planning.
+Resolved for Scope & Capabilities. Later functional, data, architecture, integration and acceptance specifications remain subject to their own gates.
 
 ---
 

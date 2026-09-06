@@ -30,7 +30,7 @@ NOT_READY_FOR_IMPLEMENTATION
 |---|---|
 | Product | CLOSED |
 | Domain | NOT_STARTED |
-| Capabilities | NOT_STARTED |
+| Capabilities | CLOSED |
 | Functional | NOT_STARTED |
 | Data | NOT_STARTED |
 | Graph | NOT_STARTED |
@@ -67,6 +67,10 @@ No SPEC-BLOCKERS identified at Initialization Quality Gate.
 
 Step 1 — Product Definition completed.
 
+Step 2 — Scope & Capabilities completed.
+
 Product Global Gate: CLOSED.
+
+Scope Global Gate: CLOSED.
 
 SDD status remains NOT_READY_FOR_IMPLEMENTATION. Current phase remains SPECIFICATION. All other Global Gates remain unchanged.
