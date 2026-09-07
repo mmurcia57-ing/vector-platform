@@ -2,37 +2,37 @@
 
 ## Current Project Phase
 
-CURRENT PROJECT PHASE: SPECIFICATION
+CURRENT PROJECT PHASE: IMPLEMENTATION
 
-Implementation is forbidden until:
+Implementation is authorized only when:
 
 SDD_STATUS = READY_FOR_IMPLEMENTATION
 
+Implementation must be limited to a task that is Ready under
+`specs/implementation-plan.md` and `specs/implementation-tasks.md`, and must
+preserve all applicable CLOSED SDD contracts and acceptance requirements.
+
 ## Allowed Work
 
-During SPECIFICATION, AI agents may only:
+During IMPLEMENTATION, AI agents may:
 
-- Create or update Markdown documentation.
-- Create specifications.
-- Create diagrams.
-- Create ADRs.
-- Define contracts.
-- Define acceptance scenarios.
-- Define plans and implementation tasks.
-- Analyze evidence.
-- Identify contradictions, blockers, assumptions and TBDs.
+- Execute only approved Ready-task scope.
+- Create source code, tests, and local infrastructure only when required by
+  that task and its applicable CLOSED SDD contracts.
+- Create or update implementation documentation, contracts, and acceptance
+  evidence within approved task scope.
+- Identify contradictions, blockers, assumptions, and TBDs.
 
 ## Forbidden Work
 
-During SPECIFICATION, AI agents must not:
+During IMPLEMENTATION, AI agents must not:
 
-- Create application source code.
-- Create production infrastructure.
-- Implement UI, backend, databases or integrations.
 - Expand product scope without explicit approval.
 - Invent corporate systems, fields, APIs, permissions or data sources.
 - Convert assumptions into facts.
 - Reopen CLOSED decisions because of optional improvements.
+- Implement a task whose Ready criteria, dependencies, acceptance, or required
+  SDD contracts are not sufficient; report a SPEC-BLOCKER instead.
 
 ## Source of Truth Priority
 
