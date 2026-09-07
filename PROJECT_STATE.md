@@ -36,7 +36,7 @@ NOT_READY_FOR_IMPLEMENTATION
 | Graph | CLOSED |
 | Integrations | CLOSED |
 | UX | CLOSED |
-| Architecture | NOT_STARTED |
+| Architecture | CLOSED |
 | Security | NOT_STARTED |
 | NFR | NOT_STARTED |
 | AI | NOT_STARTED |
@@ -94,5 +94,9 @@ Step 7 — Integration Specification CLOSED after formal external Quality Gate P
 Evolution Backlog EV-001–EV-007 is MATERIALIZED / PRE-AUDIT as bounded future evolution. It does not reopen or alter the Closed Baseline (Steps 0–6).
 
 Step 8 — UX Specification CLOSED after formal external Quality Gate PASS. SPEC-BLOCKERS: 0. OQ-009 remains OPEN and non-blocking for local V1; OQ-016 remains RESOLVED. Steps 0–8 remain CLOSED. SDD status remains NOT_READY_FOR_IMPLEMENTATION; no implementation authorization is granted. Next Step: Step 9 — Architecture Specification.
+
+Process checkpoint approved: after sufficient logical architecture is defined in Step 9 and before Step 13 Implementation Plan, VECTOR must pass Step 9.5 — Interaction Design & Prototype. This checkpoint will validate Information Architecture, navigation/workspace model, context continuity, progressive drill-down, coordinated filtering, contextual panels/drawers where applicable, bounded graph exploration, J01–J04 transitions, partial/stale/conflicting/uncertain-data interaction, an interactive prototype, and its UX Quality Gate. It does not reopen Step 8 or decide final layouts, screen count, interaction mechanism per case, visual styling, animation, or frontend state-management technology.
+
+Step 9 — Architecture Specification CLOSED after formal external Quality Gate PASS. SPEC-BLOCKERS: 0. Steps 0–9 remain CLOSED. OQ-009 remains OPEN and non-blocking for local V1; OQ-016 remains RESOLVED. SDD status remains NOT_READY_FOR_IMPLEMENTATION; no implementation authorization is granted. The SQLite → lightweight outbox → in-process asynchronous projector → Neo4j eventual-consistency synchronization model, including retry capability, idempotency, canonical-commit independence from Neo4j availability, and deterministic rebuild, remains the CLOSED Step 9 architectural mechanism; implementation/NFR parameters remain TBD. Next checkpoint: Step 9.5 — Interaction Design & Prototype.
 
 SDD status remains NOT_READY_FOR_IMPLEMENTATION. Current phase remains SPECIFICATION. All other Global Gates remain unchanged.
