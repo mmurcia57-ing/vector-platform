@@ -1,0 +1,19 @@
+name: vector-local
+
+services:
+  neo4j:
+    image: neo4j:5-community
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in .env before starting Neo4j}
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in .env before starting Neo4j}
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./runtime/neo4j/data:/data
+      - ./runtime/neo4j/logs:/logs
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p \"$$NEO4J_PASSWORD\" 'RETURN 1;' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
