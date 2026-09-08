@@ -28,4 +28,31 @@ class VectorRuntimePropertiesTests {
 		contextRunner.withPropertyValues("vector.runtime.environment=")
 			.run(context -> assertThat(context).hasFailed());
 	}
+
+	@Test
+	void acceptsExternalReliabilityPolicyConfiguration() {
+		contextRunner.withPropertyValues(
+			"vector.reliability.policy.reference=validated-policy",
+			"vector.reliability.policy.minimum-recurring-incidents=2",
+			"vector.reliability.policy.minimum-supporting-evidence=2")
+			.run(context -> {
+				var policy = context.getBean(VectorReliabilityPolicyProperties.class);
+				assertThat(policy.reference()).isEqualTo("validated-policy");
+				assertThat(policy.minimumRecurringIncidents()).isEqualTo(2);
+				assertThat(policy.minimumSupportingEvidence()).isEqualTo(2);
+			});
+	}
+
+	@Test
+	void rejectsUnsafeNonPositiveReliabilityPolicyValues() {
+		contextRunner.withPropertyValues("vector.reliability.policy.minimum-recurring-incidents=0")
+			.run(context -> assertThat(context).hasFailed());
+	}
+
+	@Test
+	void configurationObjectDoesNotContainSecretFieldsOrValues() {
+		contextRunner.withPropertyValues("vector.runtime.environment=local")
+			.run(context -> assertThat(context.getBean(VectorRuntimeProperties.class).toString())
+				.doesNotContainIgnoringCase("password", "secret", "token", "credential"));
+	}
 }

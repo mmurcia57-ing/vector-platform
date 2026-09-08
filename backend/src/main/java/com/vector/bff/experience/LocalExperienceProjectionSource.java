@@ -11,6 +11,7 @@ import com.vector.bff.canonical.Service;
 import com.vector.bff.canonical.SourceAuthority;
 import com.vector.bff.canonical.SourceReference;
 import com.vector.bff.canonical.TemporalSemantics;
+import com.vector.bff.configuration.VectorReliabilityPolicyProperties;
 import com.vector.bff.evidence.EvidencePath;
 import com.vector.bff.intelligence.DeterministicIntelligenceService;
 import com.vector.bff.intelligence.IntelligenceInput;
@@ -25,7 +26,8 @@ public final class LocalExperienceProjectionSource implements ExperienceProjecti
     private static final Instant OBSERVED_AT = Instant.parse("2025-01-01T00:00:00Z");
     private final PreparedExperienceContext prepared;
 
-    public LocalExperienceProjectionSource(CanonicalRepository repository, EvidencePath evidencePath) {
+    public LocalExperienceProjectionSource(CanonicalRepository repository, EvidencePath evidencePath,
+            VectorReliabilityPolicyProperties policy) {
         var area = new AreaDomain(metadata("area-platform"), "Platform", "technology platform");
         var service = new Service(metadata("service-payments"), "Payments", area.metadata().canonicalId(), "degraded");
         var event = new MonitoringEvent(metadata("event-payments-latency"), "latency", "degraded", service.metadata().canonicalId());
@@ -47,7 +49,8 @@ public final class LocalExperienceProjectionSource implements ExperienceProjecti
 
         var result = new DeterministicIntelligenceService(repository).evaluate(new IntelligenceInput(
             service, List.of(event), incidents, List.of(), List.of(), List.of(), List.of(evidenceOne, evidenceTwo),
-            null, null, new IntelligencePolicy("local-dataset-v1", 2, 2), OBSERVED_AT));
+            null, null, new IntelligencePolicy(policy.reference(), policy.minimumRecurringIncidents(),
+                policy.minimumSupportingEvidence()), OBSERVED_AT));
         var risk = result.riskFinding().orElseThrow(() -> new IllegalStateException("local deterministic data must produce a RiskFinding"));
         var quality = new ProjectionQuality("local deterministic dataset", OBSERVED_AT.toString(),
             "CONFIRMED source references; VECTOR-derived explanation", List.of(),

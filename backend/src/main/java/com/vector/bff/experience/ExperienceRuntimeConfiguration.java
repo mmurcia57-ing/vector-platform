@@ -4,6 +4,7 @@ import com.vector.bff.evidence.EvidencePath;
 import com.vector.bff.evidence.SqliteEvidencePath;
 import com.vector.bff.persistence.CanonicalRepository;
 import com.vector.bff.persistence.SqliteCanonicalRepository;
+import com.vector.bff.configuration.VectorReliabilityPolicyProperties;
 import com.vector.bff.graph.BoundedGraphQueryService;
 import com.vector.bff.graph.GraphProjectionStore;
 import com.vector.bff.graph.InMemoryGraphProjectionStore;
@@ -23,8 +24,9 @@ public class ExperienceRuntimeConfiguration {
     }
 
     @Bean
-    ExperienceProjectionSource experienceProjectionSource(CanonicalRepository repository, EvidencePath evidencePath) {
-        return new LocalExperienceProjectionSource(repository, evidencePath);
+    ExperienceProjectionSource experienceProjectionSource(CanonicalRepository repository, EvidencePath evidencePath,
+            VectorReliabilityPolicyProperties policy) {
+        return new LocalExperienceProjectionSource(repository, evidencePath, policy);
     }
 
     @Bean
