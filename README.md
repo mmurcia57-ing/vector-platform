@@ -1,6 +1,7 @@
 # VECTOR local engineering foundation
 
-This repository currently contains the technical foundation for `TASK-FND-001`.
+This repository currently contains the technical foundation through
+`TASK-FND-002`.
 It is not a product slice: canonical entities, persistence schemas, graph
 projection, external integrations, journeys, and final UX are intentionally
 deferred to their approved follow-on tasks.
@@ -26,6 +27,13 @@ runtime directory is prepared and ignored by Git for that later task.
 
 Neo4j is a future rebuildable projection/read model, not canonical truth or
 Source Authority. No application code connects to it in this foundation.
+
+The backend reads the non-sensitive runtime label from
+`VECTOR_RUNTIME_ENVIRONMENT`, defaulting safely to `local`. An explicit blank
+value is rejected at startup. The frontend example in `frontend/.env.example`
+contains only a public BFF base URL. Never place passwords, tokens, credentials,
+or provider configuration in `VITE_*` variables: those values are embedded in
+the browser bundle.
 
 ## Run locally
 
