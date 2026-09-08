@@ -60,6 +60,27 @@ class GraphProjectionTests {
         assertThat(outbox.pending()).isEmpty();
     }
 
+    @Test
+    void queryReturnsOnlyAConnectedBoundedSubgraph() {
+        var store = new InMemoryGraphProjectionStore();
+        var service = new GraphNode("Service", "service-1");
+        var finding = new GraphNode("RiskFinding", "risk-1");
+        var evidence = new GraphNode("Evidence", "evidence-1");
+        store.apply(new GraphProjectionEvent("event-1", List.of(service, finding),
+            List.of(new GraphRelationship(finding, "CONCERNS", service, List.of(), List.of())), NOW));
+        store.apply(new GraphProjectionEvent("event-2", List.of(finding, evidence),
+            List.of(new GraphRelationship(evidence, "SUPPORTS", finding, List.of("evidence-1"), List.of())), NOW));
+
+        var projection = new BoundedGraphQueryService(store, "current")
+            .query(new BoundedGraphQuery(finding, 2, 1));
+
+        assertThat(projection.nodes()).contains(finding);
+        assertThat(projection.nodes()).anySatisfy(node -> assertThat(node).isIn(service, evidence));
+        assertThat(projection.relationships()).hasSize(1);
+        assertThat(projection.relationships().getFirst().predicate()).isIn("CONCERNS", "SUPPORTS");
+        assertThat(projection.truncated()).isTrue();
+    }
+
     private static CanonicalMetadata metadata(String id, List<String> references) {
         return new CanonicalMetadata(id, IdentityResolutionState.CONFIRMED,
             new TemporalSemantics(NOW, NOW, NOW, null, null), new Provenance(references, "fixture", "test"),

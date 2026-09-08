@@ -2,11 +2,19 @@ package com.vector.bff.graph;
 
 import com.vector.bff.canonical.AreaDomain;
 import com.vector.bff.canonical.CanonicalEntity;
+import com.vector.bff.canonical.Change;
+import com.vector.bff.canonical.Commitment;
+import com.vector.bff.canonical.Deployment;
 import com.vector.bff.canonical.Evidence;
+import com.vector.bff.canonical.ImprovementAction;
 import com.vector.bff.canonical.Incident;
+import com.vector.bff.canonical.MetricObservation;
 import com.vector.bff.canonical.MonitoringEvent;
+import com.vector.bff.canonical.Problem;
 import com.vector.bff.canonical.RiskFinding;
 import com.vector.bff.canonical.Service;
+import com.vector.bff.canonical.SLO;
+import com.vector.bff.canonical.SLOObservation;
 import com.vector.bff.canonical.SourceReference;
 
 import java.util.List;
@@ -44,6 +52,41 @@ public final class GraphRelationshipMapper {
             });
             for (var evidenceId : basis(finding.evidenceBasis())) related(knownEntities, "Evidence", evidenceId).ifPresent(evidence -> {
                 nodes.add(node(evidence)); relationships.add(relation(node(evidence), "SUPPORTS", node, List.of(evidenceId), refs(evidence)));
+            });
+        } else if (entity instanceof Change change) {
+            related(knownEntities, "Deployment", change.deploymentId()).ifPresent(deployment -> {
+                nodes.add(node(deployment)); relationships.add(relation(node, "DECLARES_CONTEXT_FOR", node(deployment), List.of(), refs(entity)));
+            });
+        } else if (entity instanceof Deployment deployment) {
+            related(knownEntities, "Change", deployment.changeId()).ifPresent(change -> {
+                nodes.add(node(change)); relationships.add(relation(node(change), "DECLARES_CONTEXT_FOR", node, List.of(), refs(change)));
+            });
+            related(knownEntities, "Service", deployment.serviceId()).ifPresent(service -> {
+                nodes.add(node(service)); relationships.add(relation(node, "DEPLOYS_TO", node(service), List.of(), refs(entity)));
+            });
+        } else if (entity instanceof SLO slo) {
+            related(knownEntities, "Service", slo.serviceId()).ifPresent(service -> {
+                nodes.add(node(service)); relationships.add(relation(node, "DEFINES_OBJECTIVE_FOR", node(service), List.of(), refs(entity)));
+            });
+        } else if (entity instanceof SLOObservation observation) {
+            related(knownEntities, "SLO", observation.sloId()).ifPresent(slo -> {
+                nodes.add(node(slo)); relationships.add(relation(node, "OBSERVES_BEHAVIOR_OF", node(slo), List.of(), refs(entity)));
+            });
+        } else if (entity instanceof MetricObservation observation) {
+            related(knownEntities, "Service", observation.serviceId()).ifPresent(service -> {
+                nodes.add(node(service)); relationships.add(relation(node, "MEASURES_CONTEXT_FOR", node(service), List.of(), refs(entity)));
+            });
+        } else if (entity instanceof Problem problem) {
+            related(knownEntities, "Incident", problem.incidentId()).ifPresent(incident -> {
+                nodes.add(node(incident)); relationships.add(relation(node(incident), "PROVIDES_CONTEXT_FOR", node, List.of(), refs(incident)));
+            });
+        } else if (entity instanceof Commitment commitment) {
+            related(knownEntities, "RiskFinding", commitment.riskFindingId()).ifPresent(finding -> {
+                nodes.add(node(finding)); relationships.add(relation(node(finding), "IS_ADDRESSED_BY", node, List.of(), refs(finding)));
+            });
+        } else if (entity instanceof ImprovementAction action) {
+            related(knownEntities, "Commitment", action.commitmentId()).ifPresent(commitment -> {
+                nodes.add(node(commitment)); relationships.add(relation(node(commitment), "IS_ADVANCED_BY", node, List.of(), refs(commitment)));
             });
         }
         return new GraphProjectionEvent("canonical:" + entity.canonicalType() + ":" + entity.metadata().canonicalId(), List.copyOf(nodes), List.copyOf(relationships),
