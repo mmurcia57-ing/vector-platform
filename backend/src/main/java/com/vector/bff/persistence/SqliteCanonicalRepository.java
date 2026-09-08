@@ -1,6 +1,7 @@
 package com.vector.bff.persistence;
 
 import com.vector.bff.canonical.CanonicalEntity;
+import com.vector.bff.canonical.CanonicalEntityCatalog;
 import com.vector.bff.canonical.CanonicalSerializer;
 
 import java.sql.Connection;
@@ -29,6 +30,9 @@ public final class SqliteCanonicalRepository implements CanonicalRepository {
 
 	@Override
 	public CanonicalRecord save(CanonicalEntity entity) {
+		if (!CanonicalEntityCatalog.v1Types().contains(entity.canonicalType())) {
+			throw new IllegalArgumentException("Only approved V1 canonical entities may be persisted");
+		}
 		try (var statement = connection.prepareStatement("""
 			INSERT INTO canonical_record
 			(canonical_type, canonical_id, payload, identity_state, occurred_at, observed_at, ingested_at,

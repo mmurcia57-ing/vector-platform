@@ -13,10 +13,12 @@ final class CanonicalEntitySupport {
 		}
 		var result = new LinkedHashMap<String, String>();
 		for (int index = 0; index < values.length; index += 2) {
-			if (values[index] == null || values[index].isBlank() || values[index + 1] == null) {
-				throw new IllegalArgumentException("attribute names and values are required");
+			if (values[index] == null || values[index].isBlank()) {
+				throw new IllegalArgumentException("attribute names are required");
 			}
-			result.put(values[index], values[index + 1]);
+			if (values[index + 1] != null) {
+				result.put(values[index], values[index + 1]);
+			}
 		}
 		return Map.copyOf(result);
 	}
