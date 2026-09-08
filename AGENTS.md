@@ -146,12 +146,87 @@ Escalate only when:
 - cross-artifact reasoning is necessary;
 - the current model repeatedly fails a well-specified task.
 
-## Implementation Rule
+## Autonomous Implementation Protocol
 
-Once implementation begins, agents must:
+This protocol governs every implementation task. CLOSED decisions remain
+normative; missing product semantics must never be invented.
 
-- read AGENTS.md;
-- read only the relevant approved specifications;
-- not expand scope;
-- not invent missing decisions;
-- stop and report SPEC-BLOCKER when a required decision is missing.
+### Source of Truth and task selection
+
+Before work, an agent SHALL read the exact Ready task definition, its
+dependencies, Ready Criteria, Definition of Done, SDD References, and
+Acceptance References. It SHALL implement only a currently Ready task,
+respect the declared DAG, and never silently expand into another Ready task or
+select a blocked task.
+
+### Preflight
+
+Before editing, verify the branch and `HEAD == origin/main`, inspect Git
+status for unexpected tracked changes, and preserve `work-prep/` untouched.
+`work-prep/` is non-normative, must remain untracked and unstaged, and must
+not be read as a Source of Truth.
+
+### Autonomous execution and repair
+
+Use the loop:
+
+`inspect → plan → implement → compile/build → test → validate → diagnose → correct → retest`.
+
+Routine implementation defects may be corrected autonomously, including
+compilation, tests, lint, serialization, mappings, configuration, imports,
+local persistence, build, test fixtures, and implementation-related
+documentation. Limit correction to five cycles for the same root cause; then
+stop rather than loop indefinitely.
+
+### Stop conditions
+
+Stop rather than improvise if work would modify a CLOSED decision; invent a
+requirement, product decision, corporate assumption, credential, or
+architecture; alter Source Authority semantics; conflate Identity and
+Correlation; introduce causation without evidence; touch production; perform a
+destructive action; modify `work-prep/`; expand task scope; or implement a
+blocked/downstream task. Report exactly:
+
+`STOP — [exact reason]`
+
+### Architecture, security, and AI invariants
+
+Preserve these invariants:
+
+- The SPA never accesses SQLite, Neo4j, or external providers directly;
+  integrations are backend-mediated.
+- The canonical model is vendor-independent. SQLite local canonical
+  persistence remains replaceable, Neo4j is not authority, and data follows
+  `Source → Adapter → Normalization → Canonical`.
+- Identity != Correlation; Correlation != Causation; canonicalization does not
+  transfer Source Authority; conflicting claims are not silently collapsed.
+- External integrations are read-only by default in V1. Secrets never enter
+  source control, the frontend, logs, or documentation.
+- Do not introduce unnecessary microservices, brokers, event sourcing, or
+  heavy CQRS.
+- For AI-related work, deterministic validated intelligence precedes the LLM.
+  The LLM is not Source Authority, does not invent KPIs, silently resolve
+  conflicts, declare causation without proof, or expand user permissions.
+
+### Validation discipline
+
+Classify every applicable validation as `PASS`, `FAIL`, `NOT EXECUTED`, or
+`NOT APPLICABLE`; never claim PASS without execution. Where applicable,
+validate compile/build, the complete relevant and regression test suites,
+runtime startup/health, security scan, semantic anti-drift, `git diff --check`,
+and `git status`.
+
+### Gate and Git discipline
+
+Until an External Implementation Quality Gate approves the work, agents must
+not run `git add`, `git commit`, `git push`, or update GitHub Project. Keep
+implementation local and uncommitted for that gate. An implementation agent
+does not self-close a task. Only after external approval may work be staged
+selectively, committed, pushed, marked Done, and used to recalculate the Ready
+Set.
+
+A successful implementation must finish exactly:
+
+`READY FOR IMPLEMENTATION QUALITY GATE`
+
+Otherwise finish with the required STOP format.
