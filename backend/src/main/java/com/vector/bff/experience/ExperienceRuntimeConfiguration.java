@@ -4,6 +4,9 @@ import com.vector.bff.evidence.EvidencePath;
 import com.vector.bff.evidence.SqliteEvidencePath;
 import com.vector.bff.persistence.CanonicalRepository;
 import com.vector.bff.persistence.SqliteCanonicalRepository;
+import com.vector.bff.graph.BoundedGraphQueryService;
+import com.vector.bff.graph.GraphProjectionStore;
+import com.vector.bff.graph.InMemoryGraphProjectionStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,5 +30,13 @@ public class ExperienceRuntimeConfiguration {
     @Bean
     ExperienceProjectionUseCase experienceProjectionUseCase(ExperienceProjectionSource source) {
         return new DefaultExperienceProjectionUseCase(source);
+    }
+
+    @Bean
+    GraphProjectionStore graphProjectionStore() { return new InMemoryGraphProjectionStore(); }
+
+    @Bean
+    BoundedGraphQueryService boundedGraphQueryService(GraphProjectionStore store) {
+        return new BoundedGraphQueryService(store, "local projection");
     }
 }

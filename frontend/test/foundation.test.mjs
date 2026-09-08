@@ -10,6 +10,8 @@ test('the SPA entry point follows the evidence-first investigation slice', async
   assert.match(app, /sourceReferenceIds/)
   assert.match(app, /Action → Outcome/)
   assert.match(app, /execution is not outcome proof/)
+  assert.match(app, /Bounded graph context/)
+  assert.match(app, /maxRelationships=16/)
   assert.doesNotMatch(app, /ServiceNow|Dynatrace|Neo4j|Cypher|credential/i)
 })
 
