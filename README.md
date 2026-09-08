@@ -65,6 +65,16 @@ The SPA has no direct database, Neo4j, Cypher, provider, or credential access.
 It is a technical runtime shell only; experience/BFF work begins in its
 approved later task.
 
+## Deterministic synthetic seed harness
+
+`TASK-DATA-001` provides an in-memory seed harness under
+`backend/src/main/java/com/vector/bff/seed`. It produces synthetic,
+versioned fixtures from explicit profile, seed, version, and effective
+configuration inputs. The `GOLDEN` manifest carries GS-01 through GS-12 as
+non-evaluated oracle descriptors; it does not claim that later canonical or
+journey logic has been implemented. SMALL, BASELINE, and STRESS records are
+generated on demand and are never committed as large datasets.
+
 ## Validation
 
 ```powershell
