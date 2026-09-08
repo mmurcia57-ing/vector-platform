@@ -1,16 +1,3 @@
-.foundation-shell {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  gap: 1rem;
-  justify-content: center;
-  padding: 2rem;
-  text-align: left;
-}
-
-.eyebrow {
-  color: var(--accent);
-  font-family: var(--mono);
-  font-size: 0.85rem;
-  text-transform: uppercase;
-}
+.shell { max-width: 1120px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+header { margin-bottom: 3rem; } h1 { font-size: clamp(2.2rem, 5vw, 4.6rem); line-height: .98; max-width: 760px; margin: .3rem 0 1rem; } h2 { color: var(--muted); font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; } h3 { margin: .45rem 0; } p { color: var(--muted); } .eyebrow { color: var(--accent); font-family: var(--mono); letter-spacing: .08em; text-transform: uppercase; } .lede { font-size: 1.2rem; }
+section { margin: 2.5rem 0; }.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; } article, .card-button { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 1.2rem; text-align: left; }.card-button { color: inherit; cursor: pointer; font: inherit; width: 100%; }.card-button:hover, .risk:hover { border-color: var(--accent); }.state { color: var(--accent); font-family: var(--mono); font-size: .75rem; }.panel { position: relative; }.risk { align-items: flex-start; background: transparent; border: 1px solid var(--line); border-radius: 10px; color: inherit; cursor: pointer; display: flex; flex-direction: column; gap: .35rem; margin: .7rem 0; padding: .9rem; text-align: left; width: 100%; }.risk span, .evidence-list span, .evidence-list small, .quality span { color: var(--muted); display: block; }.evidence-list { display: grid; gap: .75rem; margin-top: 1rem; }.evidence-list div { border-left: 3px solid var(--accent); padding-left: .8rem; }.quality { background: color-mix(in srgb, var(--accent) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); border-radius: 12px; display: grid; gap: .35rem; margin-top: 1rem; padding: 1rem; }
