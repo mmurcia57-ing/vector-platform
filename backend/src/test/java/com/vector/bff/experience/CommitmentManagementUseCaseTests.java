@@ -22,4 +22,32 @@ class CommitmentManagementUseCaseTests {
             assertThat(useCase.list("area-1", "service-1", LocalDate.of(2025, 1, 11), 20).overdueCount()).isEqualTo(1);
         }
     }
+
+    @Test
+    void administrativeCommitmentNeedsOnlyAccountabilityAndPreservesNativeProvenance() {
+        ExperienceProjectionSource source = request -> new PreparedExperienceContext(List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(),
+            new ProjectionQuality("test", "fixed", "native", List.of(), List.of(), List.of(), false, false));
+        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:")) {
+            var useCase = new DefaultCommitmentManagementUseCase(source, repository);
+            var projection = useCase.create(new CommitmentCreateRequest("admin-1", "renew policy", "area-1", "reference-owner",
+                LocalDate.of(2025, 1, 10), "COMPLETED", "policy renewed", null, null, null));
+            assertThat(projection.serviceId()).isNull();
+            assertThat(projection.riskFindingId()).isNull();
+            assertThat(projection.sourceReferenceSummary()).isEmpty();
+            assertThat(useCase.list("area-1", null, LocalDate.of(2025, 1, 11), 20).completedCount()).isEqualTo(1);
+        }
+    }
+
+    @Test
+    void completedExecutionDoesNotBecomeOutcomeImprovement() {
+        ExperienceProjectionSource source = request -> new PreparedExperienceContext(List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(),
+            new ProjectionQuality("test", "fixed", "native", List.of(), List.of(), List.of(), false, false));
+        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:")) {
+            var useCase = new DefaultCommitmentManagementUseCase(source, repository);
+            var projection = useCase.create(new CommitmentCreateRequest("completed-1", "address risk", "area-1", null,
+                LocalDate.of(2025, 1, 10), "COMPLETED", "improvement expected", "service-1", "ci-1", "risk-1"));
+            assertThat(projection.executionStatus()).isEqualTo("COMPLETED");
+            assertThat(projection.overdue()).isFalse();
+        }
+    }
 }
