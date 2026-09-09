@@ -47,6 +47,22 @@ Abbreviations: `Acc` = acceptance references; `DoD` = Definition of Done. Every 
 
 ## 3. Dependency and Ready policy
 
+## 2.1 EXT-001 controlled extension tasks
+
+EXT-001 is a separate controlled extension and is not part of the closed V1
+inventory above. Its minimum implementation decomposition is:
+
+| ID / title | Objective and scope | Dependencies / acceptance |
+|---|---|---|
+| TASK-EXT001-CORE Commitment canonical core | Extend the existing Commitment contract and local SQLite boundary with exactly one accountable AreaDomain, optional `responsibleParty`, VECTOR-native creation, due date, execution status, deterministic overdue state, provenance, and optional Service/ConfigurationItem/RiskFinding context. | FND-002,CAN-001,EVD-001; EXT-001, DEC-EXT001-001; admin and technological creation, round-trip/provenance, no new entity, `COMPLETED != IMPROVED`. |
+| TASK-EXT001-MGMT Commitment management projection | Add bounded Management/Executive AreaDomain aggregates, list/filter/detail/create projections and SRE contextual association using existing BFF/experience boundaries; preserve ImprovementAction/OutcomeVerification continuity. | TASK-EXT001-CORE,BFF-001,UX-001; EXT-001 FR-EXT-002..007; partial/missing/provenance behavior and no corporate authority. |
+| TASK-EXT001-ACC Commitment extension acceptance | Add focused acceptance coverage for administrative and technological commitments, accountability, responsibleParty, due/overdue, projections, SRE context, Evidence/provenance, and execution/outcome distinction. | TASK-EXT001-MGMT,DATA-001; EXT-001 acceptance criteria, GS-04/05/06/12 and applicable AT paths. |
+
+EXT-001 tasks are Ready only in dependency order and do not authorize
+corporate ingestion, AI extraction, predictive commitments, Capacity
+Intelligence, Organizational Friction, hierarchy, productivity/scoring, or a
+new canonical entity.
+
 All tasks are V1/P0 unless a later approved release changes this. Family prefix encodes work type. Dependencies form the Step 13 DAG and have no unexplained cycle. Initial Ready count is **1**: `TASK-FND-001`. `TASK-FND-002` becomes Ready only after FND-001 completes. Tasks are never bulk-marked Ready.
 
 ## 4. GitHub Project population plan
