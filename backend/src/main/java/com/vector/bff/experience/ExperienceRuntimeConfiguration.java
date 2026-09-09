@@ -35,6 +35,11 @@ public class ExperienceRuntimeConfiguration {
     }
 
     @Bean
+    CommitmentManagementUseCase commitmentManagementUseCase(ExperienceProjectionSource source, CanonicalRepository repository) {
+        return new DefaultCommitmentManagementUseCase(source, repository);
+    }
+
+    @Bean
     GraphProjectionStore graphProjectionStore() { return new InMemoryGraphProjectionStore(); }
 
     @Bean
