@@ -9,6 +9,11 @@ Previous codename: CRIO
 
 IMPLEMENTATION
 
+Governance reconciliation: checkpoint paragraphs below retain their original
+historical statuses. The final external gate superseded those checkpoint
+statuses and established SDD_STATUS = READY_FOR_IMPLEMENTATION, as recorded
+in the final state below.
+
 ## SDD Status
 
 READY_FOR_IMPLEMENTATION

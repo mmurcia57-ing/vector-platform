@@ -289,6 +289,10 @@ remains NOT_READY_FOR_IMPLEMENTATION; no implementation is authorized.
 
 ## 19. Traceability and invariants
 
+Governance note: the later-step status sentence in the preceding checkpoint
+text is historical. Steps 10–16 are subsequently recorded as CLOSED in
+PROJECT_STATE.md; this artifact does not reopen or modify Steps 8 or 9.
+
 | Invariant | Result |
 |---|---|
 | Canonical model | Exactly 17 canonical entities preserved. |

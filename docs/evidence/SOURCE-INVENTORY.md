@@ -4,6 +4,10 @@
 > Status: ACTIVE
 > Purpose: Register known and candidate information sources required by VECTOR and preserve their authority, maturity and unresolved integration details.
 
+Historical discovery note: expected concepts and candidate chains in this
+inventory are evidence from discovery, not canonical V1 entities or normative
+relationships unless adopted by the closed specifications.
+
 ---
 
 ## Source Principles
