@@ -21,3 +21,11 @@ test('frontend configuration examples contain public values only', async () => {
   assert.match(assignments, /^VITE_VECTOR_BFF_BASE_URL=http:\/\/localhost:8080$/m)
   assert.doesNotMatch(assignments, /password|token|secret|credential|neo4j/i)
 })
+
+test('Area Intelligence preserves durable investigation context', async () => {
+  const app = await readFile(new URL('../src/App.tsx', import.meta.url), 'utf8')
+  assert.match(app, /path: 'areas'/)
+  assert.match(app, /areaDomainId/)
+  assert.match(app, /sessionStorage\.setItem\(CONTEXT_KEY/)
+  assert.match(app, /overview\.services\.filter\(\(service\) => service\.areaDomainId === route\.areaDomainId\)/)
+})
