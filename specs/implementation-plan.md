@@ -75,3 +75,27 @@ Corporate load, concurrency, topology, IAM, secret manager, AI provider/model, A
 ## 6. Step 13 internal quality result
 
 Final external Quality Gate result: PASS. All 18 MUST capabilities and J01–J04 have incremental implementation paths; acceptance attaches to the sequence; AI follows deterministic intelligence; graph remains projection; and security/NFR/observability are embedded. Step 13 is CLOSED; implementation follows this plan only through Ready tasks.
+
+## 7. EXT-002 V1.1 controlled extension plan
+
+EXT-002 is a governed post-V1 extension. It preserves the closed V1 plan and
+adds no canonical entity, GRC, corporate authority, or Evolution capability.
+The executable local sequence is:
+
+| Task | Objective | Dependencies | Acceptance |
+|---|---|---|---|
+| TASK-EXT002-NAV | Durable navigation, deep links, and context restoration | BFF-001, UX-001 | UXI-01..15 context continuity |
+| TASK-EXT002-GRAPH | Seeded bounded graph runtime through BFF | NAV, GRP-002 | GS-11 bounded/stale graph |
+| TASK-EXT002-PANORAMA | Panorama Ejecutivo experience | NAV | executive attention and drill-down |
+| TASK-EXT002-AREA | Area Intelligence experience | NAV, PANORAMA | AreaDomain → Service → Risk → Evidence |
+| TASK-EXT002-COMMITMENT | Commitments & Improvements experience | AREA, EXT-001 | EXT-001 FR-EXT-001..007 |
+| TASK-EXT002-SERVICE | Service Intelligence experience | NAV, AREA | service context and evidence |
+| TASK-EXT002-RISK | Risk Investigation experience | GRAPH, SERVICE | bounded Evidence/Timeline/Graph |
+| TASK-EXT002-J02 | J02 Change/Deployment experience | SERVICE, RISK | contextual correlation, never causation |
+| TASK-EXT002-PERF | Mixed workload and STRESS characterization | NAV, GRAPH, J02 | existing NFR local profiles |
+| TASK-EXT002-OUTBOX | Projection/outbox restart hardening | GRAPH | approved architecture and recovery |
+| TASK-EXT002-GOV | Governed stale-state documentation cleanup | existing evidence | no silent OQ resolution |
+
+The DAG is acyclic. Corporate IAM, corporate source mappings, and external
+Commitment authority remain external dependencies and are not implementation
+tasks in EXT-002. The Product Evolution tracker is governance-only.

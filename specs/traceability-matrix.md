@@ -64,7 +64,28 @@ EXT-001 controlled amendment traceability: Commitment accountability is
 represented by `ACCOUNTABLE_TO` exactly one AreaDomain, outside the closed V1
 GRC inventory; it preserves J03/J04 navigation and does not alter 17/18/62.
 
-## 4. Cross-cutting traceability
+## 4. EXT-002 V1.1 traceability
+
+EXT-002 maps the post-V1 usable-experience boundary to the existing closed
+contracts without adding entities, capabilities, GRCs, or journeys:
+
+| EXT-002 task | Existing contract coverage |
+|---|---|
+| NAV | UXI-01..15; context continuity; SPA → BFF |
+| GRAPH | GRC-01..18; GS-11; projection-only graph |
+| PANORAMA | E01/C10; J04 decision context |
+| AREA | C01/C02/C07; AreaDomain → Service → RiskFinding → Evidence |
+| COMMITMENT | EXT-001 FR-EXT-001..007; E02/E03; execution != outcome |
+| SERVICE | R01–R06; Service correlation anchor; Evidence |
+| RISK | C04; bounded graph and Evidence investigation |
+| J02 | R04/C03; contextual correlation != causation |
+| PERF | NFR-01..10; AT-16..21; local profiles |
+| OUTBOX | RES-01..05; graph projection recovery |
+
+No EXT-002 task changes the closed 18 MUST capability baseline, 62 required
+Capability/Journey pairs, 17 canonical entities, or J01–J04 semantics.
+
+## 5. Cross-cutting traceability
 
 | Concern | Implementation / acceptance path |
 |---|---|

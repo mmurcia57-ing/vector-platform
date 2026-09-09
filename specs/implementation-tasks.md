@@ -74,3 +74,27 @@ Authenticated GitHub CLI/API access was unavailable at materialization; no Proje
 ## 5. Step 14 internal quality result
 
 Final external Quality Gate result: PASS. All 18 MUST capabilities, J01–J04, acceptance obligations, Definitions of Done, Ready criteria, and dependencies have task coverage. No corporate TBD is promoted to fact, no Evolution item enters V1, and no task asks an implementer to invent product behavior. Step 14 is CLOSED.
+
+## 6. EXT-002 V1.1 implementation tasks
+
+EXT-002 is READY_FOR_IMPLEMENTATION under its controlled specification. These
+tasks are separate from the closed V1 inventory and preserve all V1 semantics.
+Only `TASK-EXT002-NAV` is initially Ready; subsequent tasks become Ready only
+when their listed dependencies complete.
+
+| ID / title | Objective and scope | Dependencies / acceptance / issue |
+|---|---|---|
+| TASK-EXT002-NAV Durable navigation and context | Routing, deep links, and restoration for approved experiences; no domain change. | BFF-001, UX-001; UXI-01..15; issue #38 |
+| TASK-EXT002-GRAPH Runtime bounded graph usability | Seed/expose connected bounded graph through GraphQueryService → BFF → SPA. | NAV, GRP-002; GS-11; issue #39 |
+| TASK-EXT002-PANORAMA Panorama Ejecutivo | Executive attention and drill-down over existing semantics. | NAV; UX acceptance; issue #33 |
+| TASK-EXT002-AREA Area Intelligence | Selectable AreaDomain and retained Service/Risk/Evidence context. | NAV, PANORAMA; UX acceptance; issue #34 |
+| TASK-EXT002-COMMITMENT Commitments & Improvements | EXT-001 list/filter/create/detail workflow and outcome continuity. | AREA, EXT-001; EXT-001 FR-EXT-001..007; issue #35 |
+| TASK-EXT002-SERVICE Service Intelligence | Dedicated Service view with canonical and deterministic context. | NAV, AREA; J01/J02 evidence; issue #36 |
+| TASK-EXT002-RISK Risk Investigation | Bounded Evidence, Timeline, Graph, Action, and Outcome workspace. | GRAPH, SERVICE; GS-11; issue #37 |
+| TASK-EXT002-J02 J02 Change/Deployment experience | Contextual Change/Deployment association, never causal attribution. | SERVICE, RISK; GS-03/09/10; issue #40 |
+| TASK-EXT002-PERF Mixed workload / STRESS characterization | Execute existing local/synthetic NFR characterization. | NAV, GRAPH, J02; AT-16..21; issue #41 |
+| TASK-EXT002-OUTBOX Projection/outbox restart hardening | Evaluate restart behavior within approved architecture. | GRAPH; RES-01..05; issue #42 |
+| TASK-EXT002-GOV Governance and stale-state reconciliation | Correct only documented stale governance wording. | Later normative evidence; issue #47 |
+
+External Dependency issues #43–#45 and Product Evolution issue #46 are tracked
+in GitHub but do not authorize implementation or enter this executable DAG.
