@@ -106,6 +106,7 @@ flowchart LR
 - Change and Deployment may be associated with Service conditions through explicit Evidence-backed correlation semantics.
 - A RiskFinding is addressed by a declared Commitment; an ImprovementAction is concrete execution intended to fulfill or advance that Commitment; OutcomeVerification verifies whether execution produced the expected structural outcome.
 - A Commitment represents the declared commitment to address a relevant risk, condition, or outcome. This semantic chain does not define workflow or state-machine behavior.
+- EXT-001 Commitment responsibility is represented structurally as Commitment `ACCOUNTABLE_TO` exactly one existing AreaDomain. This does not infer organizational hierarchy, person/team ownership, or Source Authority; optional `responsibleParty` is descriptive/reference context only.
 - Change, Deployment, Service, Incident, and degradation associations are temporal/contextual and Evidence-backed; they do not imply causation.
 - SourceReference preserves external identity and provenance context for relevant canonical entities or claims; it does not define canonical identity.
 

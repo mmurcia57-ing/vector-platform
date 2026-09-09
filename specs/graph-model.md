@@ -14,6 +14,12 @@ This specification defines semantic relationships and traversability only. It do
 
 Relationships are directional, typed, and explicit; `RELATED_TO` is not normative. A semantic relationship has one normative predicate direction. A Journey may navigate it from either endpoint; reverse traversal does not reverse, rename, or alter the predicate. For example, `Evidence --SUPPORTS--> RiskFinding` may be navigated as `RiskFinding ← SUPPORTS -- Evidence`. Canonical Identity != Source Identity; Identity != Correlation; Correlation != Causation; Canonical Representation != Source Authority; Execution != Outcome. Service remains the primary technology correlation anchor.
 
+EXT-001 controlled amendment: `Commitment --ACCOUNTABLE_TO--> AreaDomain` is an
+extension-specific structural relationship, with exactly one existing
+AreaDomain target per Commitment. Reverse traversal is allowed; organizational
+hierarchy, person/team ownership, and Source Authority are not inferred. This
+does not add a V1 GRC contract: the closed inventory remains GRC-01..GRC-18.
+
 Evidence and SourceReference are distinct: Evidence supports a claim, association, explanation, uncertainty, or verification; SourceReference preserves source identity, provenance, and known authority. Material relationships preserve applicable Evidence, provenance, temporal context (`occurredAt`, `observedAt`, `ingestedAt`, `effectiveFrom`/`effectiveTo`), identity resolution context, uncertainty, and Source Authority context. CONFIRMED, INFERRED, and UNRESOLVED apply to identity only; no correlation state machine is created.
 
 Conflicting claims follow DEC-035: preserve competing claims and provenance; select only under an explicit applicable authority rule; otherwise represent conflict as unresolved. Unknown corporate authority remains TBD.
@@ -74,6 +80,10 @@ Journey navigation order != relationship predicate order. A Journey is satisfied
 | C10 | J01, J02, J03, J04 | GRC-11, GRC-12, GRC-13, GRC-18 | Commitment/action/outcome semantics and Service-anchored findings support decision intelligence. |
 
 Coverage result: 17/17 canonical entities are compatible with graph semantics; J01–J04 are graph-representable; 18/18 MUST capabilities are graph-representable; orphan MUST capabilities: 0. Required Capability/Journey pairs remain 62/62 supported, with zero unsupported or extra non-normative pairs.
+
+EXT-001 extension coverage: every extension Commitment has exactly one
+`ACCOUNTABLE_TO` AreaDomain; this is outside the closed 18/18 GRC inventory and
+does not change the 17/18/62 V1 baseline.
 
 ## 6. Deferred Decisions
 

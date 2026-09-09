@@ -60,6 +60,10 @@ The 62/62 Capability × Journey baseline remains the closed coverage inventory;
 the capability matrix maps every capability's relevant journey set to at least
 one task and GS/AT path. Step 15 does not invent extra pairs.
 
+EXT-001 controlled amendment traceability: Commitment accountability is
+represented by `ACCOUNTABLE_TO` exactly one AreaDomain, outside the closed V1
+GRC inventory; it preserves J03/J04 navigation and does not alter 17/18/62.
+
 ## 4. Cross-cutting traceability
 
 | Concern | Implementation / acceptance path |

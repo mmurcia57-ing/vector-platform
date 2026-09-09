@@ -165,17 +165,24 @@ Explicitly deferred: Formula/threshold.
 ### MDC-11 — Commitment
 Purpose: Declared intent to address risk/condition/outcome.
 Canonical identity: Vendor-independent Commitment identity.
-Minimum semantic attributes: Commitment; RiskFinding; due/status context.
+Minimum semantic attributes: Commitment; accountable AreaDomain (exactly one);
+due/status context.
 Temporal semantics: occurredAt; effectiveFrom/effectiveTo.
 Required information: Identity and declared context.
-Optional information: Due date/status.
+Optional information: Due date/status; `responsibleParty` descriptive/reference
+value (0..1).
 Origin classification: MIXED / AUTHORITY-DEPENDENT.
 Source Authority: VECTOR may be authoritative when native; external authority TBD.
 Provenance / SourceReference: Sourced commitment retains provenance.
 Uncertainty / confidence considerations: External ownership explicit.
 Historical requirement: Action/outcome history.
 Supports: J03, J04; E02, C10.
-Explicitly deferred: Corporate Commitment system.
+Structural responsibility: every EXT-001 Commitment is `ACCOUNTABLE_TO` exactly
+one existing AreaDomain. This is contextual accountability, not organizational
+hierarchy or person/team ownership. Administrative commitments may omit Service,
+ConfigurationItem, and RiskFinding; technological commitments may retain those
+optional technical links. VECTOR-native capture does not establish future
+corporate Source Authority. Corporate Commitment system remains deferred.
 
 ### MDC-12 — ImprovementAction
 Purpose: Concrete execution advancing Commitment.
