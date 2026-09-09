@@ -66,6 +66,23 @@ class CanonicalCoreTests {
 		}
 	}
 
+	@Test
+	void extensionCommitmentPreservesAccountabilityOptionalContextAndDeterministicOverdueState() {
+		var commitment = new Commitment(metadata("commitment-ext-1"), "address recurring risk", "area-1",
+			"reference-owner", java.time.LocalDate.of(2025, 1, 10), "OPEN", "restore availability",
+			"service-1", "ci-1", "risk-1");
+
+		assertThat(commitment.accountableAreaDomainId()).isEqualTo("area-1");
+		assertThat(commitment.overdueOn(java.time.LocalDate.of(2025, 1, 11))).isTrue();
+		assertThat(commitment.overdueOn(java.time.LocalDate.of(2025, 1, 9))).isFalse();
+
+		try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:")) {
+			var saved = repository.save(commitment);
+			assertThat(saved.payload()).contains("accountableAreaDomainId=area-1", "dueDate=2025-01-10",
+				"executionStatus=OPEN", "serviceId=service-1", "configurationItemId=ci-1", "riskFindingId=risk-1");
+		}
+	}
+
 	private static CanonicalMetadata metadata(String id) {
 		return new CanonicalMetadata(id, IdentityResolutionState.INFERRED,
 			new TemporalSemantics(null, OBSERVED, OBSERVED, null, null),
