@@ -2,10 +2,13 @@ package com.vector.bff.experience;
 
 import com.vector.bff.canonical.AreaDomain;
 import com.vector.bff.canonical.CanonicalMetadata;
+import com.vector.bff.canonical.Commitment;
 import com.vector.bff.canonical.Evidence;
 import com.vector.bff.canonical.IdentityResolutionState;
 import com.vector.bff.canonical.Incident;
+import com.vector.bff.canonical.ImprovementAction;
 import com.vector.bff.canonical.MonitoringEvent;
+import com.vector.bff.canonical.OutcomeVerification;
 import com.vector.bff.canonical.Provenance;
 import com.vector.bff.canonical.Service;
 import com.vector.bff.canonical.SourceAuthority;
@@ -19,6 +22,7 @@ import com.vector.bff.intelligence.IntelligencePolicy;
 import com.vector.bff.persistence.CanonicalRepository;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 /** Deterministic local application data used to demonstrate the first vertical slice. */
@@ -52,6 +56,16 @@ public final class LocalExperienceProjectionSource implements ExperienceProjecti
             null, null, new IntelligencePolicy(policy.reference(), policy.minimumRecurringIncidents(),
                 policy.minimumSupportingEvidence()), OBSERVED_AT));
         var risk = result.riskFinding().orElseThrow(() -> new IllegalStateException("local deterministic data must produce a RiskFinding"));
+        var commitment = new Commitment(metadata("commitment-payments"), "Address recurring Payments degradation",
+            area.metadata().canonicalId(), "SRE role", LocalDate.of(2025, 1, 31), "COMPLETED",
+            "Reduce recurring degradation", service.metadata().canonicalId(), null, risk.metadata().canonicalId());
+        var action = new ImprovementAction(metadata("action-payments"), "Applied the approved reliability improvement",
+            commitment.metadata().canonicalId(), "COMPLETED");
+        var outcome = new OutcomeVerification(metadata("outcome-payments"), "PERSISTENT",
+            "evidence-incident,evidence-latency", "Post-action evidence still shows the condition");
+        repository.save(commitment);
+        repository.save(action);
+        repository.save(outcome);
         var quality = new ProjectionQuality("local deterministic dataset", OBSERVED_AT.toString(),
             "CONFIRMED source references; VECTOR-derived explanation", List.of(),
             List.of("No causal attribution is asserted."), List.of("Local dataset is demonstrative."), false, false);
@@ -60,7 +74,12 @@ public final class LocalExperienceProjectionSource implements ExperienceProjecti
             List.of(new ServiceProjection(service.metadata().canonicalId(), service.name(), service.areaDomainId(), service.conditionContext())),
             List.of(new RiskFindingProjection(risk.metadata().canonicalId(), risk.serviceId(), risk.condition(), risk.explanation(), risk.evidenceBasis())),
             List.of(toProjection(evidenceOne, service.metadata().canonicalId(), risk.metadata().canonicalId()), toProjection(evidenceTwo, service.metadata().canonicalId(), risk.metadata().canonicalId())),
-            List.of(), List.of(), List.of(), quality);
+            List.of(new CommitmentProjection(commitment.metadata().canonicalId(), risk.metadata().canonicalId(),
+                commitment.declaration(), commitment.executionStatus())),
+            List.of(new ImprovementActionProjection(action.metadata().canonicalId(), commitment.metadata().canonicalId(),
+                action.action(), action.executionStatusContext())),
+            List.of(new OutcomeVerificationProjection(outcome.metadata().canonicalId(), action.metadata().canonicalId(),
+                outcome.outcome(), List.of("evidence-incident", "evidence-latency"))), quality);
     }
 
     @Override
