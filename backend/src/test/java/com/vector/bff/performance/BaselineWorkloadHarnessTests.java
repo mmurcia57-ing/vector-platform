@@ -28,4 +28,20 @@ class BaselineWorkloadHarnessTests {
         assertThat(result.semanticallyComplete()).isTrue();
         assertThat(result.p95Millis()).isGreaterThanOrEqualTo(0);
     }
+
+    @Test
+    void boundedLocalStressProfileUsesTheSameBffSemantics() {
+        var request = new ProjectionRequest(new AnalysisContext("2025-Q1", "area-platform", "service-payments", null, null), 10);
+        ExperienceProjectionSource source = ignored -> new PreparedExperienceContext(
+            List.of(), List.of(new ServiceProjection("service-payments", "Payments", "area-platform", "degraded")),
+            List.of(), List.of(), List.of(), List.of(), List.of(),
+            new ProjectionQuality("complete", "current", "confirmed", List.of(), List.of(), List.of(), false, false));
+
+        var result = new BaselineWorkloadHarness(new DefaultExperienceProjectionUseCase(source))
+            .run(request, 100, 2_000);
+
+        assertThat(result.profile()).isEqualTo("LOCAL_BASELINE");
+        assertThat(result.iterations()).isEqualTo(100);
+        assertThat(result.semanticallyComplete()).isTrue();
+    }
 }
