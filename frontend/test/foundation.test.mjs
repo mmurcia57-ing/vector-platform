@@ -55,3 +55,14 @@ test('J02 presentation keeps Change and Deployment association noncausal', async
   assert.match(app, /temporal\/contextual/)
   assert.match(app, /Correlation != Causation/)
 })
+
+test('frontend remediation provides a product shell and human-readable labels', async () => {
+  const app = await readFile(new URL('../src/AppRemediated.tsx', import.meta.url), 'utf8')
+  const css = await readFile(new URL('../src/App.css', import.meta.url), 'utf8')
+  assert.match(app, /app-shell/)
+  assert.match(app, /function displayId/)
+  assert.match(app, /Panorama Ejecutivo/)
+  assert.match(app, /Service Intelligence/)
+  assert.match(css, /--navy:/)
+  assert.match(css, /@media \(max-width: 760px\)/)
+})
