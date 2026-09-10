@@ -9,5 +9,6 @@
 import ExperienceApp from './AppRemediated'
 import RiskOverlay from './RiskOverlay'
 import RiskActionOverlay from './RiskActionOverlay'
+import AreaOverlay from './AreaOverlay'
 
-export default function App() { return <><ExperienceApp /><RiskOverlay /><RiskActionOverlay /></> }
+export default function App() { return <><ExperienceApp /><AreaOverlay /><RiskOverlay /><RiskActionOverlay /></> }
