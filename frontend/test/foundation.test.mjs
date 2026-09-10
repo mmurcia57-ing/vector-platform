@@ -48,3 +48,10 @@ test('Risk Investigation keeps Evidence, Timeline, Graph, and outcome context bo
   assert.match(app, /ActionOutcomePanel detail={detail}/)
   assert.match(app, /execution is not outcome proof/)
 })
+
+test('J02 presentation keeps Change and Deployment association noncausal', async () => {
+  const app = await readFile(new URL('../src/App.tsx', import.meta.url), 'utf8')
+  assert.match(app, /J02 Change\/Deployment context/)
+  assert.match(app, /temporal\/contextual/)
+  assert.match(app, /Correlation != Causation/)
+})
