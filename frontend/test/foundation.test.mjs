@@ -29,3 +29,12 @@ test('Area Intelligence preserves durable investigation context', async () => {
   assert.match(app, /sessionStorage\.setItem\(CONTEXT_KEY/)
   assert.match(app, /overview\.services\.filter\(\(service\) => service\.areaDomainId === route\.areaDomainId\)/)
 })
+
+test('Service Intelligence consumes the existing BFF service projection', async () => {
+  const app = await readFile(new URL('../src/App.tsx', import.meta.url), 'utf8')
+  assert.match(app, /path: 'services'/)
+  assert.match(app, /api\/experience\/services\//)
+  assert.match(app, /Service Intelligence/)
+  assert.match(app, /detail\.riskFindings/)
+  assert.match(app, /detail\.evidence/)
+})
