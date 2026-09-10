@@ -85,3 +85,21 @@ test('route overlays follow client-side navigation', async () => {
   assert.match(entry, /new PopStateEvent\('popstate'\)/)
   for (const source of [area, risk, action]) assert.match(source, /window\.addEventListener\('popstate'/)
 })
+
+test('bare risks route renders the dedicated Risk Investigation experience', async () => {
+  const entry = await readFile(new URL('../src/App.tsx', import.meta.url), 'utf8')
+  const risk = await readFile(new URL('../src/RiskOverlay.tsx', import.meta.url), 'utf8')
+  assert.match(entry, /path === '\/risks' \|\| path\.startsWith\('\/risks\/'\)/)
+  assert.match(entry, /!riskRoute && <ExperienceApp \/>/)
+  assert.match(risk, /path !== '\/risks' && !path\.startsWith\('\/risks\/'\)/)
+  assert.match(risk, /Risk Investigation/)
+  assert.match(risk, /overview\.attentionFindings\[0\]/)
+  assert.doesNotMatch(risk, /Panorama Ejecutivo.*return/)
+})
+
+test('commitment area identity stays canonical while display text is human-readable', async () => {
+  const entry = await readFile(new URL('../src/App.tsx', import.meta.url), 'utf8')
+  assert.match(entry, /accountable-area/)
+  assert.match(entry, /field\.value = 'Platform'/)
+  assert.match(entry, /field\.value === 'area-platform'/)
+})
