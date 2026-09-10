@@ -9,7 +9,8 @@ const pretty = (value: string) => value.replace(/^(area-|service-|evidence-|risk
 const load = async <T,>(url: string) => { const response = await fetch(url); if (!response.ok) throw new Error('Risk context unavailable'); return response.json() as Promise<T> }
 
 export default function RiskOverlay() {
-  const [data, setData] = useState<Data>(); const [graph, setGraph] = useState<Graph>(); const path = window.location.pathname
+  const [data, setData] = useState<Data>(); const [graph, setGraph] = useState<Graph>(); const [path, setPath] = useState(window.location.pathname)
+  useEffect(() => { const onPopState = () => setPath(window.location.pathname); window.addEventListener('popstate', onPopState); return () => window.removeEventListener('popstate', onPopState) }, [])
   useEffect(() => { if (!path.startsWith('/risks/')) return; const riskId = decodeURIComponent(path.split('/')[2] ?? ''); const params = new URLSearchParams(window.location.search); const serviceId = params.get('serviceId') ?? 'service-payments'; void load<Data>(`/api/experience/risks/${encodeURIComponent(riskId)}?period=local-dataset-v1&serviceId=${encodeURIComponent(serviceId)}`).then(setData); void load<Graph>(`/api/experience/graph?period=local-dataset-v1&serviceId=${encodeURIComponent(serviceId)}&riskFindingId=${encodeURIComponent(riskId)}&maxNodes=12&maxRelationships=16`).then(setGraph) }, [path])
   if (!path.startsWith('/risks/') || !data?.riskFinding) return null
   const risk = data.riskFinding

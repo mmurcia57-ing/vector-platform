@@ -7,7 +7,8 @@ type Overview = { areas: Area[]; services: Service[]; attentionFindings: Risk[] 
 const pretty = (value: string) => value.replace(/^(area-|service-)/, '').replace(/[-:]/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase())
 
 export default function AreaOverlay() {
-  const [data, setData] = useState<Overview>(); const path = window.location.pathname
+  const [data, setData] = useState<Overview>(); const [path, setPath] = useState(window.location.pathname)
+  useEffect(() => { const onPopState = () => setPath(window.location.pathname); window.addEventListener('popstate', onPopState); return () => window.removeEventListener('popstate', onPopState) }, [])
   useEffect(() => { if (path !== '/areas') return; void fetch('/api/experience/overview?period=local-dataset-v1').then((response) => response.json()).then(setData) }, [path])
   if (path !== '/areas' || !data) return null
   const areaId = new URLSearchParams(window.location.search).get('areaDomainId'); const area = data.areas.find((item) => item.areaDomainId === areaId) ?? data.areas[0]; const services = data.services.filter((item) => item.areaDomainId === area?.areaDomainId); const serviceIds = new Set(services.map((item) => item.serviceId)); const findings = data.attentionFindings.filter((item) => serviceIds.has(item.serviceId))

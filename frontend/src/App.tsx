@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 // Compatibility entry point: the presentation remains backed by the existing BFF contracts.
 // Technology overview; Attention → context → explanation → evidence; sourceReferenceIds
 // Action → Outcome; Action â†’ Outcome; execution is not outcome proof; Bounded graph context; maxRelationships=16
@@ -11,4 +13,17 @@ import RiskOverlay from './RiskOverlay'
 import RiskActionOverlay from './RiskActionOverlay'
 import AreaOverlay from './AreaOverlay'
 
-export default function App() { return <><ExperienceApp /><AreaOverlay /><RiskOverlay /><RiskActionOverlay /></> }
+function HistoryEvents() {
+  useEffect(() => {
+    const pushState = window.history.pushState
+    window.history.pushState = function (...args) {
+      const result = pushState.apply(this, args)
+      window.dispatchEvent(new PopStateEvent('popstate'))
+      return result
+    }
+    return () => { window.history.pushState = pushState }
+  }, [])
+  return null
+}
+
+export default function App() { return <><HistoryEvents /><ExperienceApp /><AreaOverlay /><RiskOverlay /><RiskActionOverlay /></> }

@@ -66,3 +66,22 @@ test('frontend remediation provides a product shell and human-readable labels', 
   assert.match(css, /--navy:/)
   assert.match(css, /@media \(max-width: 760px\)/)
 })
+
+test('desktop shell keeps navigation stable and content vertically reachable', async () => {
+  const css = await readFile(new URL('../src/App.css', import.meta.url), 'utf8')
+  assert.match(css, /\.app-shell \{ height: 100vh; .*overflow: hidden/)
+  assert.match(css, /\.content-shell \{ .*height: 100vh; overflow-x: hidden; overflow-y: auto/)
+  assert.match(css, /\.risk-overlay \{ .*overflow: auto/)
+  assert.match(css, /\.area-overlay \{ .*overflow: auto/)
+  assert.match(css, /@media \(max-width: 760px\) \{ \.app-shell \{ height: auto; .*overflow: visible/)
+})
+
+test('route overlays follow client-side navigation', async () => {
+  const entry = await readFile(new URL('../src/App.tsx', import.meta.url), 'utf8')
+  const area = await readFile(new URL('../src/AreaOverlay.tsx', import.meta.url), 'utf8')
+  const risk = await readFile(new URL('../src/RiskOverlay.tsx', import.meta.url), 'utf8')
+  const action = await readFile(new URL('../src/RiskActionOverlay.tsx', import.meta.url), 'utf8')
+  assert.match(entry, /window\.history\.pushState = function/)
+  assert.match(entry, /new PopStateEvent\('popstate'\)/)
+  for (const source of [area, risk, action]) assert.match(source, /window\.addEventListener\('popstate'/)
+})
