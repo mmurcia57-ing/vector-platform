@@ -38,3 +38,13 @@ test('Service Intelligence consumes the existing BFF service projection', async 
   assert.match(app, /detail\.riskFindings/)
   assert.match(app, /detail\.evidence/)
 })
+
+test('Risk Investigation keeps Evidence, Timeline, Graph, and outcome context bounded', async () => {
+  const app = await readFile(new URL('../src/App.tsx', import.meta.url), 'utf8')
+  assert.match(app, /path: 'risks'/)
+  assert.match(app, /api\/experience\/graph/)
+  assert.match(app, /Bounded graph context/)
+  assert.match(app, /observedAt/)
+  assert.match(app, /ActionOutcomePanel detail={detail}/)
+  assert.match(app, /execution is not outcome proof/)
+})
