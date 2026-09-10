@@ -41,4 +41,24 @@ class GraphProjectionRecoveryTests {
         assertThat(second.projected()).isZero();
         assertThat(second.pending()).isZero();
     }
+
+    @Test
+    void recoveryConvergesAfterCoordinatorRestart() {
+        var outbox = new InMemoryGraphOutbox();
+        var store = new InMemoryGraphProjectionStore();
+        var event = new GraphProjectionEvent("event-1", List.of(), List.of(), Instant.parse("2026-01-01T00:00:00Z"));
+        outbox.append(event);
+
+        var firstCoordinator = new GraphProjectionRecoveryCoordinator(outbox, store);
+        var first = firstCoordinator.recoverOnce();
+
+        var restartedCoordinator = new GraphProjectionRecoveryCoordinator(outbox, store);
+        var afterRestart = restartedCoordinator.recoverOnce();
+
+        assertThat(first.degraded()).isFalse();
+        assertThat(first.projected()).isEqualTo(1);
+        assertThat(afterRestart.degraded()).isFalse();
+        assertThat(afterRestart.projected()).isZero();
+        assertThat(afterRestart.pending()).isZero();
+    }
 }
