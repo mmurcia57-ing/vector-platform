@@ -10,7 +10,7 @@ import com.vector.bff.graph.GraphProjectionStore;
 import com.vector.bff.graph.GraphNode;
 import com.vector.bff.graph.GraphProjectionEvent;
 import com.vector.bff.graph.GraphRelationship;
-import com.vector.bff.graph.InMemoryGraphProjectionStore;
+import com.vector.bff.graph.SqliteGraphProjectionStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -74,7 +74,7 @@ public class ExperienceRuntimeConfiguration {
 
     @Bean
     GraphProjectionStore graphProjectionStore() {
-        var store = new InMemoryGraphProjectionStore();
+        var store = new SqliteGraphProjectionStore("jdbc:sqlite:vector-graph.db");
         var area = new GraphNode("AreaDomain", "area-platform");
         var service = new GraphNode("Service", "service-payments");
         var finding = new GraphNode("RiskFinding", "risk-finding:service-payments:2025-01-01T00:00:00Z");
