@@ -26,16 +26,18 @@ public class ExperienceController {
     private final SecurityAuditRecorder audit;
     private final LocalHttpSecurityContextResolver securityContext;
     private final com.vector.bff.ai.AiInvestigationService aiInvestigation;
+    private final LocalChangeAssociationExperience changeAssociation;
 
     public ExperienceController(ExperienceProjectionUseCase useCase, CommitmentManagementUseCase commitmentManagement,
             AuthorizationService authorization, SecurityAuditRecorder audit, LocalHttpSecurityContextResolver securityContext,
-            com.vector.bff.ai.AiInvestigationService aiInvestigation) {
+            com.vector.bff.ai.AiInvestigationService aiInvestigation, LocalChangeAssociationExperience changeAssociation) {
         this.useCase = useCase;
         this.commitmentManagement = commitmentManagement;
         this.authorization = authorization;
         this.audit = audit;
         this.securityContext = securityContext;
         this.aiInvestigation = aiInvestigation;
+        this.changeAssociation = changeAssociation;
     }
 
     @GetMapping("/overview")
@@ -58,6 +60,13 @@ public class ExperienceController {
     }
 
 
+
+
+    @GetMapping("/risks/{riskFindingId}/change-association")
+    ChangeAssociationExperienceProjection changeAssociation(@PathVariable String riskFindingId,
+            @RequestParam String serviceId) {
+        return changeAssociation.investigate(serviceId, riskFindingId);
+    }
 
     @GetMapping("/risks/{riskFindingId}/assist")
     com.vector.bff.ai.AiProviderResult assist(@PathVariable String riskFindingId,
