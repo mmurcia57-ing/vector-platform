@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "vector-experience-contract-v1",
+  "title": "VECTOR Experience BFF Contract",
+  "type": "object",
+  "description": "Machine-readable compatibility boundary for the local VECTOR experience. It does not define corporate source schemas.",
+  "$defs": {
+    "quality": {
+      "type": "object",
+      "required": ["sourceCoverage","freshness","confidence","uncertainty","limitations"],
+      "properties": {
+        "sourceCoverage":{"type":"string"},"freshness":{"type":"string"},"confidence":{"type":"string"},
+        "uncertainty":{"type":"string"},"limitations":{"type":"string"}
+      },
+      "additionalProperties": true
+    },
+    "area": {
+      "type":"object","required":["areaDomainId","name","attentionState"],
+      "properties":{"areaDomainId":{"type":"string"},"name":{"type":"string"},"attentionState":{"type":"string"}}
+    },
+    "service": {
+      "type":"object","required":["serviceId","name","areaDomainId","conditionContext"],
+      "properties":{"serviceId":{"type":"string"},"name":{"type":"string"},"areaDomainId":{"type":"string"},"conditionContext":{"type":"string"}}
+    },
+    "risk": {
+      "type":"object","required":["riskFindingId","serviceId","condition","explanation"],
+      "properties":{"riskFindingId":{"type":"string"},"serviceId":{"type":"string"},"condition":{"type":"string"},"explanation":{"type":"string"}}
+    },
+    "evidence": {
+      "type":"object","required":["evidenceId","supportedClaim","sourceReferenceIds","observedAt"],
+      "properties":{"evidenceId":{"type":"string"},"supportedClaim":{"type":"string"},"sourceReferenceIds":{"type":"array","items":{"type":"string"}},"observedAt":{"type":"string"}}
+    }
+  },
+  "x-vector-endpoints": {
+    "GET /api/experience/overview": {"required":["context","areas","services","attentionFindings","quality"]},
+    "GET /api/experience/services/{serviceId}": {"required":["context","service","riskFindings","evidence","commitments","improvementActions","outcomeVerifications","quality"]},
+    "GET /api/experience/risks/{riskFindingId}": {"required":["context","riskFinding","evidence","commitments","improvementActions","outcomeVerifications","quality"]},
+    "GET /api/experience/commitments": {"required":["commitments","activeCount","inProgressCount","completedCount","overdueCount"]},
+    "POST /api/experience/commitments": {"mutation":true,"authorizationRequired":true,"auditRequired":true}
+  },
+  "x-vector-invariants": [
+    "Correlation is not causation",
+    "Graph is a projection, never canonical authority",
+    "AI output is non-authoritative",
+    "Evidence provenance is preserved",
+    "Missing evidence must not be presented as healthy state"
+  ]
+}
