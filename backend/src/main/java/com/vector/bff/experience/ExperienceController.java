@@ -54,6 +54,15 @@ public class ExperienceController {
         return useCase.riskInvestigation(new ProjectionRequest(new AnalysisContext(period, areaDomainId, serviceId, riskFindingId, null), limit));
     }
 
+
+    @GetMapping("/signals")
+    java.util.List<TemporalSignalProjection> signals(@RequestParam(required = false) String period,
+            @RequestParam(required = false) String areaDomainId, @RequestParam(required = false) String serviceId,
+            @RequestParam(required = false) String riskFindingId, @RequestParam(defaultValue = "50") int limit) {
+        return useCase.temporalSignals(new ProjectionRequest(
+            new AnalysisContext(period, areaDomainId, serviceId, riskFindingId, null), limit));
+    }
+
     @GetMapping("/commitments")
     CommitmentManagementProjection commitments(@RequestParam(required = false) String areaDomainId,
             @RequestParam(required = false) String serviceId, @RequestParam java.time.LocalDate asOf,
