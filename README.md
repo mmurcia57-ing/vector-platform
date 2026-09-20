@@ -1,3 +1,5 @@
+> **Framework pilot branch notice (EXT-003):** this branch is materially ahead of the historical foundation state described below. It now contains canonical SQLite persistence, Evidence/provenance, deterministic intelligence, graph projection/query, J01–J03 services, experience projections, commitment management, security/AI/observability abstractions, automated backend tests, the Product Completion Discovery pilot, and the EXT-003 Intelligence Workspace evolution. The historical sections are retained for provenance; current pilot truth is tracked under `docs/framework-pilot/` and `specs/extensions/EXT-003-product-depth-intelligence-workspace.md`. Corporate IAM, Source Authority mappings, production volumes and corporate production readiness remain TBD.
+
 # VECTOR local engineering foundation
 
 This repository currently contains the technical foundation through
