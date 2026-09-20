@@ -206,6 +206,13 @@ export function SemanticLegend() {
   </div>;
 }
 
+function DecisionQueue({ risks, commitments, navigate }: { risks: Risk[]; commitments?: CommitmentView; navigate: (next: string, context?: Record<string, string>) => void }) {
+  return <section className="vx-decision-queue" aria-label="Decision queue">
+    <div><span>DECISION QUEUE</span><strong>{risks.length} evidence-backed conditions require review</strong><small>{commitments?.overdueCount ?? 0} overdue commitments in available context</small></div>
+    <div className="vx-decision-items">{risks.slice(0, 3).map((risk) => <button key={risk.riskFindingId} onClick={() => navigate("/risks", { riskFindingId: risk.riskFindingId, serviceId: risk.serviceId })}><b>Investigate</b><span>{risk.condition}</span><small>{risk.explanation}</small></button>)}</div>
+  </section>;
+}
+
 function QualityNote({ quality }: { quality?: Quality }) {
   return (
     <footer className="gold-footer">
@@ -454,6 +461,7 @@ export default function ExperienceViewport() {
               <Empty>No hay contexto adicional disponible.</Empty>
             </section>
         </div>
+        <DecisionQueue risks={path === "areas" ? areaRisks : overview.attentionFindings} commitments={commitments} navigate={navigate} />
         <QualityNote quality={overview.quality} />
       </div>
     </div>
@@ -578,6 +586,7 @@ export default function ExperienceViewport() {
             </p>
           </section>
         </div>
+        <DecisionQueue risks={path === "areas" ? areaRisks : overview.attentionFindings} commitments={commitments} navigate={navigate} />
         <QualityNote quality={overview.quality} />
       </div>
     </div>
