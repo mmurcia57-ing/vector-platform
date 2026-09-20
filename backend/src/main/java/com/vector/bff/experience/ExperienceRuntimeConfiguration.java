@@ -47,6 +47,12 @@ public class ExperienceRuntimeConfiguration {
 
 
 
+
+    @Bean
+    LocalChangeAssociationExperience localChangeAssociationExperience(CanonicalRepository repository) {
+        return new LocalChangeAssociationExperience(repository);
+    }
+
     @Bean
     com.vector.bff.ai.AiProvider aiProvider() {
         return request -> com.vector.bff.ai.AiProviderResult.unavailable("No corporate AI provider is configured in the local runtime");
