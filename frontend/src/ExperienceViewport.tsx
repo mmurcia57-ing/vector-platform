@@ -311,7 +311,7 @@ export default function ExperienceViewport() {
     if (!declaration) return;
     void fetch("/api/experience/commitments", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "X-Vector-Subject": "local-experience-operator", "X-Vector-Role": "ANALYST_OPERATOR" },
       body: JSON.stringify({
         commitmentId: `commitment-${Date.now()}`,
         declaration,
