@@ -25,14 +25,17 @@ public class ExperienceController {
     private final AuthorizationService authorization;
     private final SecurityAuditRecorder audit;
     private final LocalHttpSecurityContextResolver securityContext;
+    private final com.vector.bff.ai.AiInvestigationService aiInvestigation;
 
     public ExperienceController(ExperienceProjectionUseCase useCase, CommitmentManagementUseCase commitmentManagement,
-            AuthorizationService authorization, SecurityAuditRecorder audit, LocalHttpSecurityContextResolver securityContext) {
+            AuthorizationService authorization, SecurityAuditRecorder audit, LocalHttpSecurityContextResolver securityContext,
+            com.vector.bff.ai.AiInvestigationService aiInvestigation) {
         this.useCase = useCase;
         this.commitmentManagement = commitmentManagement;
         this.authorization = authorization;
         this.audit = audit;
         this.securityContext = securityContext;
+        this.aiInvestigation = aiInvestigation;
     }
 
     @GetMapping("/overview")
@@ -54,6 +57,18 @@ public class ExperienceController {
         return useCase.riskInvestigation(new ProjectionRequest(new AnalysisContext(period, areaDomainId, serviceId, riskFindingId, null), limit));
     }
 
+
+
+    @GetMapping("/risks/{riskFindingId}/assist")
+    com.vector.bff.ai.AiProviderResult assist(@PathVariable String riskFindingId,
+            @RequestParam(required = false) String period, @RequestParam(required = false) String areaDomainId,
+            @RequestParam(required = false) String serviceId) {
+        var request = new ProjectionRequest(new AnalysisContext(period, areaDomainId, serviceId, riskFindingId, null), 20);
+        var risk = useCase.riskInvestigation(request);
+        var evidenceIds = risk.evidence().stream().map(EvidenceProjection::evidenceId).toList();
+        return aiInvestigation.investigate(new com.vector.bff.ai.AiRequest(
+            "RISK_INVESTIGATION_ASSISTANCE", riskFindingId, evidenceIds, "EXT-003", true));
+    }
 
     @GetMapping("/signals")
     java.util.List<TemporalSignalProjection> signals(@RequestParam(required = false) String period,
