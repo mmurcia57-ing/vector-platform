@@ -182,6 +182,14 @@
         "limitation"
       ],
       "semantics": "Evidence-backed temporal context; never causal attribution"
+    },
+    "GET /api/experience/risks/{riskFindingId}/assist": {
+      "required": [
+        "status",
+        "limitations",
+        "provenance"
+      ],
+      "semantics": "Advisory, evidence-grounded, non-authoritative and safe-degrading"
     }
   },
   "x-vector-invariants": [
