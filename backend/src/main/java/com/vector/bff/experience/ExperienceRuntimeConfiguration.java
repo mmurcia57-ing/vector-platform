@@ -45,6 +45,22 @@ public class ExperienceRuntimeConfiguration {
         return new DefaultCommitmentManagementUseCase(source, repository);
     }
 
+
+    @Bean
+    com.vector.bff.security.AuthorizationService authorizationService() {
+        return new com.vector.bff.security.AuthorizationService();
+    }
+
+    @Bean
+    com.vector.bff.security.SecurityAuditRecorder securityAuditRecorder() {
+        return new com.vector.bff.security.InMemorySecurityAuditRecorder();
+    }
+
+    @Bean
+    com.vector.bff.security.LocalHttpSecurityContextResolver localHttpSecurityContextResolver() {
+        return new com.vector.bff.security.LocalHttpSecurityContextResolver();
+    }
+
     @Bean
     GraphProjectionStore graphProjectionStore() {
         var store = new InMemoryGraphProjectionStore();
