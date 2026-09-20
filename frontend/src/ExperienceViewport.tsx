@@ -169,7 +169,7 @@ function SectionTitle({
     </div>
   );
 }
-function WorkspaceRail({ active, navigate }: { active: string; navigate: (next: string, context?: Record<string, string>) => void }) {
+export function WorkspaceRail({ active, navigate }: { active: string; navigate: (next: string, context?: Record<string, string>) => void }) {
   const items = [
     ["overview", "/", "Command"],
     ["areas", "/areas", "Area"],
@@ -187,7 +187,7 @@ function WorkspaceRail({ active, navigate }: { active: string; navigate: (next: 
     </div>
   );
 }
-function SemanticLegend() {
+export function SemanticLegend() {
   return <div className="vx-semantics" aria-label="Semantic evidence legend">
     <span className="vx-semantic fact">Observed evidence</span>
     <span className="vx-semantic">Derived intelligence</span>
