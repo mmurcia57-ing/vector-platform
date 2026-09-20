@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.vector.bff.security.AuthorizationService;
@@ -92,6 +93,46 @@ public class ExperienceController {
             @RequestParam(required = false) String serviceId, @RequestParam java.time.LocalDate asOf,
             @RequestParam(defaultValue = "20") int limit) {
         return commitmentManagement.list(areaDomainId, serviceId, asOf, limit);
+    }
+
+
+    @GetMapping("/commitments/{commitmentId}/history")
+    java.util.List<CommitmentLifecycleEvent> commitmentHistory(@PathVariable String commitmentId) {
+        return commitmentManagement.history(commitmentId);
+    }
+
+    @PatchMapping("/commitments/{commitmentId}/lifecycle")
+    ManagementCommitmentProjection updateCommitmentLifecycle(@PathVariable String commitmentId,
+            @RequestBody CommitmentLifecycleUpdateRequest request,
+            @RequestHeader(value = "X-Vector-Subject", required = false) String subject,
+            @RequestHeader(value = "X-Vector-Role", required = false) String role) {
+        var principal = securityContext.resolve(subject, role);
+        try {
+            authorization.require(principal, SecurityPermission.MUTATE_VECTOR);
+            var result = commitmentManagement.updateLifecycle(commitmentId, request);
+            audit.record(new SecurityAuditRecord("UPDATE_COMMITMENT_LIFECYCLE", Instant.now(), principal.subject(), true, "COMPLETED"));
+            return result;
+        } catch (RuntimeException failure) {
+            audit.record(new SecurityAuditRecord("UPDATE_COMMITMENT_LIFECYCLE", Instant.now(), principal == null ? "anonymous" : principal.subject(), false, failure.getClass().getSimpleName()));
+            throw failure;
+        }
+    }
+
+    @PostMapping("/commitments/{commitmentId}/renegotiations")
+    ManagementCommitmentProjection renegotiateCommitment(@PathVariable String commitmentId,
+            @RequestBody CommitmentRenegotiationRequest request,
+            @RequestHeader(value = "X-Vector-Subject", required = false) String subject,
+            @RequestHeader(value = "X-Vector-Role", required = false) String role) {
+        var principal = securityContext.resolve(subject, role);
+        try {
+            authorization.require(principal, SecurityPermission.MUTATE_VECTOR);
+            var result = commitmentManagement.renegotiate(commitmentId, request);
+            audit.record(new SecurityAuditRecord("RENEGOTIATE_COMMITMENT", Instant.now(), principal.subject(), true, "COMPLETED"));
+            return result;
+        } catch (RuntimeException failure) {
+            audit.record(new SecurityAuditRecord("RENEGOTIATE_COMMITMENT", Instant.now(), principal == null ? "anonymous" : principal.subject(), false, failure.getClass().getSimpleName()));
+            throw failure;
+        }
     }
 
     @PostMapping("/commitments")
