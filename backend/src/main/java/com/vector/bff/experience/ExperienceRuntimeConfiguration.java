@@ -41,8 +41,14 @@ public class ExperienceRuntimeConfiguration {
     }
 
     @Bean
-    CommitmentManagementUseCase commitmentManagementUseCase(ExperienceProjectionSource source, CanonicalRepository repository) {
-        return new DefaultCommitmentManagementUseCase(source, repository);
+    CommitmentLifecycleStore commitmentLifecycleStore() {
+        return new SqliteCommitmentLifecycleStore("jdbc:sqlite:vector-commitments.db");
+    }
+
+    @Bean
+    CommitmentManagementUseCase commitmentManagementUseCase(ExperienceProjectionSource source, CanonicalRepository repository,
+            CommitmentLifecycleStore lifecycle) {
+        return new DefaultCommitmentManagementUseCase(source, repository, lifecycle);
     }
 
 
