@@ -17,6 +17,7 @@ type Risk = {
   condition: string;
   explanation: string;
 };
+type ChangeAssociation = { serviceId:string; riskFindingId:string; changeId:string; deploymentId:string; temporalContext:string; contextualAssociation:boolean; causalClaim:boolean; evidenceIds:string[]; limitation:string };
 type AiAssist = { status: "AVAILABLE" | "UNAVAILABLE" | "INVALID"; explanation?: string; limitations: string[]; provenance: string };
 type TemporalSignal = {
   signalId: string;
@@ -239,6 +240,7 @@ export default function ExperienceViewport() {
   const [signals, setSignals] = useState<TemporalSignal[]>([]);
   const [graphFocus, setGraphFocus] = useState("");
   const [aiAssist, setAiAssist] = useState<AiAssist>();
+  const [changeAssociation, setChangeAssociation] = useState<ChangeAssociation>();
   const [declaration, setDeclaration] = useState("");
   const [loadError, setLoadError] = useState("");
   useEffect(() => {
@@ -299,6 +301,9 @@ export default function ExperienceViewport() {
       void read<AiAssist>(
         `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}/assist?period=${PERIOD}&serviceId=${encodeURIComponent(serviceId)}`,
       ).then(setAiAssist).catch(() => setAiAssist({ status: "UNAVAILABLE", limitations: ["Assistance endpoint unavailable"], provenance: "local-safe-degradation" }));
+      void read<ChangeAssociation>(
+        `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}/change-association?serviceId=${encodeURIComponent(serviceId)}`,
+      ).then(setChangeAssociation).catch(() => setChangeAssociation(undefined));
     }
   }, [overview, path]);
   const navigate = (next: string, context: Record<string, string> = {}) => {
@@ -912,6 +917,14 @@ export default function ExperienceViewport() {
               <b>{aiAssist?.status ?? "LOADING"}</b>
               <p>{aiAssist?.explanation ?? aiAssist?.limitations?.join(" · ") ?? "Checking governed provider boundary…"}</p>
               <small>{aiAssist?.provenance ?? "No provider claim until evidence is returned."}</small>
+            </div>
+            <div className="gold-panel vx-change-association">
+              <SectionTitle title="Change-associated degradation" subtitle="Before / during / after · association ≠ causation" />
+              {changeAssociation ? <>
+                <div className="vx-change-path"><span>BEFORE</span><i>→</i><span>CHANGE {label(changeAssociation.changeId)}</span><i>→</i><span>AFTER</span></div>
+                <p><strong>{changeAssociation.contextualAssociation ? "Contextual association detected" : "Association not established"}</strong> · Causal claim: {changeAssociation.causalClaim ? "YES" : "NO"}</p>
+                <small>{changeAssociation.limitation}</small>
+              </> : <Empty>No change/deployment association context is available.</Empty>}
             </div>
             <div className="gold-panel">
               <SectionTitle title="Grafo de Relaciones" />
