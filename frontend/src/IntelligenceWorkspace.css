@@ -55,3 +55,8 @@
 .vx-semantic:before { content:""; width:7px; height:7px; border-radius:50%; background:var(--vx-signal); }
 .vx-semantic.fact:before { background:var(--vx-evidence); }.vx-semantic.uncertain:before { background:var(--vx-uncertain); }.vx-semantic.outcome:before { background:#b98cff; }
 @media(max-width:900px){.vx-workspace-rail{grid-template-columns:1fr}.vx-workspace-rail nav{justify-content:flex-start;overflow:auto}.vx-loop{display:none}}
+
+.semantic-edge button { padding:8px; border:1px solid rgba(81,200,255,.28); border-radius:6px; background:rgba(11,42,62,.9); color:#dff5ff; font-size:.64rem; cursor:pointer; }
+.semantic-edge button:hover,.semantic-edge button.focused { border-color:var(--vx-signal); background:rgba(81,200,255,.14); box-shadow:0 0 0 2px rgba(81,200,255,.08); }
+.vx-graph-focus { display:grid; gap:3px; margin-top:10px; padding:10px 12px; border-left:3px solid var(--vx-signal); background:rgba(81,200,255,.07); color:var(--vx-text); }
+.vx-graph-focus span { color:#bfeaff; font-size:.72rem; }.vx-graph-focus small { color:var(--vx-muted); font-size:.6rem; }
