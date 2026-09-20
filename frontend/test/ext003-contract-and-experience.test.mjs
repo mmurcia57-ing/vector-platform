@@ -14,6 +14,7 @@ test("critical experience calls are represented in the machine contract", () => 
     "GET /api/experience/services/{serviceId}",
     "GET /api/experience/risks/{riskFindingId}",
     "GET /api/experience/commitments",
+    "GET /api/experience/signals",
     "POST /api/experience/commitments",
   ]) assert.ok(contract["x-vector-endpoints"][endpoint], endpoint);
 });
