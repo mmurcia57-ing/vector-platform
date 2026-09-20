@@ -219,6 +219,7 @@ export default function ExperienceViewport() {
   const [commitments, setCommitments] = useState<CommitmentView>();
   const [graph, setGraph] = useState<Graph>();
   const [declaration, setDeclaration] = useState("");
+  const [loadError, setLoadError] = useState("");
   useEffect(() => {
     const attach = () => {
       const contentShell = document.querySelector(".content-shell");
@@ -244,7 +245,7 @@ export default function ExperienceViewport() {
     );
     void read<CommitmentView>(
       "/api/experience/commitments?asOf=2025-01-01&limit=20",
-    ).then(setCommitments);
+    ).then(setCommitments).catch((error) => setLoadError(error instanceof Error ? error.message : "Commitments unavailable"));
   }, [path]);
   useEffect(() => {
     if (!overview) return;
@@ -255,7 +256,7 @@ export default function ExperienceViewport() {
       if (serviceId)
         void read<Detail>(
           `/api/experience/services/${encodeURIComponent(serviceId)}?period=${PERIOD}`,
-        ).then(setDetail);
+        ).then(setDetail).catch((error) => setLoadError(error instanceof Error ? error.message : "Service intelligence unavailable"));
     }
     if (path === "risks") {
       const selected =
@@ -267,10 +268,10 @@ export default function ExperienceViewport() {
       const serviceId = params.get("serviceId") || selected.serviceId;
       void read<Detail>(
         `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}?period=${PERIOD}&serviceId=${encodeURIComponent(serviceId)}`,
-      ).then(setRisk);
+      ).then(setRisk).catch((error) => setLoadError(error instanceof Error ? error.message : "Risk intelligence unavailable"));
       void read<Graph>(
         `/api/experience/graph?period=${PERIOD}&serviceId=${encodeURIComponent(serviceId)}&riskFindingId=${encodeURIComponent(selected.riskFindingId)}&maxNodes=12&maxRelationships=16`,
-      ).then(setGraph);
+      ).then(setGraph).catch((error) => setLoadError(error instanceof Error ? error.message : "Graph unavailable"));
     }
   }, [overview, path]);
   const navigate = (next: string, context: Record<string, string> = {}) => {
@@ -325,10 +326,12 @@ export default function ExperienceViewport() {
           "/api/experience/commitments?asOf=2025-01-01&limit=20",
         ),
       )
-      .then(setCommitments);
+      .then(setCommitments).catch((error) => setLoadError(error instanceof Error ? error.message : "Commitments unavailable"));
     setDeclaration("");
   };
-  if (!host || !overview) return null;
+  if (!host) return null;
+  if (loadError) return createPortal(<div className="experience-viewport"><div className="gold-page"><div className="gold-panel" role="alert"><h3>Intelligence temporarily unavailable</h3><p>{loadError}</p><button className="primary-button" onClick={() => window.location.reload()}>Retry</button></div></div></div>, host);
+  if (!overview) return createPortal(<div className="experience-viewport"><div className="loading-screen" role="status" aria-live="polite"><h1>VECTOR</h1><p>Loading evidence-backed intelligence…</p></div></div>, host);
 
   const panorama = (
     <div className="experience-viewport">
@@ -806,6 +809,7 @@ export default function ExperienceViewport() {
             "Cargando explicación y evidencia."
           }
         />
+        <SemanticLegend />
         <nav className="gold-tabs">
           <b>Hallazgo</b>
           <span>Evidencia</span>
