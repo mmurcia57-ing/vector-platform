@@ -17,6 +17,7 @@ type Risk = {
   condition: string;
   explanation: string;
 };
+type AiAssist = { status: "AVAILABLE" | "UNAVAILABLE" | "INVALID"; explanation?: string; limitations: string[]; provenance: string };
 type TemporalSignal = {
   signalId: string;
   serviceId: string;
@@ -237,6 +238,7 @@ export default function ExperienceViewport() {
   const [graph, setGraph] = useState<Graph>();
   const [signals, setSignals] = useState<TemporalSignal[]>([]);
   const [graphFocus, setGraphFocus] = useState("");
+  const [aiAssist, setAiAssist] = useState<AiAssist>();
   const [declaration, setDeclaration] = useState("");
   const [loadError, setLoadError] = useState("");
   useEffect(() => {
@@ -294,6 +296,9 @@ export default function ExperienceViewport() {
       void read<TemporalSignal[]>(
         `/api/experience/signals?period=${PERIOD}&serviceId=${encodeURIComponent(serviceId)}&riskFindingId=${encodeURIComponent(selected.riskFindingId)}&limit=50`,
       ).then(setSignals).catch((error) => setLoadError(error instanceof Error ? error.message : "Temporal intelligence unavailable"));
+      void read<AiAssist>(
+        `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}/assist?period=${PERIOD}&serviceId=${encodeURIComponent(serviceId)}`,
+      ).then(setAiAssist).catch(() => setAiAssist({ status: "UNAVAILABLE", limitations: ["Assistance endpoint unavailable"], provenance: "local-safe-degradation" }));
     }
   }, [overview, path]);
   const navigate = (next: string, context: Record<string, string> = {}) => {
@@ -901,6 +906,12 @@ export default function ExperienceViewport() {
               <strong>✣ VECTOR Intelligence</strong>
               <p>{risk?.riskFinding?.explanation}</p>
               <small>Correlación temporal/contextual ≠ causalidad.</small>
+            </div>
+            <div className="gold-panel vx-ai-assist" aria-live="polite">
+              <SectionTitle title="Evidence-grounded AI Assistance" subtitle="Advisory only · never authoritative" />
+              <b>{aiAssist?.status ?? "LOADING"}</b>
+              <p>{aiAssist?.explanation ?? aiAssist?.limitations?.join(" · ") ?? "Checking governed provider boundary…"}</p>
+              <small>{aiAssist?.provenance ?? "No provider claim until evidence is returned."}</small>
             </div>
             <div className="gold-panel">
               <SectionTitle title="Grafo de Relaciones" />
