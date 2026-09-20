@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { createPortal } from "react-dom";
+import "./IntelligenceWorkspace.css";
 
 const PERIOD = "local-dataset-v1";
 type Area = { areaDomainId: string; name: string; attentionState: string };
@@ -168,6 +169,33 @@ function SectionTitle({
     </div>
   );
 }
+function WorkspaceRail({ active, navigate }: { active: string; navigate: (next: string, context?: Record<string, string>) => void }) {
+  const items = [
+    ["overview", "/", "Command"],
+    ["areas", "/areas", "Area"],
+    ["services", "/services", "Service"],
+    ["risks", "/risks", "Investigation"],
+    ["commitments", "/commitments", "Action & Outcome"],
+  ];
+  return (
+    <div className="vx-workspace-rail" aria-label="VECTOR intelligence workspace">
+      <div><strong>VECTOR / INTELLIGENCE WORKSPACE</strong><small>Evidence-led technology control plane</small></div>
+      <nav aria-label="Investigation layers">
+        {items.map(([key, route, text]) => <button key={key} className={active === key ? "active" : ""} onClick={() => navigate(route)}>{text}</button>)}
+      </nav>
+      <div className="vx-loop"><b>SIGNAL</b> → FOCUS → EXPLAIN → RELATE → DECIDE → ACT → VERIFY</div>
+    </div>
+  );
+}
+function SemanticLegend() {
+  return <div className="vx-semantics" aria-label="Semantic evidence legend">
+    <span className="vx-semantic fact">Observed evidence</span>
+    <span className="vx-semantic">Derived intelligence</span>
+    <span className="vx-semantic uncertain">Correlation / uncertainty</span>
+    <span className="vx-semantic outcome">Verified outcome</span>
+  </div>;
+}
+
 function QualityNote({ quality }: { quality?: Quality }) {
   return (
     <footer className="gold-footer">
@@ -305,6 +333,7 @@ export default function ExperienceViewport() {
   const panorama = (
     <div className="experience-viewport">
       <div className="gold-page">
+        <WorkspaceRail active={path} navigate={navigate} />
         <Header
           eyebrow="DE LA EVIDENCIA A UNA TECNOLOGÍA MÁS CONFIABLE"
           title="Panorama Ejecutivo"
@@ -415,6 +444,7 @@ export default function ExperienceViewport() {
   const areaView = (
     <div className="experience-viewport">
       <div className="gold-page">
+        <WorkspaceRail active={path} navigate={navigate} />
         <Header
           eyebrow="ÁREAS / DOMINIOS"
           title={`Area Intelligence — ${area?.name ?? "Sin área"}`}
@@ -538,6 +568,7 @@ export default function ExperienceViewport() {
   const commitmentView = (
     <div className="experience-viewport">
       <div className="gold-page">
+        <WorkspaceRail active={path} navigate={navigate} />
         <Header
           eyebrow="COMPROMISOS & MEJORAS / VISTA GENERAL"
           title="Compromisos & Mejoras"
@@ -647,6 +678,7 @@ export default function ExperienceViewport() {
   const serviceView = (
     <div className="experience-viewport">
       <div className="gold-page">
+        <WorkspaceRail active={path} navigate={navigate} />
         <Header
           eyebrow={`SERVICIOS › ${label(detail?.service?.areaDomainId)}`}
           title={detail?.service?.name ?? "Service Intelligence"}
@@ -765,6 +797,7 @@ export default function ExperienceViewport() {
   const riskView = (
     <div className="experience-viewport">
       <div className="gold-page">
+        <WorkspaceRail active={path} navigate={navigate} />
         <Header
           eyebrow="INVESTIGACIÓN"
           title={risk?.riskFinding?.condition ?? "Risk Investigation"}
