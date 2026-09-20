@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+afterEach(cleanup);
 import { SemanticLegend, WorkspaceRail } from "../src/ExperienceViewport";
 
 describe("EXT-003 intelligence workspace", () => {
