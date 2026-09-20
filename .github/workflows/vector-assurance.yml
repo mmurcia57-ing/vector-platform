@@ -1,7 +1,5 @@
 name: vector-assurance
 on:
-  pull_request:
-    branches: [main]
   push:
     branches: ["framework/vector-full-lifecycle-pilot"]
 jobs:
