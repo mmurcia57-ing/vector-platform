@@ -46,6 +46,17 @@ public class ExperienceRuntimeConfiguration {
     }
 
 
+
+    @Bean
+    com.vector.bff.ai.AiProvider aiProvider() {
+        return request -> com.vector.bff.ai.AiProviderResult.unavailable("No corporate AI provider is configured in the local runtime");
+    }
+
+    @Bean
+    com.vector.bff.ai.AiInvestigationService aiInvestigationService(com.vector.bff.ai.AiProvider provider) {
+        return new com.vector.bff.ai.AiInvestigationService(provider);
+    }
+
     @Bean
     com.vector.bff.security.AuthorizationService authorizationService() {
         return new com.vector.bff.security.AuthorizationService();
