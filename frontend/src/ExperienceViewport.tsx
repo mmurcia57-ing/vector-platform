@@ -229,6 +229,7 @@ export default function ExperienceViewport() {
   const [commitments, setCommitments] = useState<CommitmentView>();
   const [graph, setGraph] = useState<Graph>();
   const [signals, setSignals] = useState<TemporalSignal[]>([]);
+  const [graphFocus, setGraphFocus] = useState("");
   const [declaration, setDeclaration] = useState("");
   const [loadError, setLoadError] = useState("");
   useEffect(() => {
@@ -900,12 +901,13 @@ export default function ExperienceViewport() {
                     className="semantic-edge"
                     key={`${relation.predicate}-${index}`}
                   >
-                      <span>{graphNodeLabel(relation.source.canonicalId)}</span>
+                      <button className={graphFocus === relation.source.canonicalId ? "focused" : ""} onClick={() => setGraphFocus(relation.source.canonicalId)}>{graphNodeLabel(relation.source.canonicalId)}</button>
                     <b>{relation.predicate.replaceAll("_", " ")}</b>
-                      <span>{graphNodeLabel(relation.target.canonicalId)}</span>
+                    <button className={graphFocus === relation.target.canonicalId ? "focused" : ""} onClick={() => setGraphFocus(relation.target.canonicalId)}>{graphNodeLabel(relation.target.canonicalId)}</button>
                   </div>
                 ))}
               </div>
+              {graphFocus && <div className="vx-graph-focus" aria-live="polite"><strong>Focused context</strong><span>{graphNodeLabel(graphFocus)}</span><small>Bounded relationship context; selecting a node does not assert causality.</small></div>}
             </div>
             <div className="gold-panel">
               <SectionTitle title="Acciones Asociadas" />
