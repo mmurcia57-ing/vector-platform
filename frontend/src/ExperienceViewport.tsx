@@ -641,21 +641,21 @@ export default function ExperienceViewport() {
           />
           <Metric
             tone="purple"
-            title="Acciones ejecutadas"
-            value={commitments?.completedCount ?? 0}
-            note="Ejecución no implica resultado"
+            title="Renegociados"
+            value={commitments?.renegotiatedCount ?? 0}
+            note="Historial preservado"
           />
           <Metric
             tone="success"
-            title="Mejora verificada"
-            value="N/D"
-            note="Sin agregado disponible"
+            title="Reliability Rate"
+            value={commitments?.commitmentReliabilityRate == null ? "N/D" : `${Math.round(commitments.commitmentReliabilityRate * 100)}%`}
+            note={`${commitments?.reliabilityNumerator ?? 0}/${commitments?.reliabilityDenominator ?? 0} vencidos en período`}
           />
           <Metric
             tone="danger"
-            title="Sin mejora"
-            value="N/D"
-            note="Sin agregado disponible"
+            title="Resultado pendiente"
+            value={commitments?.outcomePendingCount ?? 0}
+            note="Completado ≠ resultado verificado"
           />
         </div>
         <div className="gold-main-grid">
@@ -677,6 +677,7 @@ export default function ExperienceViewport() {
                   <span>{label(item.accountableAreaDomainId)}</span>
                   <b>{item.executionStatus ?? item.statusContext}</b>
                   <em>{item.overdue ? "Vencido" : "En seguimiento"}</em>
+                  <div className="vx-commitment-actions"><button onClick={() => updateCommitmentStatus(item.commitmentId, "IN_PROGRESS")}>In progress</button><button onClick={() => updateCommitmentStatus(item.commitmentId, "COMPLETED")}>Complete</button><button onClick={() => setRenegotiationId(item.commitmentId)}>Renegotiate</button></div>
                 </div>
               ))}
             </div>
@@ -717,8 +718,17 @@ export default function ExperienceViewport() {
                   </option>
                 </select>
               </label>
+              <label>Resultado esperado<input value={intendedResult} onChange={(event) => setIntendedResult(event.target.value)} /></label>
+              <label>Fecha comprometida<input type="date" value={commitmentDueDate} onChange={(event) => setCommitmentDueDate(event.target.value)} /></label>
               <button>Crear compromiso</button>
             </form>
+            {renegotiationId && <form className="gold-panel gold-form" onSubmit={renegotiateCommitment}>
+              <h3>Renegociar compromiso</h3>
+              <p>{label(renegotiationId)} · la fecha anterior permanecerá en el historial.</p>
+              <label>Nueva fecha<input type="date" value={renegotiationDate} onChange={(event) => setRenegotiationDate(event.target.value)} required /></label>
+              <label>Razón<input value={renegotiationReason} onChange={(event) => setRenegotiationReason(event.target.value)} required /></label>
+              <button>Registrar renegociación</button>
+            </form>}
           </aside>
         </div>
         <QualityNote />
