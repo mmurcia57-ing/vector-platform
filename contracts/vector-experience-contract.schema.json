@@ -164,7 +164,12 @@
         "activeCount",
         "inProgressCount",
         "completedCount",
-        "overdueCount"
+        "overdueCount",
+        "renegotiatedCount",
+        "outcomePendingCount",
+        "reliabilityNumerator",
+        "reliabilityDenominator",
+        "commitmentReliabilityRate"
       ]
     },
     "POST /api/experience/commitments": {
@@ -203,6 +208,26 @@
         "limitation"
       ],
       "invariant": "causalClaim must remain false for contextual association"
+    },
+    "GET /api/experience/commitments/{commitmentId}/history": {
+      "required": [
+        "eventId",
+        "eventType",
+        "occurredAt",
+        "beforeDueDate"
+      ],
+      "semantics": "Immutable local lifecycle history"
+    },
+    "PATCH /api/experience/commitments/{commitmentId}/lifecycle": {
+      "mutation": true,
+      "authorizationRequired": true,
+      "auditRequired": true
+    },
+    "POST /api/experience/commitments/{commitmentId}/renegotiations": {
+      "mutation": true,
+      "authorizationRequired": true,
+      "auditRequired": true,
+      "semantics": "Reason required; prior due date retained"
     }
   },
   "x-vector-invariants": [
@@ -210,6 +235,9 @@
     "Graph is a projection, never canonical authority",
     "AI output is non-authoritative",
     "Evidence provenance is preserved",
-    "Missing evidence must not be presented as healthy state"
+    "Missing evidence must not be presented as healthy state",
+    "Commitment execution completion is not outcome verification",
+    "Commitment renegotiation preserves prior due date and reason",
+    "No individual commitment scoring or ranking"
   ]
 }
