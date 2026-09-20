@@ -2,6 +2,9 @@ name: vector-assurance
 on:
   push:
     branches: ["framework/vector-full-lifecycle-pilot"]
+concurrency:
+  group: vector-assurance-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   backend:
     runs-on: ubuntu-latest
