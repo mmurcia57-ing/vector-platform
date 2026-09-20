@@ -190,6 +190,19 @@
         "provenance"
       ],
       "semantics": "Advisory, evidence-grounded, non-authoritative and safe-degrading"
+    },
+    "GET /api/experience/risks/{riskFindingId}/change-association": {
+      "required": [
+        "serviceId",
+        "changeId",
+        "deploymentId",
+        "temporalContext",
+        "contextualAssociation",
+        "causalClaim",
+        "evidenceIds",
+        "limitation"
+      ],
+      "invariant": "causalClaim must remain false for contextual association"
     }
   },
   "x-vector-invariants": [
