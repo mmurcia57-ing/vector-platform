@@ -3,8 +3,8 @@ on:
   push:
     branches: ["framework/vector-full-lifecycle-pilot"]
 concurrency:
-  group: vector-assurance-${{ github.ref }}
-  cancel-in-progress: true
+  group: vector-assurance-${{ github.sha }}
+  cancel-in-progress: false
 jobs:
   backend:
     runs-on: ubuntu-latest
