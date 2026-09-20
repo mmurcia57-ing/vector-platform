@@ -6,6 +6,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
+
+import com.vector.bff.security.AuthorizationService;
+import com.vector.bff.security.LocalHttpSecurityContextResolver;
+import com.vector.bff.security.SecurityAuditRecord;
+import com.vector.bff.security.SecurityAuditRecorder;
+import com.vector.bff.security.SecurityPermission;
+
+import java.time.Instant;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -13,10 +22,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class ExperienceController {
     private final ExperienceProjectionUseCase useCase;
     private final CommitmentManagementUseCase commitmentManagement;
+    private final AuthorizationService authorization;
+    private final SecurityAuditRecorder audit;
+    private final LocalHttpSecurityContextResolver securityContext;
 
-    public ExperienceController(ExperienceProjectionUseCase useCase, CommitmentManagementUseCase commitmentManagement) {
+    public ExperienceController(ExperienceProjectionUseCase useCase, CommitmentManagementUseCase commitmentManagement,
+            AuthorizationService authorization, SecurityAuditRecorder audit, LocalHttpSecurityContextResolver securityContext) {
         this.useCase = useCase;
         this.commitmentManagement = commitmentManagement;
+        this.authorization = authorization;
+        this.audit = audit;
+        this.securityContext = securityContext;
     }
 
     @GetMapping("/overview")
@@ -46,7 +62,19 @@ public class ExperienceController {
     }
 
     @PostMapping("/commitments")
-    ManagementCommitmentProjection createCommitment(@RequestBody CommitmentCreateRequest request) {
-        return commitmentManagement.create(request);
+    ManagementCommitmentProjection createCommitment(@RequestBody CommitmentCreateRequest request,
+            @RequestHeader(value = "X-Vector-Subject", required = false) String subject,
+            @RequestHeader(value = "X-Vector-Role", required = false) String role) {
+        var principal = securityContext.resolve(subject, role);
+        try {
+            authorization.require(principal, SecurityPermission.MUTATE_VECTOR);
+            var result = commitmentManagement.create(request);
+            audit.record(new SecurityAuditRecord("CREATE_COMMITMENT", Instant.now(), principal.subject(), true, "COMPLETED"));
+            return result;
+        } catch (RuntimeException deniedOrFailed) {
+            audit.record(new SecurityAuditRecord("CREATE_COMMITMENT", Instant.now(),
+                principal == null ? "anonymous" : principal.subject(), false, deniedOrFailed.getClass().getSimpleName()));
+            throw deniedOrFailed;
+        }
     }
 }
