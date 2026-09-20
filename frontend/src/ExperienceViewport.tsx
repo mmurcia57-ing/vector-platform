@@ -17,6 +17,16 @@ type Risk = {
   condition: string;
   explanation: string;
 };
+type TemporalSignal = {
+  signalId: string;
+  serviceId: string;
+  riskFindingId: string;
+  semanticType: string;
+  statement: string;
+  observedAt: string;
+  sourceReferenceIds: string[];
+  limitation: string;
+};
 type Evidence = {
   evidenceId: string;
   supportedClaim: string;
@@ -218,6 +228,7 @@ export default function ExperienceViewport() {
   const [risk, setRisk] = useState<Detail>();
   const [commitments, setCommitments] = useState<CommitmentView>();
   const [graph, setGraph] = useState<Graph>();
+  const [signals, setSignals] = useState<TemporalSignal[]>([]);
   const [declaration, setDeclaration] = useState("");
   const [loadError, setLoadError] = useState("");
   useEffect(() => {
@@ -272,6 +283,9 @@ export default function ExperienceViewport() {
       void read<Graph>(
         `/api/experience/graph?period=${PERIOD}&serviceId=${encodeURIComponent(serviceId)}&riskFindingId=${encodeURIComponent(selected.riskFindingId)}&maxNodes=12&maxRelationships=16`,
       ).then(setGraph).catch((error) => setLoadError(error instanceof Error ? error.message : "Graph unavailable"));
+      void read<TemporalSignal[]>(
+        `/api/experience/signals?period=${PERIOD}&serviceId=${encodeURIComponent(serviceId)}&riskFindingId=${encodeURIComponent(selected.riskFindingId)}&limit=50`,
+      ).then(setSignals).catch((error) => setLoadError(error instanceof Error ? error.message : "Temporal intelligence unavailable"));
     }
   }, [overview, path]);
   const navigate = (next: string, context: Record<string, string> = {}) => {
@@ -849,18 +863,17 @@ export default function ExperienceViewport() {
           <section>
             <div className="gold-panel">
               <SectionTitle title="Línea de Tiempo del Riesgo" />
-              {risk?.evidence.map((item) => (
-                <div className="gold-timeline" key={item.evidenceId}>
+              {signals.length ? signals.map((item) => (
+                <div className="gold-timeline" key={item.signalId}>
                   <time>{item.observedAt.slice(0, 10)}</time>
                   <i />
                   <div>
-                    <strong>{item.supportedClaim}</strong>
-                    <p>
-                      Fuente · {item.sourceReferenceIds.map(label).join(", ")}
-                    </p>
+                    <strong>{item.statement}</strong>
+                    <p>{item.semanticType.replaceAll("_", " ")} · {item.sourceReferenceIds.map(label).join(", ")}</p>
+                    {item.limitation && <small>{item.limitation}</small>}
                   </div>
                 </div>
-              ))}
+              )) : <Empty>No hay historia temporal suficiente en la evidencia disponible.</Empty>}
             </div>
             <div className="gold-panel">
               <SectionTitle title="Evidencia Disponible" />
