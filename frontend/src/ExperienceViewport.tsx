@@ -85,6 +85,11 @@ type CommitmentView = {
   inProgressCount: number;
   completedCount: number;
   overdueCount: number;
+  renegotiatedCount: number;
+  outcomePendingCount: number;
+  reliabilityNumerator: number;
+  reliabilityDenominator: number;
+  commitmentReliabilityRate?: number;
 };
 type Graph = {
   graph: {
@@ -242,6 +247,11 @@ export default function ExperienceViewport() {
   const [aiAssist, setAiAssist] = useState<AiAssist>();
   const [changeAssociation, setChangeAssociation] = useState<ChangeAssociation>();
   const [declaration, setDeclaration] = useState("");
+  const [intendedResult, setIntendedResult] = useState("");
+  const [commitmentDueDate, setCommitmentDueDate] = useState("");
+  const [renegotiationId, setRenegotiationId] = useState("");
+  const [renegotiationDate, setRenegotiationDate] = useState("");
+  const [renegotiationReason, setRenegotiationReason] = useState("");
   const [loadError, setLoadError] = useState("");
   useEffect(() => {
     const attach = () => {
@@ -349,8 +359,9 @@ export default function ExperienceViewport() {
         commitmentId: `commitment-${Date.now()}`,
         declaration,
         accountableAreaDomainId: area?.areaDomainId ?? "area-platform",
+        dueDate: commitmentDueDate || undefined,
         executionStatus: "OPEN",
-        intendedResult: declaration,
+        intendedResult: intendedResult || declaration,
       }),
     })
       .then(() =>
@@ -359,7 +370,11 @@ export default function ExperienceViewport() {
         ),
       )
       .then(setCommitments).catch((error) => setLoadError(error instanceof Error ? error.message : "Commitments unavailable"));
-    setDeclaration("");
+    setDeclaration(""); setIntendedResult(""); setCommitmentDueDate("");
+  };
+  const refreshCommitments = () => read<CommitmentView>("/api/experience/commitments?asOf=2025-01-01&limit=20").then(setCommitments);
+  const updateCommitmentStatus = (id: string, executionStatus: string) => void fetch(`/api/experience/commitments/${encodeURIComponent(id)}/lifecycle`, { method: "PATCH", headers: { "Content-Type": "application/json", "X-Vector-Subject": "local-experience-operator", "X-Vector-Role": "ANALYST_OPERATOR" }, body: JSON.stringify({ executionStatus, reason: `Operator moved commitment to ${executionStatus}` }) }).then(refreshCommitments).catch((error) => setLoadError(error instanceof Error ? error.message : "Commitment update unavailable"));
+  const renegotiateCommitment = (event: FormEvent) => { event.preventDefault(); if (!renegotiationId || !renegotiationDate || !renegotiationReason) return; void fetch(`/api/experience/commitments/${encodeURIComponent(renegotiationId)}/renegotiations`, { method: "POST", headers: { "Content-Type": "application/json", "X-Vector-Subject": "local-experience-operator", "X-Vector-Role": "ANALYST_OPERATOR" }, body: JSON.stringify({ newDueDate: renegotiationDate, reason: renegotiationReason }) }).then(refreshCommitments).then(() => { setRenegotiationId(""); setRenegotiationDate(""); setRenegotiationReason(""); }).catch((error) => setLoadError(error instanceof Error ? error.message : "Renegotiation unavailable")); };
   };
   if (!host) return null;
   if (loadError) return createPortal(<div className="experience-viewport"><div className="gold-page"><div className="gold-panel" role="alert"><h3>Intelligence temporarily unavailable</h3><p>{loadError}</p><button className="primary-button" onClick={() => window.location.reload()}>Retry</button></div></div></div>, host);
