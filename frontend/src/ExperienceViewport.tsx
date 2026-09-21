@@ -290,6 +290,22 @@ export function SemanticLegend() {
   </div>;
 }
 
+export function ContextEnvelope({ area, service, risk, period, quality }: { area?: Area; service?: Service; risk?: Risk; period: string; quality?: Quality }) {
+  const t = useCopy();
+  const items = [
+    area ? [t.area, area.name] : undefined,
+    service ? [t.service, service.name] : undefined,
+    risk ? [t.riskFinding, risk.condition] : undefined,
+    [t.scenario, period],
+    [t.quality, quality?.stale ? t.stale : quality?.partial ? t.partial : quality ? t.available : "—"],
+  ].filter(Boolean) as string[][];
+  return <section className="vx-context-envelope" aria-label={t.selectedContext}>
+    <strong>{t.selectedContext}</strong>
+    <div>{items.map(([key,value]) => <span key={key}><small>{key}</small><b>{value}</b></span>)}</div>
+    <em>{t.contextDisclaimer}</em>
+  </section>;
+}
+
 function DecisionQueue({ risks, commitments, navigate }: { risks: Risk[]; commitments?: CommitmentView; navigate: (next: string, context?: Record<string, string>) => void }) {
   const t = useCopy();
   return <section className="vx-decision-queue" aria-label={t.decisionQueue}>
@@ -488,8 +504,18 @@ export default function ExperienceViewport() {
     }
   }, [overview, path, period, graphLimit]);
   const navigate = (next: string, context: Record<string, string> = {}) => {
-    const params = new URLSearchParams({ period, ...context });
+    const current = new URLSearchParams(window.location.search);
+    const preserved = ["areaDomainId", "serviceId", "riskFindingId", "condition", "origin"];
+    const merged: Record<string, string> = { period };
+    preserved.forEach((key) => {
+      const value = current.get(key);
+      if (value) merged[key] = value;
+    });
+    Object.assign(merged, context);
+    if (!merged.origin) merged.origin = window.location.pathname;
+    const params = new URLSearchParams(merged);
     window.history.pushState({}, "", `${next}?${params}`);
+    setPath(next.split("/").filter(Boolean)[0] ?? "overview");
   };
   const changeLocale = (nextLocale: UiLocale) => {
     setLocale(nextLocale);
@@ -566,10 +592,13 @@ export default function ExperienceViewport() {
   if (loadError) return createPortal(<LocaleContext.Provider value={locale}><div className="experience-viewport"><div className="gold-page"><div className="gold-panel" role="alert"><h3>{t.unavailable}</h3><p>{loadError}</p><button className="primary-button" onClick={() => window.location.reload()}>{t.retry}</button></div></div></div></LocaleContext.Provider>, host);
   if (!overview) return createPortal(<LocaleContext.Provider value={locale}><div className="experience-viewport"><div className="loading-screen" role="status" aria-live="polite"><h1>VECTOR</h1><p>{t.loading}</p></div></div></LocaleContext.Provider>, host);
 
+  const contextEnvelope = <ContextEnvelope area={area} service={detail?.service ?? risk?.service} risk={risk?.riskFinding} period={period} quality={risk?.quality ?? detail?.quality ?? overview.quality} />;
+
   const panorama = (
     <div className="experience-viewport">
       <div className="gold-page">
         <WorkspaceRail active={path} navigate={navigate} />
+        {contextEnvelope}
         <Header
           eyebrow={tr("DE LA EVIDENCIA A UNA TECNOLOGÍA MÁS CONFIABLE", "FROM EVIDENCE TO MORE RELIABLE TECHNOLOGY")}
           title={tr("Panorama Ejecutivo", "Executive Command")}
@@ -663,6 +692,7 @@ export default function ExperienceViewport() {
     <div className="experience-viewport">
       <div className="gold-page">
         <WorkspaceRail active={path} navigate={navigate} />
+        {contextEnvelope}
         <Header
           eyebrow={tr("ÁREAS / DOMINIOS · ESPACIO DE DECISIÓN", "AREAS / DOMAINS · DECISION WORKSPACE")}
           title={area?.name ?? tr("Área sin seleccionar", "No area selected")}
@@ -764,6 +794,7 @@ export default function ExperienceViewport() {
     <div className="experience-viewport">
       <div className="gold-page">
         <WorkspaceRail active={path} navigate={navigate} />
+        {contextEnvelope}
         <Header
           eyebrow={tr("COMPROMISOS Y MEJORAS · FLUJO", "COMMITMENTS & IMPROVEMENTS · WORKFLOW")}
           title={tr("Compromisos y Mejoras", "Commitments & Improvements")}
@@ -835,6 +866,7 @@ export default function ExperienceViewport() {
     <div className="experience-viewport">
       <div className="gold-page">
         <WorkspaceRail active={path} navigate={navigate} />
+        {contextEnvelope}
         <Header
           eyebrow={`SERVICIO · ${label(detail?.service?.areaDomainId)}`}
           title={detail?.service?.name ?? "Service Intelligence"}
@@ -900,6 +932,7 @@ export default function ExperienceViewport() {
     <div className="experience-viewport">
       <div className="gold-page">
         <WorkspaceRail active={path} navigate={navigate} />
+        {contextEnvelope}
         <Header
           eyebrow={tr("INVESTIGACIÓN", "INVESTIGATION")}
           title={risk?.riskFinding?.condition ?? tr("Investigación de riesgo", "Risk Investigation")}
