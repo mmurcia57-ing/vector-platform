@@ -92,6 +92,8 @@ type Commitment = {
   overdue?: boolean;
   sourceReferenceSummary?: string;
   currentDueDate?: string;
+  serviceId?: string;
+  riskFindingId?: string;
 };
 type Action = {
   actionId: string;
@@ -575,6 +577,8 @@ export default function ExperienceViewport() {
         dueDate: commitmentDueDate || undefined,
         executionStatus: "OPEN",
         intendedResult: intendedResult || declaration,
+        serviceId: new URLSearchParams(window.location.search).get("serviceId") || undefined,
+        riskFindingId: new URLSearchParams(window.location.search).get("riskFindingId") || undefined,
       }),
     })
       .then(() =>
@@ -827,6 +831,7 @@ export default function ExperienceViewport() {
                   <button onClick={() => updateCommitmentStatus(item.commitmentId, "IN_PROGRESS")}>{tr("En progreso","In progress")}</button>
                   <button onClick={() => updateCommitmentStatus(item.commitmentId, "COMPLETED")}>{tr("Completar","Complete")}</button>
                   <button onClick={() => setRenegotiationId(item.commitmentId)}>{tr("Renegociar","Renegotiate")}</button>
+                  {item.riskFindingId && <button onClick={() => navigate(`/risks/${encodeURIComponent(item.riskFindingId!)}`, { riskFindingId: item.riskFindingId!, serviceId: item.serviceId ?? "" })}>{tr("Volver a investigación","Return to investigation")}</button>}
                 </div>
               </div>
             ))}
@@ -1032,6 +1037,12 @@ export default function ExperienceViewport() {
             </div>
             <div className="gold-panel">
               <SectionTitle id="risk-actions" title={tr("Acciones asociadas", "Associated actions")} />
+              {risk?.riskFinding && <button className="primary-button" type="button" onClick={() => navigate("/commitments", {
+                areaDomainId: risk.service?.areaDomainId ?? "",
+                serviceId: risk.service?.serviceId ?? risk.riskFinding!.serviceId,
+                riskFindingId: risk.riskFinding!.riskFindingId,
+                condition: risk.riskFinding!.condition,
+              })}>{tr("Crear compromiso desde esta investigación","Create commitment from this investigation")}</button>}
               {risk?.commitments.map((commitment) => (
                 <div className="gold-action" key={commitment.commitmentId}>
                   <strong>{commitment.declaration}</strong>
