@@ -37,3 +37,24 @@ it("keeps workspace navigation behavior explicit rather than decorative", () => 
   expect(calls).toEqual(["/risks"]);
   expect(screen.getByRole("button", { name: "Service" }).className).toContain("active");
 });
+
+
+it("changes the deterministic analysis scenario through a real control", () => {
+  const periods: string[] = [];
+  render(<Header eyebrow="Contexto" title="VECTOR" question="Pregunta" period="local-dataset-v1" onPeriodChange={(period) => periods.push(period)} />);
+  fireEvent.change(screen.getByRole("combobox", { name: "Escenario de análisis" }), { target: { value: "local-partial-stale" } });
+  expect(periods).toEqual(["local-partial-stale"]);
+  expect(screen.getByText(/Datos demostrativos locales/)).toBeTruthy();
+});
+
+it("investigation lenses execute navigation to an explicit section", () => {
+  const target = document.createElement("div");
+  target.id = "risk-evidence";
+  const scrollIntoView = vi.fn();
+  target.scrollIntoView = scrollIntoView;
+  document.body.appendChild(target);
+  render(<LensNav labelText="Lentes de investigación" items={[["risk-evidence", "Evidencia"]]} />);
+  fireEvent.click(screen.getByRole("button", { name: "Evidencia" }));
+  expect(scrollIntoView).toHaveBeenCalledOnce();
+  target.remove();
+});
