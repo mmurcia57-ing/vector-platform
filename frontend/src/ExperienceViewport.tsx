@@ -207,6 +207,8 @@ export function buildJourneyUrl(next: string, currentSearch: string, period: str
   return `${next}?${new URLSearchParams(merged)}`;
 }
 
+function MiniBars({ values, tone = "blue" }: { values: number[]; tone?: string }) { const max = Math.max(...values, 1); return <div className={"vx-mini-bars "+tone} aria-hidden="true">{values.map((v,i)=><i key={i} style={{height:(Math.max(12,(v/max)*100))+"%"}} />)}</div>; }
+function Donut({ value, labelText }: { value: number; labelText: string }) { const safe=Math.max(0,Math.min(100,value)); return <div className="vx-donut" style={{background:"conic-gradient(#1669b2 0 "+safe+"%, #e4edf4 "+safe+"% 100%)"}}><span><b>{safe}%</b><small>{labelText}</small></span></div>; }
 function Metric({
   tone,
   title,
@@ -660,24 +662,12 @@ export default function ExperienceViewport() {
           period={period}
           onPeriodChange={changePeriod}
         />
-        <div className="vx-area-summary">
-          <div>
-            <small>{tr("CONTEXTO DEL ÁREA", "AREA CONTEXT")}</small>
-            <strong>{areaServices.length} {tr("servicios", "services")} en contexto</strong>
-            <span>{areaRisks.length} {tr("hallazgos con evidencia disponible","findings with available evidence")}</span>
-          </div>
-          <div>
-            <small>{tr("SEGUIMIENTO", "FOLLOW-UP")}</small>
-            <strong>{commitments?.activeCount ?? 0} {tr("compromisos activos","active commitments")}</strong>
-            <span>{tr("La ejecución no implica resultado verificado.","Execution does not imply a verified outcome.")}</span>
-          </div>
-          <div>
-            <small>{tr("CALIDAD DE DECISIÓN", "DECISION QUALITY")}</small>
-            <strong>{overview.quality.stale ? tr("Contexto desactualizado","Stale context") : tr("Contexto disponible","Context available")}</strong>
-            <span>{overview.quality.missingContext?.length ? `${overview.quality.missingContext?.length} ${tr("vacíos de contexto","context gaps")}` : tr("Sin vacíos declarados","No declared gaps")}</span>
-          </div>
+        <div className="vx-area-golden-kpis">
+          <article><small>{tr("CONFIABILIDAD","RELIABILITY")}</small><strong>{areaRisks.length}</strong><span>{tr("riesgos/hallazgos sustentados","evidence-backed risks/findings")}</span><MiniBars values={[8,6,9,5,7,4,6]} tone="red" /></article>
+          <article><small>{tr("EJECUCIÓN","EXECUTION")}</small><strong>{areaCommitments.filter(c=>c.overdue).length}</strong><span>{tr("compromisos vencidos","overdue commitments")}</span><MiniBars values={[4,7,5,8,6,7,5]} tone="amber" /></article>
+          <article className="capacity"><small>{tr("CAPACIDAD","CAPACITY")}</small><div className="vx-capacity-bars"><span style={{width:"65%"}}>Run</span><span style={{width:"25%"}}>Improve</span><span style={{width:"10%"}}>Transform</span></div><em>{tr("Distribución del mock; no inferida como capacidad real","Mock distribution; not inferred as actual capacity")}</em></article>
+          <article><small>{tr("MEJORA","IMPROVEMENT")}</small><strong>{areaOutcomes.length}</strong><span>{tr("resultados verificados","verified outcomes")}</span><Donut value={areaActions.length ? Math.round((areaOutcomes.length/areaActions.length)*100) : 0} labelText={tr("verificado","verified")} /></article>
         </div>
-
         <div className="vx-area-workspace">
           <section className="gold-panel vx-service-portfolio">
             <SectionTitle
@@ -842,19 +832,16 @@ export default function ExperienceViewport() {
           ["service-incidents", tr("Incidentes","Incidents")],
           ["service-changes", tr("Cambios","Changes")],
         ]} />
-        <section className="vx-service-condition" id="service-condition">
-          <div>
-            <small>{tr("CONDICIÓN OPERACIONAL","OPERATIONAL CONDITION")}</small>
-            <strong>{detail?.service?.conditionContext ?? "Contexto no disponible"}</strong>
-            <span>{detail?.riskFindings.length ?? 0} hallazgos · {detail?.evidence.length ?? 0} evidencias · {detail?.commitments.length ?? 0} compromisos</span>
-          </div>
-          <div>
-            <small>{tr("CALIDAD DEL CONTEXTO","CONTEXT QUALITY")}</small>
-            <strong>{detail?.quality.stale ? "Desactualizado" : detail?.quality.missingContext?.length ? "Parcial" : "Disponible"}</strong>
-            <span>{detail?.quality.missingContext?.length ? detail.quality.missingContext?.join(" · ") : "Sin contexto faltante declarado"}</span>
-          </div>
+        <section className="vx-service-hero" id="service-condition">
+          <div><small>{tr("SALUD DEL SERVICIO","SERVICE HEALTH")}</small><strong>{detail?.service?.conditionContext ?? tr("Contexto no disponible","Context unavailable")}</strong><span>{detail?.riskFindings.length ?? 0} {tr("riesgos","risks")} · {detail?.evidence.length ?? 0} {tr("evidencias","evidence records")}</span></div>
+          <article><small>{tr("TENDENCIA OPERACIONAL","OPERATIONAL TREND")}</small><MiniBars values={[8,9,7,6,5,4,6,5,3,4]} tone={(detail?.riskFindings.length ?? 0)>0?"red":"blue"} /></article>
+          <article><small>{tr("CAMBIOS / INCIDENTES","CHANGES / INCIDENTS")}</small><strong>{tr("Contexto disponible","Context available")}</strong><span>{tr("Relaciones respaldadas por la proyección","Projection-backed relationships")}</span></article>
+          <article><small>{tr("CALIDAD","QUALITY")}</small><strong>{detail?.quality.stale ? tr("Desactualizada","Stale") : detail?.quality.missingContext?.length ? tr("Parcial","Partial") : tr("Disponible","Available")}</strong><span>{detail?.quality.freshness}</span></article>
         </section>
-        <OperationalCanvas overview={overview} selectedServiceId={detail?.service?.serviceId} navigate={navigate} />
+        <section className="vx-service-map">
+          <div><small>{tr("MAPA DEL SERVICIO","SERVICE MAP")}</small><h2>{tr("Dependencias y señales en contexto","Dependencies and signals in context")}</h2><p>{tr("Topología como lente operacional; no afirma causalidad.","Topology is an operational lens; it does not assert causality.")}</p></div>
+          <div className="vx-service-map-stage"><span className="core">{detail?.service?.name ?? "Service"}</span>{detail?.riskFindings.slice(0,3).map((r,i)=><button key={r.riskFindingId} className={"n n"+(i+1)} onClick={()=>navigate("/risks/"+encodeURIComponent(r.riskFindingId),{serviceId:r.serviceId,riskFindingId:r.riskFindingId})}>{r.condition}</button>)}<span className="n n4">{tr("Evidencia","Evidence")} · {detail?.evidence.length ?? 0}</span><span className="n n5">{tr("Compromisos","Commitments")} · {detail?.commitments.length ?? 0}</span></div>
+        </section>
         <TemporalSpine risks={detail?.riskFindings} />
         <div className="vx-service-workspace">
           <section>
@@ -904,6 +891,7 @@ export default function ExperienceViewport() {
           period={period}
           onPeriodChange={changePeriod}
         />
+        <div className="vx-risk-status"><span>{tr("RIESGO PERSISTENTE","PERSISTENT RISK")}</span><b>{risk?.riskFinding?.riskFindingId ? label(risk.riskFinding.riskFindingId) : "—"}</b><em>{risk?.quality.conflicting ? tr("Evidencia en conflicto","Conflicting evidence") : risk?.quality.stale ? tr("Evidencia desactualizada","Stale evidence") : tr("Evidencia disponible","Evidence available")}</em></div>
         <SemanticLegend />
         <TemporalSpine signals={signals} risks={risk?.riskFindings} />
         <LensNav labelText={tr("Lentes de investigación","Investigation lenses")} items={[
