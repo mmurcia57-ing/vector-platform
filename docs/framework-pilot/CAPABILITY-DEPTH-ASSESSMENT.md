@@ -111,4 +111,4 @@ Task completion must never be used as a substitute for capability depth.
 
 **CAPABILITY DEPTH GATE: PASS at END_TO_END for the 18 V1 MUST capabilities.**
 
-Next work is assurance/convergence and framework/knowledge-source calibration. Do not reopen product definition or regenerate valid implementation.
+Next work is assurance/convergence and Framework calibration. The Knowledge Base is consulted or extended only when an external reusable knowledge/strategy/research gap is demonstrated. Do not reopen product definition or regenerate valid implementation.
