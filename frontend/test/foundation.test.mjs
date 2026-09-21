@@ -83,9 +83,9 @@ test('all route experiences render inside one persistent application shell', asy
   assert.match(entry, /new PopStateEvent\('popstate'\)/)
   assert.match(entry, /<ExperienceApp \/><ExperienceViewport \/>/)
   assert.doesNotMatch(entry, /AreaOverlay|RiskOverlay|RiskActionOverlay/)
-  assert.match(viewport, /createPortal\\(/)
-  assert.match(viewport, /LocaleContext\\.Provider/)
-  assert.match(viewport, /\\{view\\}/)
+  assert.ok(viewport.includes("createPortal("))
+  assert.ok(viewport.includes("LocaleContext.Provider"))
+  assert.ok(viewport.includes("{view}"))
   assert.match(viewport, /document\.querySelector\(["']\.content-shell["']\)/)
   assert.match(viewport, /new MutationObserver/)
   assert.match(viewport, /window\.addEventListener\(["']popstate["']/)
@@ -98,8 +98,8 @@ test('bare risks route renders the dedicated Risk Investigation experience', asy
   assert.match(viewport, /path === "risks"\s+\? riskView\s+: panorama/)
   assert.match(viewport, /\/api\/experience\/risks\//)
   assert.match(viewport, /overview\.attentionFindings\[0\]/)
-  assert.match(viewport, /risk\\?\\.riskFinding\\?\\.condition/)
-  assert.match(viewport, /tr\\(\"Investigación de riesgo\", \"Risk Investigation\"\\)/)
+  assert.ok(viewport.includes("risk?.riskFinding?.condition"))
+  assert.ok(viewport.includes('tr("Investigación de riesgo", "Risk Investigation")'))
 })
 
 test('commitment area identity stays canonical while display text is human-readable', async () => {
