@@ -103,20 +103,20 @@
       "userInputRequired": false
     },
     {
-      "type": "EVIDENCE_DEPENDENCY",
-      "id": "RUNTIME-VISUAL-RETEST",
-      "description": "Viewport material difference, expanded graph and locale coherence require rendered runtime evidence before their gates can pass.",
+      "type": "FRAMEWORK_GATE",
+      "id": "EXPECTATION-CHALLENGE",
+      "description": "Current visual candidate is REJECTED. Product Vision and Experience Target must be materialized and expectation-aligned before deeper visual implementation.",
       "userInputRequired": false
     }
   ],
-  "currentAction": "Second runtime validation persisted. Viewport/navigation/affordances pass; R3 material experience, graph depth and derived-copy localization remain open.",
-  "nextAutonomousAction": "Create a structurally different operational intelligence prototype; upgrade topology investigation grammar; replace backend prose localization dependency with structured derived presentation; rerun visual/behavioral gates.",
+  "currentAction": "Current R3 runtime candidate rejected. Framework now requires Product Vision + Experience Target before further deep visual implementation.",
+  "nextAutonomousAction": "Synthesize VECTOR Product Vision from accepted intent + inspected product + full KB challenge; generate materially competing Experience Target alternatives; materialize target(s) for expectation validation before resuming deep implementation.",
   "rules": {
     "progressIsEvidenceBased": true,
     "noBackgroundExecutionClaim": true,
     "readyRequiresAllRequiredGatesPass": true
   },
-  "agentActivity": "STOPPED_EXTERNAL_ASSURANCE_DEPENDENCY",
+  "agentActivity": "STOPPED_AT_EXPECTATION_TARGET_BOUNDARY",
   "progressCalculation": {
     "method": "weighted_workstream_progress",
     "weights": {
@@ -212,5 +212,18 @@
       }
     ],
     "decision": "R3_REJECTED_FOR_MATERIAL_EXPERIENCE; escalate to competing structural prototype rather than cosmetic iteration."
-  }
+  },
+  "frameworkLearning": [
+    {
+      "id": "FR-050",
+      "finding": "Deep visual implementation preceded Product Vision / Experience Target alignment; user had to discover target mismatch through repeated runtime rejection.",
+      "frameworkCommits": [
+        "3ff6955aeee9bb7c6f070428d0a4e296b8d7eb3a",
+        "8316a0dd0bc63099467967a0f90a744f7a5d2737",
+        "ab02f1a3f549c4704af32005f345a891ebb959c8",
+        "9a072bda42c3146501dbe32b6e6e914432fe2a2f"
+      ],
+      "pilotDisposition": "RETURN_TO_PRODUCT_ALTERNATIVES_AND_EXPERIENCE_TARGET"
+    }
+  ]
 }
