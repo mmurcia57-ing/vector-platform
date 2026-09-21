@@ -70,6 +70,85 @@ Minimum scenario pack:
 
 A scenario selector may be local/demo-only. It must not be represented as a production feature.
 
+### DX-03B — Expanded adversarial operational scenario catalog
+
+The minimum 12-scenario pack is a floor, not sufficient breadth for VECTOR product validation.
+
+The demo/assurance catalog SHALL exercise materially different failure and non-failure conditions across reliability, change, recurrence, evidence, execution and dependency context.
+
+#### Reliability / service condition
+13. **SLO burn without incident** — degraded objective evidence exists before/without an Incident record; VECTOR must not require an incident to surface attention.
+14. **Incident spike with SLO still inside objective** — operational events exist but available objective evidence does not justify declaring SLO failure.
+15. **Latency degradation with stable error rate** — one signal degrades while another remains stable; avoid collapsing service health into one synthetic verdict.
+16. **Error-rate degradation with stable latency** — inverse multi-signal condition.
+17. **Intermittent/flapping condition** — repeated short degradations separated by apparent recovery; recurrence/history must remain visible.
+18. **Recovery after degradation** — current condition recovered while historical risk/evidence remains inspectable; current state != erased history.
+19. **Multiple simultaneous service risks** — one Service has distinct supported RiskFindings; do not merge them into one generic risk.
+20. **Area concentration across services** — multiple services in one AreaDomain require attention for different reasons; Area view must support comparison rather than generic scoring.
+
+#### Change / temporal association
+21. **Degradation begins after a change** — temporal association is visible; causality remains unproven.
+22. **Degradation predates the change** — VECTOR must prevent the change from being presented as origin merely because it is nearby in time.
+23. **Change during an existing degradation** — before/during/after context must preserve pre-existing condition.
+24. **Multiple changes inside the observation window** — evidence is insufficient to attribute the condition to a single change without additional support.
+25. **Rollback followed by recovery** — recovery is observable after rollback, but causal language remains bounded by evidence.
+26. **Successful change with no degradation** — change presence alone must not generate a risk/failure narrative.
+
+#### Recurrence / problem intelligence
+27. **Repeated incidents with same supported pattern** — recurrence should be surfaced with evidence/history.
+28. **Similar incidents with insufficient identity resolution** — do not silently merge potentially different problems.
+29. **Temporary fixes followed by recurrence** — completed actions exist but condition returns; execution != structural improvement.
+30. **Long quiet period followed by recurrence** — historical relationship remains discoverable without implying continuous degradation.
+
+#### Commitment / execution / outcome
+31. **Commitment overdue without renegotiation** — due-date reliability impact is explicit.
+32. **Commitment renegotiated before due date** — immutable history preserved; not classified the same as silent lateness.
+33. **Commitment completed with no outcome evidence** — outcome remains pending.
+34. **Action completed and condition improved** — outcome may become IMPROVED only with comparable supporting evidence.
+35. **Action completed and condition persists** — PERSISTENT remains visible; completion does not hide failure to improve.
+36. **Multiple actions against one risk** — preserve action/evidence/outcome lineage instead of crediting the latest action automatically.
+37. **Outcome evidence conflicts** — no fabricated winner; limitation/conflict visible.
+
+#### Evidence / observability quality
+38. **Telemetry source unavailable** — dependency/data-source degradation is visible and does not become a false healthy state.
+39. **One source stale, another fresh** — freshness is source/evidence specific; avoid flattening all evidence into one timestamp.
+40. **Missing source authority** — evidence may be displayed with its authority boundary; no promotion to authoritative fact.
+41. **Duplicate evidence records** — avoid inflating confidence/recurrence from duplicates.
+42. **Conflicting signals** — e.g. one observation supports degradation while another does not; expose disagreement.
+43. **Observation gap** — no data for a time interval; absence of evidence != evidence of normal operation.
+44. **Late-arriving evidence** — temporal semantics distinguish observed/event time from ingestion/availability time.
+45. **Identity-resolution ambiguity** — unresolved entity mapping blocks unsafe correlation.
+
+#### Dependency / topology / blast-radius reasoning
+46. **Shared dependency with multiple affected services** — topology helps discover common context; common dependency != proven root cause.
+47. **Dependency degraded but selected service unaffected** — avoid propagating failure merely because a relationship exists.
+48. **Partial topology/truncated graph** — user sees boundedness and can expand within limits.
+49. **Relationship exists with stale provenance** — relationship freshness/authority is visible.
+50. **High-degree node** — graph remains bounded/readable and provides accessible non-graph inspection.
+
+#### Security / control / degraded product behavior
+51. **Read allowed, mutation denied** — investigation remains usable while unauthorized state change is rejected safely.
+52. **Expired/invalid authorization context** — no data leakage and clear recovery path.
+53. **Backend projection dependency timeout** — affected surface degrades independently where possible and supports retry.
+54. **AI provider unavailable** — deterministic evidence workflow remains usable.
+55. **AI suggestion conflicts with deterministic evidence** — AI remains advisory and cannot override governed evidence.
+56. **Unsupported scenario/context token** — explicit unsupported/empty state; never silently fall back to a misleading healthy dataset.
+
+#### Negative controls
+57. **Healthy/normal evidence set** — VECTOR must be able to show no supported attention finding; a demo must not manufacture risk.
+58. **Change-only normal scenario** — normal change activity without degradation must remain non-problematic.
+59. **Incident resolved with verified recovery** — preserve history while current condition is recovered.
+60. **Insufficient evidence for any conclusion** — explicit UNKNOWN/INSUFFICIENT state rather than ATTENTION by default.
+
+#### Scenario acceptance rule
+Each scenario must specify:
+`scenario → source facts → expected derived/non-derived conclusion → affected view → user decision → prohibited inference → expected state/telemetry → executable test`.
+
+A scenario is not complete because it appears in a selector. It is complete only when the data differs materially, the product behavior differs appropriately, and the expected conclusion/prohibited inference is executable.
+
+#### Capability-gap rule
+If the current canonical/projection model cannot represent a scenario without fabricating semantics, classify it as **PRODUCT CAPABILITY GAP** rather than forcing it into existing fields.
+
 ### DX-04 — Experience State Matrix lacks executable proof
 EXT-003 already requires state completeness. Current executable frontend evidence does not demonstrate the full matrix across critical surfaces.
 
