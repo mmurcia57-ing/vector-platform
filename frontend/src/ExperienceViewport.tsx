@@ -516,7 +516,7 @@ export default function ExperienceViewport() {
         `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}/assist?period=${period}&serviceId=${encodeURIComponent(serviceId)}`,
       ).then(setAiAssist).catch(() => setAiAssist({ status: "UNAVAILABLE", limitations: ["Assistance endpoint unavailable"], provenance: "local-safe-degradation" }));
       void read<ChangeAssociation>(
-        `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}/change-association?serviceId=${encodeURIComponent(serviceId)}`,
+        `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}/change-association?serviceId=${encodeURIComponent(serviceId)}&period=${encodeURIComponent(period)}`,
       ).then(setChangeAssociation).catch(() => setChangeAssociation(undefined));
     }
   }, [overview, path, period, graphLimit]);
