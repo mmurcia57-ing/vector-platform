@@ -97,26 +97,20 @@
   ],
   "blockers": [
     {
-      "type": "EXTERNAL_DEPENDENCY",
-      "id": "ASSURANCE-RUNNER",
-      "description": "Current pilot commits expose no GitHub workflow run/status. Executable build/test PASS cannot be claimed from repository inspection.",
-      "userInputRequired": false
-    },
-    {
-      "type": "FRAMEWORK_GATE",
-      "id": "EXPECTATION-CHALLENGE",
-      "description": "Current visual candidate is REJECTED. Product Vision and Experience Target must be materialized and expectation-aligned before deeper visual implementation.",
+      "type": "EVIDENCE_DEPENDENCY",
+      "id": "NORTHSTAR-RUNTIME-VISUAL-L3",
+      "description": "Real Panorama runtime must be visually checked against the accepted North-Star/Experience Contract before deep-surface migration is considered L3-preserving.",
       "userInputRequired": false
     }
   ],
-  "currentAction": "North-Star direction formalized and translated into a refined isolated Experience Target V2; quality iteration corrected locale and false-affordance defects.",
-  "nextAutonomousAction": "Obtain expectation signal on V2. If aligned, freeze experience grammar, derive functional/engineering contract, then resume controlled implementation and run FR-050/FR-051 L3.",
+  "currentAction": "North-Star Experience Contract V2 frozen; real Panorama migrated to topology-dominant runtime shell; current head builds and all frontend/backend tests pass.",
+  "nextAutonomousAction": "After runtime visual/material-difference validation, preserve or correct the shell, then migrate Service/Investigation/Commitment surfaces and execute scenario/state L3 assurance.",
   "rules": {
     "progressIsEvidenceBased": true,
     "noBackgroundExecutionClaim": true,
     "readyRequiresAllRequiredGatesPass": true
   },
-  "agentActivity": "STOPPED_AT_HUMAN_EXPECTATION_VALIDATION",
+  "agentActivity": "STOPPED_AT_RUNTIME_VISUAL_VALIDATION",
   "progressCalculation": {
     "method": "weighted_workstream_progress",
     "weights": {
@@ -288,5 +282,33 @@
       "status": "REFINED_PENDING_RUNTIME_VISUAL_VALIDATION"
     },
     "disposition": "EXPERIMENT REQUIRED"
+  },
+  "fr050L3": {
+    "state": "IN_PROGRESS_RUNTIME_NORTH_STAR_MIGRATION",
+    "experienceContract": "docs/framework-pilot/EXPERIENCE-CONTRACT-V2.md",
+    "runtimeCommits": [
+      "9d35bbac76db377f4f5a112a3dde080b45371bd3",
+      "61dca062dfc6d95ed14738b115251ca2ba4ea6d6"
+    ],
+    "assurance": {
+      "workflow": "Framework Pilot Assurance",
+      "runId": 35559343293,
+      "headSha": "cf0644729fdf7444d8a209cfb20606154fa3e5cd",
+      "frontendBuild": "PASS",
+      "frontendTests": "PASS",
+      "backendTests": "PASS"
+    },
+    "remaining": [
+      "Runtime visual/material-difference validation of real Panorama",
+      "Migrate Service/Investigation/Commitment deep surfaces to persistent North-Star grammar",
+      "Scenario/state L3 assurance across Experience Contract V2 minimum scenarios"
+    ],
+    "disposition": "IMPLEMENTED_ASSURANCE_PASS_VISUAL_L3_PENDING"
+  },
+  "fr051L3": {
+    "state": "IN_PROGRESS",
+    "northStarPreservedInRuntimePanorama": true,
+    "deepSurfacesPending": true,
+    "disposition": "PARTIAL_PASS"
   }
 }
