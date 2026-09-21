@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>VECTOR — Context + Continuity Experience Target</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:#071012;color:#dce8e8;overflow:hidden}.app{height:100vh;display:grid;grid-template-rows:58px 1fr 116px;background:radial-gradient(circle at 50% 35%,#102326 0,#091416 42%,#071012 72%)}header{display:flex;align-items:center;gap:18px;padding:0 20px;border-bottom:1px solid #213236;background:#091315}.brand{font-weight:800;letter-spacing:.18em}.sub{font-size:11px;color:#7f9698}.context{display:flex;gap:8px;align-items:center;margin-left:20px}.chip,.lens,button{border:1px solid #294146;background:#0d1b1e;color:#cfe0e0;border-radius:8px;padding:7px 10px;font-size:11px}.chip b{color:#fff}.quality{margin-left:auto;font-size:11px;color:#9db0b0}.workspace{display:grid;grid-template-columns:72px 1fr 330px;min-height:0}.rail{border-right:1px solid #213236;padding:14px 8px;display:flex;flex-direction:column;gap:10px}.rail button{height:48px;padding:4px}.rail .active{border-color:#4fb8c0;background:#10292c}.main{display:grid;grid-template-rows:48px 1fr;min-width:0}.lenses{display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid #1d3033}.lens.active{border-color:#55bec6;color:#fff;background:#123034}.canvas{position:relative;overflow:hidden}.scope{position:absolute;left:18px;top:16px;font-size:11px;color:#83999b}.node{position:absolute;width:132px;padding:10px;border:1px solid #315055;background:#0d1d20dd;border-radius:12px;font-size:11px;box-shadow:0 12px 30px #0005}.node b{display:block;color:#eef7f7;margin-bottom:4px}.node.selected{border-color:#64cbd2;box-shadow:0 0 0 1px #64cbd244,0 16px 40px #0008}.node.risk{border-color:#a85e58}.edge{position:absolute;height:1px;background:#3b6569;transform-origin:left center;opacity:.7}.edge.inferred{background:repeating-linear-gradient(90deg,#7f8c8d 0 5px,transparent 5px 9px)}.legend{position:absolute;right:16px;bottom:14px;font-size:10px;color:#789092;background:#091416dd;padding:8px;border:1px solid #24383b;border-radius:8px}.inspector{border-left:1px solid #213236;padding:15px;overflow:auto;background:#091416cc}.eyebrow{font-size:9px;letter-spacing:.15em;color:#6f8f92;text-transform:uppercase}.inspector h2{font-size:16px;margin:5px 0 12px}.fact,.derived,.hyp,.limit{padding:9px 10px;margin:8px 0;border-left:2px solid #5cbcc3;background:#0d1a1c;font-size:11px;line-height:1.4}.derived{border-color:#7da57b}.hyp{border-color:#c39a55}.limit{border-color:#9a6262}.evidence{font-size:10px;color:#789092;margin-top:4px}.flow{margin-top:16px;border-top:1px solid #213236;padding-top:12px}.step{display:flex;align-items:center;gap:8px;margin:7px 0;font-size:10px}.dot{width:8px;height:8px;border-radius:50%;background:#42676a}.step.done .dot{background:#65b58d}.step.pending .dot{background:#c49b59}.timeline{border-top:1px solid #213236;padding:10px 20px;display:grid;grid-template-columns:150px 1fr;background:#081214}.timeline-title b{display:block;font-size:11px}.timeline-title span{font-size:9px;color:#71888a}.track{position:relative;margin-top:20px;height:45px;border-top:1px solid #31484b}.event{position:absolute;top:-7px;width:12px;height:12px;border:2px solid #0b1517;border-radius:50%;background:#62bdc4}.event.change{background:#c09b5e}.event.action{background:#7fad83}.event.outcome{background:#866b9f}.label{position:absolute;top:12px;transform:translateX(-30%);font-size:9px;color:#83989a;white-space:nowrap}.boundary{position:absolute;left:92px;bottom:130px;font-size:9px;color:#607678}.hidden{display:none}@media(max-width:1000px){.workspace{grid-template-columns:60px 1fr}.inspector{position:absolute;right:0;top:58px;bottom:116px;width:320px;z-index:4}.context .chip:nth-child(n+3){display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">VECTOR</div><div class="sub">Operational Intelligence Workspace</div><div class="context"><span class="chip">Área <b>Canales</b></span><span class="chip">Servicio <b>Pagos</b></span><span class="chip">Condición <b>Persistencia</b></span><span class="chip">Periodo <b>24 h</b></span></div><div class="quality">Evidencia: PARCIAL · Demo determinístico</div></header>
+<div class="workspace">
+<nav class="rail"><button class="active" data-mode="orient">Orientar</button><button data-mode="investigate">Investigar</button><button data-mode="execute">Actuar</button><button data-mode="verify">Verificar</button></nav>
+<main class="main">
+<div class="lenses"><button class="lens active" data-lens="topology">Topología</button><button class="lens" data-lens="time">Tiempo</button><button class="lens" data-lens="evidence">Evidencia</button><span style="margin-left:auto;font-size:10px;color:#789092">El contexto permanece al cambiar de lente</span></div>
+<section class="canvas" id="canvas">
+<div class="scope">CONTEXTO ACTIVO · Pagos · 24 h · relaciones respaldadas por evidencia</div>
+<div class="edge" style="left:26%;top:42%;width:190px;transform:rotate(-9deg)"></div><div class="edge" style="left:48%;top:39%;width:175px;transform:rotate(15deg)"></div><div class="edge inferred" style="left:48%;top:41%;width:145px;transform:rotate(62deg)"></div>
+<div class="node" style="left:13%;top:34%"><b>API Gateway</b>relación observada<br><span class="evidence">trace / fresca</span></div>
+<div class="node selected risk" style="left:41%;top:29%"><b>Pagos</b>condición persistente<br><span class="evidence">seleccionado · evidencia parcial</span></div>
+<div class="node" style="left:68%;top:42%"><b>Core transaccional</b>dependencia observada<br><span class="evidence">topología / fresca</span></div>
+<div class="node" style="left:55%;top:68%"><b>Entidad candidata</b>posible equivalencia<br><span class="evidence">inferencia · no fusionada</span></div>
+<div class="legend">— relación respaldada &nbsp; ⋯ relación inferida<br>La proximidad visual no implica causalidad.</div>
+</section>
+</main>
+<aside class="inspector">
+<div class="eyebrow">Intelligence Inspector · contexto persistente</div><h2>Pagos / Persistencia</h2>
+<div class="fact"><b>HECHO OBSERVADO</b><br>La condición aparece en evidencia del periodo seleccionado.<div class="evidence">Fuente: evidencia demo E-17 · fresca</div></div>
+<div class="derived"><b>HALLAZGO DETERMINÍSTICO</b><br>La condición cumple la regla demo de persistencia.<div class="evidence">Regla R-03 · trazable</div></div>
+<div class="hyp"><b>HIPÓTESIS</b><br>Un cambio cercano en el tiempo merece investigación; no prueba causalidad.<div class="evidence">Candidato H-02 · abierto</div></div>
+<div class="limit"><b>LIMITACIÓN</b><br>Una relación de identidad permanece sin resolver; no se fusionaron entidades.</div>
+<div class="flow"><div class="eyebrow">Continuidad</div><div class="step done"><span class="dot"></span>Finding identificado</div><div class="step done"><span class="dot"></span>Decisión registrada</div><div class="step done"><span class="dot"></span>Acción en ejecución</div><div class="step pending"><span class="dot"></span>Outcome pendiente de evidencia</div></div>
+</aside>
+</div>
+<div class="timeline"><div class="timeline-title"><b>Temporal Intelligence</b><span>mismo contexto · asociaciones ≠ causalidad</span></div><div class="track"><span class="event" style="left:12%"></span><span class="label" style="left:12%">señal</span><span class="event change" style="left:38%"></span><span class="label" style="left:38%">cambio</span><span class="event action" style="left:65%"></span><span class="label" style="left:65%">acción</span><span class="event outcome" style="left:88%"></span><span class="label" style="left:88%">outcome pendiente</span></div></div>
+</div>
+<script>
+document.querySelectorAll('[data-lens]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-lens]').forEach(x=>x.classList.remove('active'));b.classList.add('active');const scope=document.querySelector('.scope');scope.textContent='CONTEXTO ACTIVO · Pagos · 24 h · lente: '+b.textContent+' · contexto preservado';});
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-mode]').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelector('.eyebrow').textContent=b.dataset.mode.toUpperCase()+' · Intelligence Inspector · contexto persistente';});
+document.querySelectorAll('.node').forEach(n=>n.onclick=()=>{document.querySelectorAll('.node').forEach(x=>x.classList.remove('selected'));n.classList.add('selected');});
+</script>
+</body></html>
