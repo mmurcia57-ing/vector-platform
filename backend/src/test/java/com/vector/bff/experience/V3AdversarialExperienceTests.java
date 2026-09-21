@@ -15,8 +15,8 @@ class V3AdversarialExperienceTests {
 
     @Test
     void healthyNegativeControlDoesNotManufactureAttention() {
-        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:");
-             var evidence = new SqliteEvidencePath("jdbc:sqlite::memory:")) {
+        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:")) {
+            var evidence = new SqliteEvidencePath(repository);
             var result = source(repository, evidence).load(new ProjectionRequest(
                 new AnalysisContext("local-healthy-control", null, null, null, null), 20));
             assertThat(result.riskFindings()).isEmpty();
@@ -26,8 +26,8 @@ class V3AdversarialExperienceTests {
 
     @Test
     void conflictingEvidenceRemainsVisibleWithoutSelectingAuthority() {
-        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:");
-             var evidence = new SqliteEvidencePath("jdbc:sqlite::memory:")) {
+        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:")) {
+            var evidence = new SqliteEvidencePath(repository);
             var result = source(repository, evidence).load(new ProjectionRequest(
                 new AnalysisContext("local-conflicting-evidence", null, null, null, null), 20));
             assertThat(result.quality().conflicting()).isTrue();
@@ -38,8 +38,8 @@ class V3AdversarialExperienceTests {
 
     @Test
     void verifiedImprovementRequiresDistinctPostActionEvidence() {
-        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:");
-             var evidence = new SqliteEvidencePath("jdbc:sqlite::memory:")) {
+        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:")) {
+            var evidence = new SqliteEvidencePath(repository);
             var result = source(repository, evidence).load(new ProjectionRequest(
                 new AnalysisContext("local-outcome-improved", null, null, null, null), 20));
             assertThat(result.evidence()).extracting(EvidenceProjection::evidenceId).contains("evidence-outcome-improved");
@@ -52,8 +52,8 @@ class V3AdversarialExperienceTests {
 
     @Test
     void completedActionCanRemainOutcomePendingOrUnverifiable() {
-        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:");
-             var evidence = new SqliteEvidencePath("jdbc:sqlite::memory:")) {
+        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:")) {
+            var evidence = new SqliteEvidencePath(repository);
             var local = source(repository, evidence);
             var pending = local.load(new ProjectionRequest(new AnalysisContext("local-outcome-pending", null, null, null, null), 20));
             assertThat(pending.improvementActions()).isNotEmpty();
@@ -66,8 +66,8 @@ class V3AdversarialExperienceTests {
 
     @Test
     void partialStaleEvidenceNeverBecomesHealthyByAbsence() {
-        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:");
-             var evidence = new SqliteEvidencePath("jdbc:sqlite::memory:")) {
+        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:")) {
+            var evidence = new SqliteEvidencePath(repository);
             var result = source(repository, evidence).load(new ProjectionRequest(
                 new AnalysisContext("local-partial-stale", null, null, null, null), 20));
             assertThat(result.quality().stale()).isTrue();
