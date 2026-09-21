@@ -109,14 +109,14 @@
       "userInputRequired": false
     }
   ],
-  "currentAction": "Current R3 runtime candidate rejected. Framework now requires Product Vision + Experience Target before further deep visual implementation.",
-  "nextAutonomousAction": "Synthesize VECTOR Product Vision from accepted intent + inspected product + full KB challenge; generate materially competing Experience Target alternatives; materialize target(s) for expectation validation before resuming deep implementation.",
+  "currentAction": "FR-050 L2 produced Product Vision, three competing experience alternatives and an isolated Dual Canvas materialization before deeper implementation.",
+  "nextAutonomousAction": "After expectation signal, record EXPECTATION ALIGNED or REJECTED CANDIDATE. If aligned, derive functional/engineering contract and only then resume implementation; if rejected, return autonomously to alternatives.",
   "rules": {
     "progressIsEvidenceBased": true,
     "noBackgroundExecutionClaim": true,
     "readyRequiresAllRequiredGatesPass": true
   },
-  "agentActivity": "STOPPED_AT_EXPECTATION_TARGET_BOUNDARY",
+  "agentActivity": "STOPPED_AT_HUMAN_EXPECTATION_VALIDATION",
   "progressCalculation": {
     "method": "weighted_workstream_progress",
     "weights": {
@@ -225,5 +225,28 @@
       ],
       "pilotDisposition": "RETURN_TO_PRODUCT_ALTERNATIVES_AND_EXPERIENCE_TARGET"
     }
-  ]
+  ],
+  "fr050L2": {
+    "state": "EXPECTATION_TARGET_MATERIALIZED_PENDING_HUMAN_VALIDATION",
+    "minimalInput": "Build VECTOR as an operational intelligence and performance platform.",
+    "outputs": {
+      "productVision": "docs/framework-pilot/PRODUCT-VISION-EXPERIENCE-TARGET.md",
+      "alternatives": [
+        "A Operational Field",
+        "B Investigation Timeline",
+        "C Dual Canvas"
+      ],
+      "selectedExperiment": "C Dual Canvas",
+      "materializedTarget": "frontend/experience-target/dual-canvas.html"
+    },
+    "evidence": [
+      "5aef487434f249669cbe33b521c04883fa739df0",
+      "58e34ab67eda72b59038734825146c2398eaa0ec"
+    ],
+    "passCriteriaRemaining": [
+      "Human expectation validation",
+      "Material difference validation against rejected baseline"
+    ],
+    "currentDisposition": "EXPERIMENT REQUIRED"
+  }
 }
