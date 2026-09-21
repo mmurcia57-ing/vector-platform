@@ -212,7 +212,10 @@ export function Header({
   period: string;
   onPeriodChange: (period: string) => void;
 }) {
-  const locale = useContext(LocaleContext);\n  const t = COPY[locale];\n  return (\n    <header className="gold-header">
+  const locale = useContext(LocaleContext);
+  const t = COPY[locale];
+  return (
+    <header className="gold-header">
       <div>
         <span>{eyebrow}</span>
         <h1>{title}</h1>
@@ -220,7 +223,10 @@ export function Header({
       </div>
       <div className="gold-filters">
         <label className="vx-context-control">
-          <span>{t.scenario}</span>\n          <select aria-label={t.scenario} value={period} onChange={(event) => onPeriodChange(event.target.value)}>\n            {PERIOD_OPTIONS[locale].map(([value, text]) => <option key={value} value={value}>{text}</option>)}\n          </select>
+          <span>{t.scenario}</span>
+          <select aria-label={t.scenario} value={period} onChange={(event) => onPeriodChange(event.target.value)}>
+            {PERIOD_OPTIONS[locale].map(([value, text]) => <option key={value} value={value}>{text}</option>)}
+          </select>
         </label>
         <span className="vx-context-meta">{t.demoBoundary}</span>
       </div>
@@ -369,7 +375,9 @@ function SpatialGraph({ graph, focus, onFocus, nodeLabel, onExpand, onReset, lim
   </div>;
 }
 
-function QualityNote({ quality }: { quality?: Quality }) {\n  const t = useCopy();\n  return (
+function QualityNote({ quality }: { quality?: Quality }) {
+  const t = useCopy();
+  return (
     <footer className="gold-footer">
       <strong>VECTOR</strong>
       <span>
@@ -386,7 +394,9 @@ export default function ExperienceViewport() {
   const [host, setHost] = useState<Element | null>(null);
   const [path, setPath] = useState(routePath());
   const [locale, setLocale] = useState<UiLocale>(() => (localStorage.getItem("vector-ui-locale") === "en" ? "en" : "es"));
-  const t = COPY[locale];\n  const tr = (es: string, en: string) => locale === "es" ? es : en;\n  const [period, setPeriod] = useState(() => new URLSearchParams(window.location.search).get("period") || DEFAULT_PERIOD);
+  const t = COPY[locale];
+  const tr = (es: string, en: string) => locale === "es" ? es : en;
+  const [period, setPeriod] = useState(() => new URLSearchParams(window.location.search).get("period") || DEFAULT_PERIOD);
   const [overview, setOverview] = useState<Overview>();
   const [detail, setDetail] = useState<Detail>();
   const [risk, setRisk] = useState<Detail>();
