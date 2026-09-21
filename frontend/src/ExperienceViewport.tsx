@@ -247,6 +247,37 @@ function DecisionQueue({ risks, commitments, navigate }: { risks: Risk[]; commit
   </section>;
 }
 
+function OperationalCanvas({ overview, selectedServiceId, navigate }: { overview: Overview; selectedServiceId?: string; navigate: (next: string, context?: Record<string, string>) => void }) {
+  const services = overview.services.slice(0, 8);
+  return <section className="vx-ops-canvas" aria-label="Mapa operacional">
+    <div className="vx-canvas-head"><div><small>LIVE OPERATIONAL CONTEXT</small><strong>Mapa de atención y servicios</strong></div><span>{overview.quality.stale ? "Evidencia desactualizada" : "Evidencia disponible"}</span></div>
+    <div className="vx-canvas-stage">
+      <div className="vx-orbit orbit-a" /><div className="vx-orbit orbit-b" />
+      <div className="vx-core"><span>VECTOR</span><b>{overview.attentionFindings.length}</b><small>hallazgos</small></div>
+      {services.map((service, index) => {
+        const riskCount = overview.attentionFindings.filter((risk) => risk.serviceId === service.serviceId).length;
+        const angle = (Math.PI * 2 * index) / Math.max(services.length, 1) - Math.PI / 2;
+        const radius = index % 2 ? 39 : 31;
+        const left = 50 + Math.cos(angle) * radius;
+        const top = 50 + Math.sin(angle) * radius;
+        return <button key={service.serviceId} className={`vx-canvas-node ${riskCount ? "attention" : "stable"} ${selectedServiceId === service.serviceId ? "selected" : ""}`} style={{ left: `${left}%`, top: `${top}%` }} onClick={() => navigate(`/services/${encodeURIComponent(service.serviceId)}`, { areaDomainId: service.areaDomainId, serviceId: service.serviceId })}>
+          <span>{service.name}</span><small>{service.conditionContext}</small>{riskCount > 0 && <b>{riskCount}</b>}
+        </button>;
+      })}
+      {overview.attentionFindings.slice(0, 5).map((risk, index) => <button key={risk.riskFindingId} className="vx-risk-beacon" style={{ left: `${18 + index * 15}%` }} onClick={() => navigate(`/risks/${encodeURIComponent(risk.riskFindingId)}`, { serviceId: risk.serviceId, riskFindingId: risk.riskFindingId })}><i /><span>{risk.condition}</span></button>)}
+    </div>
+    <div className="vx-canvas-legend"><span><i className="stable" /> servicio en contexto</span><span><i className="attention" /> atención sustentada</span><small>Relación visual de contexto; no representa causalidad ni telemetría en tiempo real.</small></div>
+  </section>;
+}
+
+function TemporalSpine({ signals, risks }: { signals?: TemporalSignal[]; risks?: Risk[] }) {
+  const items = signals?.length ? signals.slice(0, 8).map((signal) => ({ id: signal.signalId, type: signal.semanticType, text: signal.statement, time: signal.observedAt.slice(0, 10) })) : (risks ?? []).slice(0, 6).map((risk) => ({ id: risk.riskFindingId, type: "RISK FINDING", text: risk.condition, time: "contexto actual" }));
+  return <section className="vx-temporal-spine" aria-label="Espina temporal">
+    <div className="vx-spine-title"><small>TEMPORAL / EVENT SPINE</small><strong>Cómo evoluciona el contexto</strong></div>
+    <div className="vx-spine-track">{items.length ? items.map((item) => <div className="vx-spine-event" key={item.id}><i /><small>{item.time}</small><b>{item.type.replaceAll("_", " ")}</b><span>{item.text}</span></div>) : <span className="vx-spine-empty">No hay secuencia temporal suficiente.</span>}</div>
+  </section>;
+}
+
 function QualityNote({ quality }: { quality?: Quality }) {
   return (
     <footer className="gold-footer">
@@ -430,36 +461,15 @@ export default function ExperienceViewport() {
           period={period}
           onPeriodChange={changePeriod}
         />
-        <div className="gold-metrics">
-          <Metric
-            tone="danger"
-            title="Áreas con atención"
-            value={
-              overview.areas.filter((item) => item.attentionState !== "STABLE")
-                .length
-            }
-            note="Requieren revisión o intervención"
-          />
-          <Metric
-            tone="purple"
-            title="Compromisos vencidos"
-            value={commitments?.overdueCount ?? 0}
-            note="Según contexto disponible"
-          />
-          <Metric
-            tone="warning"
-            title="Riesgos persistentes"
-            value={overview.attentionFindings.length}
-            note="Con evidencia disponible"
-          />
-          <Metric
-            tone="info"
-            title="Acciones sin efecto"
-            value="N/D"
-            note="No disponible en esta proyección"
-          />
+        <div className="vx-command-status">
+          <div><small>ÁREAS CON ATENCIÓN</small><strong>{overview.areas.filter((item) => item.attentionState !== "STABLE").length}</strong></div>
+          <div><small>RIESGOS CON EVIDENCIA</small><strong>{overview.attentionFindings.length}</strong></div>
+          <div><small>COMPROMISOS VENCIDOS</small><strong>{commitments?.overdueCount ?? 0}</strong></div>
+          <div><small>CALIDAD</small><strong>{overview.quality.stale ? "STALE" : overview.quality.partial ? "PARTIAL" : "AVAILABLE"}</strong></div>
         </div>
-        <div className="gold-main-grid">
+        <OperationalCanvas overview={overview} navigate={navigate} />
+        <TemporalSpine risks={overview.attentionFindings} />
+        <div className="gold-main-grid vx-command-support">
           <section className="gold-panel">
             <SectionTitle
               title="Áreas que requieren atención"
@@ -735,6 +745,8 @@ export default function ExperienceViewport() {
             <span>{detail?.quality.missingContext.length ? detail.quality.missingContext.join(" · ") : "Sin contexto faltante declarado"}</span>
           </div>
         </section>
+        <OperationalCanvas overview={overview} selectedServiceId={detail?.service?.serviceId} navigate={navigate} />
+        <TemporalSpine risks={detail?.riskFindings} />
         <div className="vx-service-workspace">
           <section>
             <div className="gold-panel gold-stack">
@@ -783,6 +795,7 @@ export default function ExperienceViewport() {
           onPeriodChange={changePeriod}
         />
         <SemanticLegend />
+        <TemporalSpine signals={signals} risks={risk?.riskFindings} />
         <LensNav labelText="Lentes de investigación" items={[
           ["risk-timeline", "Línea de tiempo"],
           ["risk-evidence", "Evidencia"],
