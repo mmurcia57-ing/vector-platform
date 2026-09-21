@@ -54,6 +54,28 @@ public final class DefaultExperienceProjectionUseCase implements ExperienceProje
 		return new RiskInvestigationProjection(request.context(), finding, evidence, commitments, actions, outcomes, quality);
 	}
 
+	@Override
+	public List<TemporalSignalProjection> temporalSignals(ProjectionRequest request) {
+		var prepared = source.load(request);
+		var serviceId = request.context().serviceId();
+		var riskId = request.context().riskFindingId();
+		return limit(prepared.evidence().stream()
+			.filter(item -> serviceId == null || serviceId.equals(item.serviceId()))
+			.filter(item -> riskId == null || riskId.equals(item.riskFindingId()))
+			.sorted(java.util.Comparator.comparing(EvidenceProjection::observedAt))
+			.map(item -> new TemporalSignalProjection(item.evidenceId(), item.serviceId(), item.riskFindingId(),
+				semanticType(item), item.supportedClaim(), item.observedAt(), item.sourceReferenceIds(), item.limitations()))
+			.toList(), request.limit());
+	}
+
+	private static String semanticType(EvidenceProjection item) {
+		var joined = String.join(" ", item.sourceReferenceIds()).toLowerCase();
+		if (joined.contains("incident")) return "INCIDENT_EVIDENCE";
+		if (joined.contains("slo") || joined.contains("sli")) return "SLO_SLI_EVIDENCE";
+		if (joined.contains("event") || joined.contains("observability")) return "OPERATIONAL_SIGNAL";
+		return "OBSERVED_EVIDENCE";
+	}
+
 	private static String required(String value, String name) {
 		if (value == null || value.isBlank()) throw new IllegalArgumentException(name + " is required");
 		return value;

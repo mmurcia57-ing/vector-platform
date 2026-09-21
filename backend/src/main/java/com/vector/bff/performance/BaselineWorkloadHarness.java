@@ -13,7 +13,11 @@ public final class BaselineWorkloadHarness {
     }
 
     public BaselineWorkloadResult run(ProjectionRequest request, int iterations, long targetMillis) {
-        if (iterations <= 0 || targetMillis <= 0) throw new IllegalArgumentException("baseline configuration is required");
+        return run(request, iterations, targetMillis, LocalWorkloadProfile.BASELINE);
+    }
+
+    public BaselineWorkloadResult run(ProjectionRequest request, int iterations, long targetMillis, LocalWorkloadProfile profile) {
+        if (iterations <= 0 || targetMillis <= 0 || profile == null) throw new IllegalArgumentException("local workload configuration is required");
         var samples = new long[iterations];
         for (int index = 0; index < iterations; index++) {
             var started = System.nanoTime();
@@ -25,6 +29,6 @@ public final class BaselineWorkloadHarness {
         }
         java.util.Arrays.sort(samples);
         int p95Index = Math.min(samples.length - 1, (int) Math.ceil(samples.length * 0.95) - 1);
-        return new BaselineWorkloadResult(iterations, samples[p95Index], targetMillis, true, "LOCAL_BASELINE");
+        return new BaselineWorkloadResult(iterations, samples[p95Index], targetMillis, true, "LOCAL_" + profile.name());
     }
 }

@@ -1,90 +1,88 @@
-# VECTOR local engineering foundation
+# VECTOR — Framework Pilot Branch
 
-This repository currently contains the technical foundation through
-`TASK-FND-002`.
-It is not a product slice: canonical entities, persistence schemas, graph
-projection, external integrations, journeys, and final UX are intentionally
-deferred to their approved follow-on tasks.
+> Branch: `framework/vector-full-lifecycle-pilot`
+>
+> This branch is the isolated brownfield calibration product for the Engineering Intelligence & Execution Framework. It is materially ahead of VECTOR `main`. Do not infer current state from the historical foundation baseline.
 
-## Prerequisites
+## Current local pilot baseline
 
-- JDK 21 (`JAVA_HOME` and `java` must resolve to Java 21).
-- Node.js 24.x for the SPA toolchain.
-- Docker Desktop / Docker Compose for the local Neo4j runtime.
+The branch currently contains:
+- 17 canonical entity semantics and local SQLite canonical persistence;
+- Evidence, SourceReference and provenance paths;
+- deterministic intelligence;
+- graph projection/query and durable local projection recovery evidence;
+- J01–J04 product/experience paths;
+- React/Vite intelligence workspace;
+- Spring Boot BFF/backend;
+- Commitment Management including EXT-004 lifecycle/reliability depth;
+- local HTTP identity/authorization/audit boundary;
+- governed AI abstraction with safe unavailable behavior;
+- observability abstractions;
+- BASELINE/MIXED/STRESS local characterization;
+- backend and frontend automated assurance;
+- Product Completion Discovery and Capability Depth pilot evidence.
 
-The backend includes the Maven Wrapper; a global Maven installation is not
-required. SQLite is the approved local canonical persistence adapter, but its
-schema and adapter are intentionally deferred to `TASK-CAN-001`. The local
-runtime directory is prepared and ignored by Git for that later task.
+Current pilot evidence is maintained under:
+- `docs/framework-pilot/`;
+- `specs/extensions/EXT-003-product-depth-intelligence-workspace.md`;
+- `specs/extensions/EXT-004-commitment-lifecycle-reliability.md`.
 
-## Local configuration and runtime
+## Product boundary
 
-1. Copy `.env.example` to `.env` and replace the password placeholder with a
-   local-only value. Do not commit `.env`.
-2. Start Neo4j: `docker compose up -d neo4j`.
-3. Verify it is ready: `docker compose ps` and
-   `docker compose logs neo4j`.
+The approved master capability map remains broader than this release. V1 implements minimum end-to-end slices of the approved V1 MUST capabilities. A local V1 END_TO_END claim is not an assertion that the exhaustive master capability is complete.
 
-Neo4j is a future rebuildable projection/read model, not canonical truth or
-Source Authority. No application code connects to it in this foundation.
+POST-V1/evolution scope remains governed and is not silently promoted.
 
-The backend reads the non-sensitive runtime label from
-`VECTOR_RUNTIME_ENVIRONMENT`, defaulting safely to `local`. An explicit blank
-value is rejected at startup. The frontend example in `frontend/.env.example`
-contains only a public BFF base URL. Never place passwords, tokens, credentials,
-or provider configuration in `VITE_*` variables: those values are embedded in
-the browser bundle.
+## External/corporate boundaries
 
-## Run locally
+The local pilot does not fabricate or claim:
+- corporate IAM/IdP;
+- corporate Source Authority mappings;
+- production credentials;
+- corporate AI provider/model;
+- real corporate source mappings;
+- production volume/capacity;
+- production topology/approvals;
+- corporate availability/SLO targets.
 
-Install SPA dependencies:
+These remain external/TBD unless authoritative evidence is supplied.
 
-```powershell
-npm --prefix frontend install
-```
+## Local prerequisites
 
-Start the backend (requires JDK 21):
-
-```powershell
-.\backend\mvnw.cmd spring-boot:run
-```
-
-Verify backend health:
-
-```powershell
-Invoke-WebRequest http://localhost:8080/actuator/health
-```
-
-Start the SPA technical shell:
-
-```powershell
-npm --prefix frontend run dev
-```
-
-The SPA has no direct database, Neo4j, Cypher, provider, or credential access.
-It is a technical runtime shell only; experience/BFF work begins in its
-approved later task.
-
-## Deterministic synthetic seed harness
-
-`TASK-DATA-001` provides an in-memory seed harness under
-`backend/src/main/java/com/vector/bff/seed`. It produces synthetic,
-versioned fixtures from explicit profile, seed, version, and effective
-configuration inputs. The `GOLDEN` manifest carries GS-01 through GS-12 as
-non-evaluated oracle descriptors; it does not claim that later canonical or
-journey logic has been implemented. SMALL, BASELINE, and STRESS records are
-generated on demand and are never committed as large datasets.
+- JDK 21.
+- Node.js 24.x.
+- Docker Desktop / Docker Compose where the selected local runtime requires it.
 
 ## Validation
+
+Typical branch validation:
 
 ```powershell
 .\backend\mvnw.cmd test
 npm --prefix frontend test
+npm --prefix frontend run lint
 npm --prefix frontend run build
-docker compose config
 git diff --check
 ```
 
-`AT-17` performance execution is not yet applicable: representative workloads
-and vertical slices are intentionally absent. This foundation establishes only
-the readiness needed for later performance work.
+Use the current GitHub Actions evidence and `docs/framework-pilot/` reports for release/convergence claims; command examples above do not themselves constitute evidence.
+
+## Architecture invariants
+
+- SPA → BFF; browser does not directly access persistence, graph storage or provider credentials.
+- Canonical persistence remains distinct from Source Authority.
+- Graph is a deterministic/rebuildable projection/read model, not canonical truth.
+- Correlation does not imply causation.
+- Execution completion does not imply verified improvement.
+- AI assistance does not replace Evidence or human accountability.
+- Individual performance/ranking is not part of the V1 local pilot.
+
+## Historical foundation
+
+The original foundation-only README described the state around the early `TASK-FND-002` baseline. That state remains available in Git history for provenance, but is no longer presented as the current branch runtime/product state because doing so caused governance drift during brownfield reconciliation.
+
+## Release statement
+
+This branch is a **local evidence-backed Framework pilot baseline**.
+
+It is **not represented as corporate production ready**, and promotion/merge remains a separate release decision.

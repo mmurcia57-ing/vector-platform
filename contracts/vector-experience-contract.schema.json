@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "vector-experience-contract-v1",
+  "title": "VECTOR Experience BFF Contract",
+  "type": "object",
+  "description": "Machine-readable compatibility boundary for the local VECTOR experience. It does not define corporate source schemas.",
+  "$defs": {
+    "quality": {
+      "type": "object",
+      "required": [
+        "sourceCoverage",
+        "freshness",
+        "confidence",
+        "uncertainty",
+        "limitations"
+      ],
+      "properties": {
+        "sourceCoverage": {
+          "type": "string"
+        },
+        "freshness": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "string"
+        },
+        "uncertainty": {
+          "type": "string"
+        },
+        "limitations": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "area": {
+      "type": "object",
+      "required": [
+        "areaDomainId",
+        "name",
+        "attentionState"
+      ],
+      "properties": {
+        "areaDomainId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "attentionState": {
+          "type": "string"
+        }
+      }
+    },
+    "service": {
+      "type": "object",
+      "required": [
+        "serviceId",
+        "name",
+        "areaDomainId",
+        "conditionContext"
+      ],
+      "properties": {
+        "serviceId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "areaDomainId": {
+          "type": "string"
+        },
+        "conditionContext": {
+          "type": "string"
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "required": [
+        "riskFindingId",
+        "serviceId",
+        "condition",
+        "explanation"
+      ],
+      "properties": {
+        "riskFindingId": {
+          "type": "string"
+        },
+        "serviceId": {
+          "type": "string"
+        },
+        "condition": {
+          "type": "string"
+        },
+        "explanation": {
+          "type": "string"
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "evidenceId",
+        "supportedClaim",
+        "sourceReferenceIds",
+        "observedAt"
+      ],
+      "properties": {
+        "evidenceId": {
+          "type": "string"
+        },
+        "supportedClaim": {
+          "type": "string"
+        },
+        "sourceReferenceIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "observedAt": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "x-vector-endpoints": {
+    "GET /api/experience/overview": {
+      "required": [
+        "context",
+        "areas",
+        "services",
+        "attentionFindings",
+        "quality"
+      ]
+    },
+    "GET /api/experience/services/{serviceId}": {
+      "required": [
+        "context",
+        "service",
+        "riskFindings",
+        "evidence",
+        "commitments",
+        "improvementActions",
+        "outcomeVerifications",
+        "quality"
+      ]
+    },
+    "GET /api/experience/risks/{riskFindingId}": {
+      "required": [
+        "context",
+        "riskFinding",
+        "evidence",
+        "commitments",
+        "improvementActions",
+        "outcomeVerifications",
+        "quality"
+      ]
+    },
+    "GET /api/experience/commitments": {
+      "required": [
+        "commitments",
+        "activeCount",
+        "inProgressCount",
+        "completedCount",
+        "overdueCount",
+        "renegotiatedCount",
+        "outcomePendingCount",
+        "reliabilityNumerator",
+        "reliabilityDenominator",
+        "commitmentReliabilityRate"
+      ]
+    },
+    "POST /api/experience/commitments": {
+      "mutation": true,
+      "authorizationRequired": true,
+      "auditRequired": true
+    },
+    "GET /api/experience/signals": {
+      "required": [
+        "signalId",
+        "semanticType",
+        "statement",
+        "observedAt",
+        "sourceReferenceIds",
+        "limitation"
+      ],
+      "semantics": "Evidence-backed temporal context; never causal attribution"
+    },
+    "GET /api/experience/risks/{riskFindingId}/assist": {
+      "required": [
+        "status",
+        "limitations",
+        "provenance"
+      ],
+      "semantics": "Advisory, evidence-grounded, non-authoritative and safe-degrading"
+    },
+    "GET /api/experience/risks/{riskFindingId}/change-association": {
+      "required": [
+        "serviceId",
+        "changeId",
+        "deploymentId",
+        "temporalContext",
+        "contextualAssociation",
+        "causalClaim",
+        "evidenceIds",
+        "limitation"
+      ],
+      "invariant": "causalClaim must remain false for contextual association"
+    },
+    "GET /api/experience/commitments/{commitmentId}/history": {
+      "required": [
+        "eventId",
+        "eventType",
+        "occurredAt",
+        "beforeDueDate"
+      ],
+      "semantics": "Immutable local lifecycle history"
+    },
+    "PATCH /api/experience/commitments/{commitmentId}/lifecycle": {
+      "mutation": true,
+      "authorizationRequired": true,
+      "auditRequired": true
+    },
+    "POST /api/experience/commitments/{commitmentId}/renegotiations": {
+      "mutation": true,
+      "authorizationRequired": true,
+      "auditRequired": true,
+      "semantics": "Reason required; prior due date retained"
+    }
+  },
+  "x-vector-invariants": [
+    "Correlation is not causation",
+    "Graph is a projection, never canonical authority",
+    "AI output is non-authoritative",
+    "Evidence provenance is preserved",
+    "Missing evidence must not be presented as healthy state",
+    "Commitment execution completion is not outcome verification",
+    "Commitment renegotiation preserves prior due date and reason",
+    "No individual commitment scoring or ranking"
+  ]
+}

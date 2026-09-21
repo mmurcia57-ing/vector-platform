@@ -18,10 +18,12 @@ body {
 
 #root {
   box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
   min-height: 100svh;
-  max-width: 70rem;
-  margin: 0 auto;
-  border-inline: 1px solid var(--border);
+  max-width: none;
+  margin: 0;
+  border: 0;
 }
 
 h1 {

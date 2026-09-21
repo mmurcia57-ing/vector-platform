@@ -6,4 +6,6 @@ public interface ExperienceProjectionUseCase {
 	ServiceIntelligenceProjection serviceIntelligence(ProjectionRequest request);
 
 	RiskInvestigationProjection riskInvestigation(ProjectionRequest request);
+
+	java.util.List<TemporalSignalProjection> temporalSignals(ProjectionRequest request);
 }

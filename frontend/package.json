@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "test": "node --test test/foundation.test.mjs",
+    "test": "node --test test/*.test.mjs && vitest run test/*.test.tsx",
+    "test:behavior": "vitest run test/*.test.tsx",
     "preview": "vite preview"
   },
   "dependencies": {

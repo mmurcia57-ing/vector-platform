@@ -38,10 +38,23 @@ class BaselineWorkloadHarnessTests {
             new ProjectionQuality("complete", "current", "confirmed", List.of(), List.of(), List.of(), false, false));
 
         var result = new BaselineWorkloadHarness(new DefaultExperienceProjectionUseCase(source))
-            .run(request, 100, 2_000);
+            .run(request, 100, 2_000, LocalWorkloadProfile.STRESS);
 
-        assertThat(result.profile()).isEqualTo("LOCAL_BASELINE");
+        assertThat(result.profile()).isEqualTo("LOCAL_STRESS");
         assertThat(result.iterations()).isEqualTo(100);
         assertThat(result.semanticallyComplete()).isTrue();
     }
+    @Test
+    void mixedProfileIsExplicitlyLocalAndDoesNotClaimCorporateCapacity() {
+        var request = new ProjectionRequest(new AnalysisContext("2025-Q1", "area-platform", "service-payments", null, null), 10);
+        ExperienceProjectionSource source = ignored -> new PreparedExperienceContext(
+            List.of(), List.of(new ServiceProjection("service-payments", "Payments", "area-platform", "degraded")),
+            List.of(), List.of(), List.of(), List.of(), List.of(),
+            new ProjectionQuality("complete", "current", "confirmed", List.of(), List.of(), List.of(), false, false));
+        var result = new BaselineWorkloadHarness(new DefaultExperienceProjectionUseCase(source))
+            .run(request, 50, 2_000, LocalWorkloadProfile.MIXED);
+        assertThat(result.profile()).isEqualTo("LOCAL_MIXED");
+        assertThat(result.semanticallyComplete()).isTrue();
+    }
+
 }

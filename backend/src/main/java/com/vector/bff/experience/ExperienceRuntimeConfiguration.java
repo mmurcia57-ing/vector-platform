@@ -10,7 +10,7 @@ import com.vector.bff.graph.GraphProjectionStore;
 import com.vector.bff.graph.GraphNode;
 import com.vector.bff.graph.GraphProjectionEvent;
 import com.vector.bff.graph.GraphRelationship;
-import com.vector.bff.graph.InMemoryGraphProjectionStore;
+import com.vector.bff.graph.SqliteGraphProjectionStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -41,13 +41,52 @@ public class ExperienceRuntimeConfiguration {
     }
 
     @Bean
-    CommitmentManagementUseCase commitmentManagementUseCase(ExperienceProjectionSource source, CanonicalRepository repository) {
-        return new DefaultCommitmentManagementUseCase(source, repository);
+    CommitmentLifecycleStore commitmentLifecycleStore() {
+        return new SqliteCommitmentLifecycleStore("jdbc:sqlite:vector-commitments.db");
+    }
+
+    @Bean
+    CommitmentManagementUseCase commitmentManagementUseCase(ExperienceProjectionSource source, CanonicalRepository repository,
+            CommitmentLifecycleStore lifecycle) {
+        return new DefaultCommitmentManagementUseCase(source, repository, lifecycle);
+    }
+
+
+
+
+    @Bean
+    LocalChangeAssociationExperience localChangeAssociationExperience(CanonicalRepository repository) {
+        return new LocalChangeAssociationExperience(repository);
+    }
+
+    @Bean
+    com.vector.bff.ai.AiProvider aiProvider() {
+        return request -> com.vector.bff.ai.AiProviderResult.unavailable("No corporate AI provider is configured in the local runtime");
+    }
+
+    @Bean
+    com.vector.bff.ai.AiInvestigationService aiInvestigationService(com.vector.bff.ai.AiProvider provider) {
+        return new com.vector.bff.ai.AiInvestigationService(provider);
+    }
+
+    @Bean
+    com.vector.bff.security.AuthorizationService authorizationService() {
+        return new com.vector.bff.security.AuthorizationService();
+    }
+
+    @Bean
+    com.vector.bff.security.SecurityAuditRecorder securityAuditRecorder() {
+        return new com.vector.bff.security.InMemorySecurityAuditRecorder();
+    }
+
+    @Bean
+    com.vector.bff.security.LocalHttpSecurityContextResolver localHttpSecurityContextResolver() {
+        return new com.vector.bff.security.LocalHttpSecurityContextResolver();
     }
 
     @Bean
     GraphProjectionStore graphProjectionStore() {
-        var store = new InMemoryGraphProjectionStore();
+        var store = new SqliteGraphProjectionStore("jdbc:sqlite:vector-graph.db");
         var area = new GraphNode("AreaDomain", "area-platform");
         var service = new GraphNode("Service", "service-payments");
         var finding = new GraphNode("RiskFinding", "risk-finding:service-payments:2025-01-01T00:00:00Z");

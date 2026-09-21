@@ -1,0 +1,268 @@
+{
+  "schemaVersion": "1.1",
+  "project": "VECTOR",
+  "branch": "framework/vector-full-lifecycle-pilot",
+  "state": "IN_PROGRESS",
+  "overallProgressPercent": 56,
+  "completionTarget": "FUNCTIONAL_DEMO_CONVERGED",
+  "workstreams": [
+    {
+      "id": "viewport",
+      "label": "Full-browser viewport",
+      "progressPercent": 100,
+      "state": "RUNTIME_PASS",
+      "gate": "PASS",
+      "evidence": [
+        "54bf56423131e4e67e881eb99c377f58342a947a",
+        "86b54d0c277b3f75e33e4162468170df74db9bad",
+        "e03a5f0888bb30637c19da0d592d4ece63236d7b"
+      ],
+      "nextAction": "Runtime retest must confirm root→shell→workspace now uses the intended browser canvas."
+    },
+    {
+      "id": "localization",
+      "label": "UI localization ES/EN",
+      "progressPercent": 70,
+      "state": "RUNTIME_FAIL_DERIVED_COPY",
+      "gate": "FAIL",
+      "evidence": [
+        "8d3f5691c8b280d0e2f203d548156874f377def1",
+        "fff7a656d9b8eae8560f8ea9a522b959cad9d349",
+        "cdc5eaa2e0fd89526b1cfc6ca4d3e23b651949c3"
+      ],
+      "nextAction": "Behavioral ES/EN retest; preserve source evidence text without silent translation."
+    },
+    {
+      "id": "r3",
+      "label": "R3 Dual Canvas redesign",
+      "progressPercent": 42,
+      "state": "RUNTIME_FAIL_MATERIAL_DIFFERENCE",
+      "gate": "FAIL",
+      "evidence": [
+        "e03a5f0888bb30637c19da0d592d4ece63236d7b"
+      ],
+      "nextAction": "User/runtime material-difference retest against prior baseline; visual QA still mandatory."
+    },
+    {
+      "id": "spatial-graph",
+      "label": "Spatial operational graph",
+      "progressPercent": 72,
+      "state": "RUNTIME_PARTIAL_PASS_BASIC",
+      "gate": "FAIL",
+      "nextAction": "Runtime retest Open graph modal, focus/select behavior, close/recovery and accessible relationship fallback.",
+      "evidence": [
+        "8ab97203f5dbbec7fca61bfa92738562ce7967f6",
+        "f294755460280e9f4198c18d3ae83138f6d0f4c6"
+      ]
+    },
+    {
+      "id": "scenarios",
+      "label": "Scenario assurance",
+      "progressPercent": 50,
+      "state": "DEFINED_ASSURANCE_PENDING",
+      "gate": "FAIL",
+      "nextAction": "Expand deterministic harness and execute representative adversarial and negative controls."
+    },
+    {
+      "id": "build-tests",
+      "label": "Build and tests",
+      "progressPercent": 10,
+      "state": "ASSURANCE_INFRA_CREATED_RUN_NOT_OBSERVED",
+      "gate": "FAIL",
+      "nextAction": "Obtain an actual GitHub Actions run or equivalent command-execution evidence; do not infer PASS from workflow definition.",
+      "evidence": [
+        "4ea0059645ae18082947f7f05cab76606d444ca5"
+      ]
+    },
+    {
+      "id": "visual-qa",
+      "label": "Visual and responsive QA",
+      "progressPercent": 20,
+      "state": "RUNTIME_FINDINGS_OPEN",
+      "gate": "FAIL",
+      "nextAction": "Review hierarchy, density, viewport use, collisions, overflow, responsive behavior and locale coherence."
+    },
+    {
+      "id": "framework-regression",
+      "label": "Framework regression",
+      "progressPercent": 68,
+      "state": "L1_CONTROLS_EXPANDED_L2_L3_PENDING",
+      "gate": "FAIL",
+      "nextAction": "Execute new autonomous knowledge, redesign materialization, viewport, localization and execution-observability regressions.",
+      "evidence": [
+        "2cf8b102d67a49451e1a03eb132928a728189cfb",
+        "f8953dd61486389a45e8f9d65c4d5eca3038536d"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "type": "EXTERNAL_DEPENDENCY",
+      "id": "ASSURANCE-RUNNER",
+      "description": "Current pilot commits expose no GitHub workflow run/status. Executable build/test PASS cannot be claimed from repository inspection.",
+      "userInputRequired": false
+    },
+    {
+      "type": "FRAMEWORK_GATE",
+      "id": "EXPECTATION-CHALLENGE",
+      "description": "Current visual candidate is REJECTED. Product Vision and Experience Target must be materialized and expectation-aligned before deeper visual implementation.",
+      "userInputRequired": false
+    }
+  ],
+  "currentAction": "North-Star grammar frozen and Experience Target V2 materialized without unsupported live/causal/AI claims.",
+  "nextAutonomousAction": "Run human Expectation Challenge on V2. If aligned, derive functional/engineering contract and implement; if rejected, return to alternatives without cosmetic patch loop.",
+  "rules": {
+    "progressIsEvidenceBased": true,
+    "noBackgroundExecutionClaim": true,
+    "readyRequiresAllRequiredGatesPass": true
+  },
+  "agentActivity": "STOPPED_AT_HUMAN_EXPECTATION_VALIDATION",
+  "progressCalculation": {
+    "method": "weighted_workstream_progress",
+    "weights": {
+      "viewport": 10,
+      "localization": 15,
+      "r3": 20,
+      "spatial-graph": 15,
+      "scenarios": 15,
+      "build-tests": 10,
+      "visual-qa": 5,
+      "framework-regression": 10
+    },
+    "totalWeight": 100,
+    "formula": "round(sum(weight * progressPercent / 100))"
+  },
+  "runtimeValidation": {
+    "source": "human product validation",
+    "findings": [
+      {
+        "id": "UV-01",
+        "gate": "Structural/Functional Design",
+        "result": "FAIL",
+        "evidence": "Still perceived as same colors/structure as prior baseline."
+      },
+      {
+        "id": "UV-02",
+        "gate": "Viewport Fit",
+        "result": "FAIL",
+        "evidence": "Application still appears small in browser."
+      },
+      {
+        "id": "UV-03",
+        "gate": "Information Architecture",
+        "result": "PARTIAL_PASS",
+        "evidence": "Structure improved but remains visually similar."
+      },
+      {
+        "id": "UV-04",
+        "gate": "Complex Visualization",
+        "result": "FAIL_THEN_IMPLEMENTED_PENDING_RETEST",
+        "evidence": "Graph useful but too small; requires popup/modal expansion.",
+        "implementation": [
+          "8ab97203f5dbbec7fca61bfa92738562ce7967f6",
+          "f294755460280e9f4198c18d3ae83138f6d0f4c6"
+        ]
+      },
+      {
+        "id": "UV-05",
+        "gate": "Localization",
+        "result": "FAIL",
+        "evidence": "Neither Spanish nor English mode is completely coherent."
+      }
+    ]
+  },
+  "runtimeValidationSecondPass": {
+    "source": "human product validation",
+    "findings": [
+      {
+        "id": "UV2-01",
+        "gate": "Viewport Fit",
+        "result": "PASS",
+        "evidence": "Full-screen rendering confirmed."
+      },
+      {
+        "id": "UV2-02",
+        "gate": "Navigation",
+        "result": "PASS",
+        "evidence": "Panorama → Area → Service → Investigation → Commitments understood."
+      },
+      {
+        "id": "UV2-03",
+        "gate": "Complex Visualization",
+        "result": "PARTIAL_PASS",
+        "evidence": "Graph modal works, but graph remains basic for investigation."
+      },
+      {
+        "id": "UV2-04",
+        "gate": "Localization",
+        "result": "FAIL",
+        "evidence": "VECTOR-derived recurrence explanation remains English in Spanish UI; correlation disclaimer is Spanish."
+      },
+      {
+        "id": "UV2-05",
+        "gate": "Visible Affordances",
+        "result": "PASS",
+        "evidence": "Tested visible interactions work."
+      },
+      {
+        "id": "UV2-06",
+        "gate": "Material Difference",
+        "result": "FAIL",
+        "evidence": "Still perceived as a traditional dashboard; visual field remains too blue."
+      }
+    ],
+    "decision": "R3_REJECTED_FOR_MATERIAL_EXPERIENCE; escalate to competing structural prototype rather than cosmetic iteration."
+  },
+  "frameworkLearning": [
+    {
+      "id": "FR-050",
+      "finding": "Deep visual implementation preceded Product Vision / Experience Target alignment; user had to discover target mismatch through repeated runtime rejection.",
+      "frameworkCommits": [
+        "3ff6955aeee9bb7c6f070428d0a4e296b8d7eb3a",
+        "8316a0dd0bc63099467967a0f90a744f7a5d2737",
+        "ab02f1a3f549c4704af32005f345a891ebb959c8",
+        "9a072bda42c3146501dbe32b6e6e914432fe2a2f"
+      ],
+      "pilotDisposition": "RETURN_TO_PRODUCT_ALTERNATIVES_AND_EXPERIENCE_TARGET"
+    }
+  ],
+  "fr050L2": {
+    "state": "V2_MATERIALIZED_PENDING_HUMAN_EXPECTATION_VALIDATION",
+    "minimalInput": "Build VECTOR as an operational intelligence and performance platform.",
+    "outputs": {
+      "productVision": "docs/framework-pilot/PRODUCT-VISION-EXPERIENCE-TARGET.md",
+      "alternatives": [
+        "A Operational Field",
+        "B Investigation Timeline",
+        "C Dual Canvas"
+      ],
+      "selectedExperiment": "C Dual Canvas",
+      "materializedTarget": "frontend/experience-target/dual-canvas.html",
+      "northStar": "docs/framework-pilot/NORTH-STAR-EXPERIENCE.md",
+      "materializedTargetV2": "frontend/experience-target/north-star-v2.html"
+    },
+    "evidence": [
+      "5aef487434f249669cbe33b521c04883fa739df0",
+      "58e34ab67eda72b59038734825146c2398eaa0ec"
+    ],
+    "passCriteriaRemaining": [
+      "Human expectation validation",
+      "Material difference validation against rejected baseline"
+    ],
+    "currentDisposition": "EXPERIMENT REQUIRED"
+  },
+  "fr051": {
+    "state": "L2_CONTROL_ADDED_V2_TARGET_MATERIALIZED",
+    "finding": "First Experience Target preserved conceptual structure but under-materialized visual/interaction ambition; human had to request a more futuristic vision.",
+    "frameworkEvidence": [
+      "845943ad74d0622018ec42024c7f6c5a6ce0c240",
+      "5383344e34092a05dd78d848f5c4b98c36fc5a05",
+      "55f46a035968abe5b6733ffad72bcb31310b450f"
+    ],
+    "productEvidence": [
+      "9686088cf1e2a4ca013f63e6f933ed57a39556a5",
+      "14f0994ae6ad1d1457416cef8025afdd5288c7d0"
+    ],
+    "disposition": "NORTH_STAR_DIRECTION_HUMAN_VALIDATED; EXPERIENCE_TARGET_V2_PENDING_EXPECTATION_VALIDATION"
+  }
+}

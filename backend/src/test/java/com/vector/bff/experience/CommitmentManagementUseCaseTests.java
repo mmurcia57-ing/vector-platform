@@ -50,4 +50,55 @@ class CommitmentManagementUseCaseTests {
             assertThat(projection.overdue()).isFalse();
         }
     }
+    @Test
+    void preservesRenegotiationHistoryAndDistinguishesPreDueDateChange() {
+        ExperienceProjectionSource source = request -> new PreparedExperienceContext(List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(),
+            new ProjectionQuality("test","fixed","native",List.of(),List.of(),List.of(),false,false));
+        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:");
+             var lifecycle = new SqliteCommitmentLifecycleStore("jdbc:sqlite::memory:")) {
+            var useCase = new DefaultCommitmentManagementUseCase(source, repository, lifecycle);
+            useCase.create(new CommitmentCreateRequest("reneg-1","stabilize service","area-1",null,LocalDate.of(2025,1,10),"IN_PROGRESS","risk removed","service-1",null,"risk-1"));
+            useCase.renegotiate("reneg-1", new CommitmentRenegotiationRequest(LocalDate.of(2025,1,20),"dependency changed",java.time.Instant.parse("2025-01-05T10:00:00Z")));
+            var history = useCase.history("reneg-1");
+            assertThat(history).anySatisfy(event -> {
+                assertThat(event.eventType()).isEqualTo("RENEGOTIATED");
+                assertThat(event.priorDueDate()).isEqualTo(LocalDate.of(2025,1,10));
+                assertThat(event.newDueDate()).isEqualTo(LocalDate.of(2025,1,20));
+                assertThat(event.beforeDueDate()).isTrue();
+                assertThat(event.reason()).isEqualTo("dependency changed");
+            });
+            assertThat(useCase.list("area-1","service-1",LocalDate.of(2025,1,6),20).renegotiatedCount()).isEqualTo(1);
+        }
+    }
+
+    @Test
+    void rejectsRenegotiationWithoutReason() {
+        ExperienceProjectionSource source = request -> new PreparedExperienceContext(List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(),
+            new ProjectionQuality("test","fixed","native",List.of(),List.of(),List.of(),false,false));
+        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:");
+             var lifecycle = new SqliteCommitmentLifecycleStore("jdbc:sqlite::memory:")) {
+            var useCase = new DefaultCommitmentManagementUseCase(source, repository, lifecycle);
+            useCase.create(new CommitmentCreateRequest("reneg-2","stabilize","area-1",null,LocalDate.of(2025,1,10),"OPEN","stable","service-1",null,"risk-1"));
+            assertThatIllegalArgumentException().isThrownBy(() -> useCase.renegotiate("reneg-2",
+                new CommitmentRenegotiationRequest(LocalDate.of(2025,1,20),"",java.time.Instant.parse("2025-01-05T10:00:00Z"))));
+        }
+    }
+
+    @Test
+    void reliabilityUsesExplicitDueDenominatorAndCompletionEventDate() {
+        ExperienceProjectionSource source = request -> new PreparedExperienceContext(List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(),
+            new ProjectionQuality("test","fixed","native",List.of(),List.of(),List.of(),false,false));
+        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:");
+             var lifecycle = new SqliteCommitmentLifecycleStore("jdbc:sqlite::memory:")) {
+            var useCase = new DefaultCommitmentManagementUseCase(source, repository, lifecycle);
+            useCase.create(new CommitmentCreateRequest("rel-1","deliver fix","area-1",null,LocalDate.of(2025,1,10),"IN_PROGRESS","stable","service-1",null,"risk-1"));
+            useCase.updateLifecycle("rel-1",new CommitmentLifecycleUpdateRequest("COMPLETED","delivered",java.time.Instant.parse("2025-01-09T10:00:00Z")));
+            var result=useCase.list("area-1","service-1",LocalDate.of(2025,1,11),20);
+            assertThat(result.reliabilityDenominator()).isEqualTo(1);
+            assertThat(result.reliabilityNumerator()).isEqualTo(1);
+            assertThat(result.commitmentReliabilityRate()).isEqualTo(1.0);
+            assertThat(result.outcomePendingCount()).isEqualTo(1);
+        }
+    }
+
 }
