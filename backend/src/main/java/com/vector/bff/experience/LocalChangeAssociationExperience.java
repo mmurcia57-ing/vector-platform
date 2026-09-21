@@ -17,6 +17,16 @@ public final class LocalChangeAssociationExperience {
     }
 
     public ChangeAssociationExperienceProjection investigate(String serviceId, String riskFindingId) {
+        return investigate(serviceId, riskFindingId, "local-change-associated");
+    }
+
+    public ChangeAssociationExperienceProjection investigate(String serviceId, String riskFindingId, String period) {
+        if ("local-change-predates".equals(period)) {
+            return new ChangeAssociationExperienceProjection(serviceId, riskFindingId, "change-payments-local",
+                "deployment-payments-local", "degradation-before-change", false, false,
+                List.of("evidence-change-association"),
+                "Synthetic inverse control: degradation predates the change; temporal proximity does not establish association or causation");
+        }
         var service = new Service(metadata(serviceId), "Payments", "area-platform", "degraded");
         var evidence = new Evidence(metadata("evidence-change-association"), "correlation-observation",
             "Degradation evidence is temporally adjacent to the local synthetic deployment", "Local demo evidence; association only");
