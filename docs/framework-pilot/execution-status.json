@@ -3,15 +3,15 @@
   "project": "VECTOR",
   "branch": "framework/vector-full-lifecycle-pilot",
   "state": "IN_PROGRESS",
-  "overallProgressPercent": 60,
+  "overallProgressPercent": 48,
   "completionTarget": "FUNCTIONAL_DEMO_CONVERGED",
   "workstreams": [
     {
       "id": "viewport",
       "label": "Full-browser viewport",
-      "progressPercent": 95,
-      "state": "IMPLEMENTED",
-      "gate": "ASSURANCE_PENDING",
+      "progressPercent": 35,
+      "state": "RUNTIME_FAIL",
+      "gate": "FAIL",
       "evidence": [
         "abab912749ea9ce5edce6bbb205cc97624b15972"
       ]
@@ -19,8 +19,8 @@
     {
       "id": "localization",
       "label": "UI localization ES/EN",
-      "progressPercent": 75,
-      "state": "IMPLEMENTED_ASSURANCE_PENDING",
+      "progressPercent": 55,
+      "state": "RUNTIME_FAIL",
       "gate": "FAIL",
       "evidence": [
         "9fee48c9356b10d41e4b200fd7f82bc1fed8356a",
@@ -32,8 +32,8 @@
     {
       "id": "r3",
       "label": "R3 Dual Canvas redesign",
-      "progressPercent": 70,
-      "state": "IN_PROGRESS",
+      "progressPercent": 45,
+      "state": "RUNTIME_FAIL",
       "gate": "FAIL",
       "evidence": [
         "f9e03c25608cbac82496bd4152d96a4f83865e0c",
@@ -45,7 +45,7 @@
     {
       "id": "spatial-graph",
       "label": "Spatial operational graph",
-      "progressPercent": 70,
+      "progressPercent": 78,
       "state": "IMPLEMENTED_ASSURANCE_PENDING",
       "gate": "FAIL",
       "nextAction": "Run behavioral/accessibility and visual assurance for bounded node-edge topology.",
@@ -76,8 +76,8 @@
     {
       "id": "visual-qa",
       "label": "Visual and responsive QA",
-      "progressPercent": 0,
-      "state": "PENDING",
+      "progressPercent": 15,
+      "state": "RUNTIME_FINDINGS_OPEN",
       "gate": "FAIL",
       "nextAction": "Review hierarchy, density, viewport use, collisions, overflow, responsive behavior and locale coherence."
     },
@@ -104,14 +104,14 @@
       "userInputRequired": false
     }
   ],
-  "currentAction": "Execution paused at external assurance runner boundary after material runtime changes.",
-  "nextAutonomousAction": "When command/CI execution evidence becomes available: run frontend npm ci/build/test and backend mvn test; fix failures; then perform behavioral locale/topology assurance and explicit visual QA.",
+  "currentAction": "User runtime validation rejected material visual redesign, viewport fit and localization completeness; graph expansion requirement implemented.",
+  "nextAutonomousAction": "Trace actual viewport constraint in runtime structure; materially differentiate R3 composition from baseline; complete locale boundary; then rerun user visual validation and executable assurance.",
   "rules": {
     "progressIsEvidenceBased": true,
     "noBackgroundExecutionClaim": true,
     "readyRequiresAllRequiredGatesPass": true
   },
-  "agentActivity": "STOPPED_EXTERNAL_ASSURANCE_DEPENDENCY",
+  "agentActivity": "AGENT_EXECUTING",
   "progressCalculation": {
     "method": "weighted_workstream_progress",
     "weights": {
@@ -126,5 +126,44 @@
     },
     "totalWeight": 100,
     "formula": "round(sum(weight * progressPercent / 100))"
+  },
+  "runtimeValidation": {
+    "source": "human product validation",
+    "findings": [
+      {
+        "id": "UV-01",
+        "gate": "Structural/Functional Design",
+        "result": "FAIL",
+        "evidence": "Still perceived as same colors/structure as prior baseline."
+      },
+      {
+        "id": "UV-02",
+        "gate": "Viewport Fit",
+        "result": "FAIL",
+        "evidence": "Application still appears small in browser."
+      },
+      {
+        "id": "UV-03",
+        "gate": "Information Architecture",
+        "result": "PARTIAL_PASS",
+        "evidence": "Structure improved but remains visually similar."
+      },
+      {
+        "id": "UV-04",
+        "gate": "Complex Visualization",
+        "result": "FAIL_THEN_IMPLEMENTED_PENDING_RETEST",
+        "evidence": "Graph useful but too small; requires popup/modal expansion.",
+        "implementation": [
+          "8ab97203f5dbbec7fca61bfa92738562ce7967f6",
+          "f294755460280e9f4198c18d3ae83138f6d0f4c6"
+        ]
+      },
+      {
+        "id": "UV-05",
+        "gate": "Localization",
+        "result": "FAIL",
+        "evidence": "Neither Spanish nor English mode is completely coherent."
+      }
+    ]
   }
 }
