@@ -346,30 +346,6 @@ function DecisionQueue({ risks, commitments, navigate }: { risks: Risk[]; commit
   </section>;
 }
 
-function OperationalCanvas({ overview, selectedServiceId, navigate }: { overview: Overview; selectedServiceId?: string; navigate: (next: string, context?: Record<string, string>) => void }) {
-  const t = useCopy();
-  const services = overview.services.slice(0, 8);
-  return <section className="vx-ops-canvas" aria-label={t.mapLabel}>
-    <div className="vx-canvas-head"><div><small>{t.operationalContext}</small><strong>{t.attentionMap}</strong></div><span>{overview.quality.stale ? t.evidenceStale : t.evidenceAvailable}</span></div>
-    <div className="vx-canvas-stage">
-      <div className="vx-orbit orbit-a" /><div className="vx-orbit orbit-b" />
-      <div className="vx-core"><span>VECTOR</span><b>{overview.attentionFindings.length}</b><small>{t.findings}</small></div>
-      {services.map((service, index) => {
-        const riskCount = overview.attentionFindings.filter((risk) => risk.serviceId === service.serviceId).length;
-        const angle = (Math.PI * 2 * index) / Math.max(services.length, 1) - Math.PI / 2;
-        const radius = index % 2 ? 39 : 31;
-        const left = 50 + Math.cos(angle) * radius;
-        const top = 50 + Math.sin(angle) * radius;
-        return <button key={service.serviceId} className={`vx-canvas-node ${riskCount ? "attention" : "stable"} ${selectedServiceId === service.serviceId ? "selected" : ""}`} style={{ left: `${left}%`, top: `${top}%` }} onClick={() => navigate(`/services/${encodeURIComponent(service.serviceId)}`, { areaDomainId: service.areaDomainId, serviceId: service.serviceId })}>
-          <span>{service.name}</span><small>{service.conditionContext}</small>{riskCount > 0 && <b>{riskCount}</b>}
-        </button>;
-      })}
-      {overview.attentionFindings.slice(0, 5).map((risk, index) => <button key={risk.riskFindingId} className="vx-risk-beacon" style={{ left: `${18 + index * 15}%` }} onClick={() => navigate(`/risks/${encodeURIComponent(risk.riskFindingId)}`, { serviceId: risk.serviceId, riskFindingId: risk.riskFindingId })}><i /><span>{risk.condition}</span></button>)}
-    </div>
-    <div className="vx-canvas-legend"><span><i className="stable" /> {t.serviceContext}</span><span><i className="attention" /> {t.evidenceAttention}</span><small>{t.contextDisclaimer}</small></div>
-  </section>;
-}
-
 function TemporalSpine({ signals, risks }: { signals?: TemporalSignal[]; risks?: Risk[] }) {
   const t = useCopy();
   const items = signals?.length ? signals.slice(0, 8).map((signal) => ({ id: signal.signalId, type: signal.semanticType, text: signal.statement, time: signal.observedAt.slice(0, 10) })) : (risks ?? []).slice(0, 6).map((risk) => ({ id: risk.riskFindingId, type: t.riskFinding, text: risk.condition, time: t.currentContext }));
