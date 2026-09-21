@@ -95,6 +95,7 @@ type Evidence = {
 };
 type Commitment = {
   commitmentId: string;
+  riskFindingId?: string;
   declaration: string;
   statusContext?: string;
   executionStatus?: string;
@@ -131,6 +132,9 @@ type Overview = {
   areas: Area[];
   services: Service[];
   attentionFindings: Risk[];
+  commitments: Commitment[];
+  improvementActions: Action[];
+  outcomeVerifications: Outcome[];
   quality: Quality;
 };
 type Detail = {
@@ -565,6 +569,12 @@ export default function ExperienceViewport() {
     overview?.attentionFindings.filter((item) =>
       areaServiceIds.has(item.serviceId),
     ) ?? [];
+  const areaRiskIds = new Set(areaRisks.map((item) => item.riskFindingId));
+  const areaCommitments = overview?.commitments.filter((item) => areaRiskIds.has((item as Commitment & { riskFindingId?: string }).riskFindingId ?? "")) ?? [];
+  const areaCommitmentIds = new Set(areaCommitments.map((item) => item.commitmentId));
+  const areaActions = overview?.improvementActions.filter((item) => areaCommitmentIds.has(item.commitmentId)) ?? [];
+  const areaActionIds = new Set(areaActions.map((item) => item.actionId));
+  const areaOutcomes = overview?.outcomeVerifications.filter((item) => areaActionIds.has(item.actionId)) ?? [];
   const graphNodeLabel = (canonicalId: string) =>
     (risk?.service?.serviceId === canonicalId && risk.service.name) ||
     (risk?.riskFinding?.riskFindingId === canonicalId &&
@@ -690,11 +700,11 @@ export default function ExperienceViewport() {
         <div className="gold-bottom">
           <section className="gold-panel">
             <h3>{tr("Estado de compromisos", "Commitment status")}</h3>
-            <Empty>{tr("Detalle agregado no disponible para el dataset local.", "Aggregated detail is not available for the local dataset.")}</Empty>
+            <p><strong>{overview.commitments.length}</strong> {tr("compromisos vinculados a hallazgos del período.","commitments linked to findings in the period.")}</p>
           </section>
           <section className="gold-panel">
             <h3>{tr("Resultado de acciones", "Action outcomes")}</h3>
-            <Empty>{tr("No hay verificación agregada disponible.", "No aggregated verification is available.")}</Empty>
+            overview.outcomeVerifications.length ? <div>{overview.outcomeVerifications.map((outcome) => <p key={outcome.verificationId}><strong>{outcome.outcome}</strong> · {outcome.evidenceIds.length} {tr("evidencias","evidence references")}</p>)}</div> : <Empty>{tr("No hay resultado verificado; ejecución no implica mejora.", "No verified outcome; execution does not imply improvement.")}</Empty>
           </section>
             <section className="gold-panel">
               <h3>{tr("Contexto adicional", "Additional context")}</h3>
@@ -798,8 +808,8 @@ export default function ExperienceViewport() {
           <div className="vx-followup-grid">
             <div><small>{tr("RIESGO","RISK")}</small><strong>{areaRisks.length}</strong><span>{tr("hallazgos visibles","visible findings")}</span></div>
             <div><small>{tr("COMPROMISO","COMMITMENT")}</small><strong>{commitments?.activeCount ?? 0}</strong><span>{tr("activos","active")}</span></div>
-            <div><small>{tr("ACCIÓN","ACTION")}</small><strong>{tr("N/D","N/A")}</strong><span>{tr("sin agregado de área","no area aggregate")}</span></div>
-            <div><small>{tr("RESULTADO","OUTCOME")}</small><strong>{tr("N/D","N/A")}</strong><span>{tr("sin verificación agregada","no aggregate verification")}</span></div>
+            <div><small>{tr("ACCIÓN","ACTION")}</small><strong>{areaActions.length}</strong><span>{tr("acciones vinculadas","linked actions")}</span></div>
+            <div><small>{tr("RESULTADO","OUTCOME")}</small><strong>{areaOutcomes.length}</strong><span>{areaOutcomes.length ? areaOutcomes.map((item) => item.outcome).join(" · ") : tr("sin resultado verificado","no verified outcome")}</span></div>
           </div>
         </section>
 
