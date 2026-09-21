@@ -158,3 +158,13 @@ html,body,#root{width:100%;max-width:none;min-width:0}
 .vx-locale-dock{left:18px!important;right:auto!important;bottom:18px!important;z-index:130!important}
 @media(min-width:1600px){.experience-viewport>.gold-page{padding-left:264px!important;padding-right:36px!important}.vx-workspace-rail{width:238px}.vx-canvas-stage{height:500px}}
 @media(max-width:900px){.experience-viewport>.gold-page{padding:14px 14px 82px!important}.vx-workspace-rail{position:sticky!important;inset:auto!important;width:auto;margin:-14px -14px 14px!important;padding:10px 12px!important;grid-template-columns:auto 1fr!important;grid-template-rows:auto auto!important;gap:8px 14px!important;border-right:0!important;border-bottom:1px solid var(--vx-line)!important}.vx-workspace-rail>div:first-child{padding:0;border:0}.vx-workspace-rail nav{display:flex!important;overflow:auto}.vx-workspace-rail button{width:auto;white-space:nowrap}.vx-loop{display:none}.vx-locale-dock{left:auto!important;right:14px!important}}
+
+
+/* Experience Contract V3 — persistent cross-surface Context Envelope */
+.vx-context-envelope{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;margin:0 0 10px;padding:8px 12px;border:1px solid var(--vx-line);border-radius:10px;background:rgba(6,24,37,.82);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.vx-context-envelope>strong{font:800 .52rem var(--mono);letter-spacing:.11em;color:var(--vx-signal);text-transform:uppercase}
+.vx-context-envelope>div{display:flex;align-items:center;gap:7px;min-width:0;overflow-x:auto}
+.vx-context-envelope>div>span{display:flex;align-items:center;gap:5px;flex:0 0 auto;padding:5px 7px;border:1px solid rgba(130,196,230,.15);border-radius:7px;background:rgba(255,255,255,.025)}
+.vx-context-envelope small{font-size:.46rem;color:var(--vx-muted);text-transform:uppercase}.vx-context-envelope b{font-size:.55rem;color:var(--vx-text)}
+.vx-context-envelope em{max-width:310px;color:var(--vx-uncertain);font-size:.48rem;font-style:normal;text-align:right}
+@media(max-width:900px){.vx-context-envelope{grid-template-columns:1fr}.vx-context-envelope em{text-align:left;max-width:none}}
