@@ -639,103 +639,54 @@ export default function ExperienceViewport() {
       <div className="gold-page">
         <WorkspaceRail active={path} navigate={navigate} />
         <Header
-          eyebrow="COMPROMISOS & MEJORAS / VISTA GENERAL"
+          eyebrow="COMPROMISOS & MEJORAS · WORKFLOW"
           title="Compromisos & Mejoras"
-          question="Seguimiento de compromisos, acciones de mejora y verificación de resultados."
+          question="¿Qué se comprometió, qué cambió en la ejecución y qué resultado está realmente verificado?"
           period={period}
           onPeriodChange={changePeriod}
         />
         <LensNav labelText="Lentes de compromisos y resultados" items={[
-          ["commitment-list", "Compromisos"],
-          ["commitment-results", "Resultados y evidencia"],
+          ["commitment-list", "Flujo de compromisos"],
+          ["commitment-results", "Resultado y evidencia"],
           ["commitment-new", "Nuevo compromiso"],
         ]} />
-        <div className="gold-metrics">
-          <Metric
-            tone="info"
-            title="Compromisos activos"
-            value={commitments?.activeCount ?? 0}
-            note="En el contexto disponible"
-          />
-          <Metric
-            tone="purple"
-            title="Renegociados"
-            value={commitments?.renegotiatedCount ?? 0}
-            note="Historial preservado"
-          />
-          <Metric
-            tone="success"
-            title="Reliability Rate"
-            value={commitments?.commitmentReliabilityRate == null ? "N/D" : `${Math.round(commitments.commitmentReliabilityRate * 100)}%`}
-            note={`${commitments?.reliabilityNumerator ?? 0}/${commitments?.reliabilityDenominator ?? 0} vencidos en período`}
-          />
-          <Metric
-            tone="danger"
-            title="Resultado pendiente"
-            value={commitments?.outcomePendingCount ?? 0}
-            note="Completado ≠ resultado verificado"
-          />
+        <div className="vx-commitment-strip">
+          <div><small>ACTIVOS</small><strong>{commitments?.activeCount ?? 0}</strong></div>
+          <div><small>RENEGOCIADOS</small><strong>{commitments?.renegotiatedCount ?? 0}</strong></div>
+          <div><small>RELIABILITY RATE</small><strong>{commitments?.commitmentReliabilityRate == null ? "N/D" : `${Math.round(commitments.commitmentReliabilityRate * 100)}%`}</strong></div>
+          <div><small>OUTCOME PENDIENTE</small><strong>{commitments?.outcomePendingCount ?? 0}</strong></div>
         </div>
-        <div className="gold-main-grid">
-          <section>
-            <div className="gold-panel">
-              <h3>Estado de compromisos</h3>
-              <div className="gold-progress">
-                <i />
-                <i />
-                <i />
-                <i />
-              </div>
-            </div>
-            <div className="gold-panel gold-stack">
-              <SectionTitle id="commitment-list" title="Compromisos recientes" />
-              {commitments?.commitments.map((item) => (
-                <div className="gold-table-row" key={item.commitmentId}>
-                  <strong>{item.declaration}</strong>
-                  <span>{label(item.accountableAreaDomainId)}</span>
-                  <b>{item.executionStatus ?? item.statusContext}</b>
-                  <em>{item.overdue ? "Vencido" : "En seguimiento"}</em>
-                  <div className="vx-commitment-actions"><button onClick={() => updateCommitmentStatus(item.commitmentId, "IN_PROGRESS")}>En progreso</button><button onClick={() => updateCommitmentStatus(item.commitmentId, "COMPLETED")}>Completar</button><button onClick={() => setRenegotiationId(item.commitmentId)}>Renegociar</button></div>
+        <div className="vx-commitment-workspace">
+          <section className="gold-panel">
+            <SectionTitle id="commitment-list" title="Flujo de compromisos" subtitle="La fecha y la renegociación preservan historia; completar ejecución no verifica resultado." />
+            <div className="vx-ledger-head"><span>Compromiso</span><span>Área</span><span>Estado</span><span>Fecha</span><span>Acciones</span></div>
+            {commitments?.commitments.map((item) => (
+              <div className="vx-ledger-row" key={item.commitmentId}>
+                <strong>{item.declaration}</strong>
+                <span>{label(item.accountableAreaDomainId)}</span>
+                <b>{item.executionStatus ?? item.statusContext}</b>
+                <em>{item.currentDueDate ?? (item.overdue ? "Vencido" : "En seguimiento")}</em>
+                <div className="vx-commitment-actions">
+                  <button onClick={() => updateCommitmentStatus(item.commitmentId, "IN_PROGRESS")}>En progreso</button>
+                  <button onClick={() => updateCommitmentStatus(item.commitmentId, "COMPLETED")}>Completar</button>
+                  <button onClick={() => setRenegotiationId(item.commitmentId)}>Renegociar</button>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </section>
-          <aside>
+          <aside className="vx-commitment-side">
+            <div className="gold-panel" id="commitment-results">
+              <SectionTitle title="Resultado y evidencia" />
+              <Empty>No hay OutcomeVerification agregado para esta vista. La ejecución completada permanece separada del resultado.</Empty>
+            </div>
             <div className="gold-intelligence">
               <strong>✣ VECTOR Intelligence</strong>
-              <p>
-                La ejecución se presenta separada de la verificación del
-                resultado estructural.
-              </p>
-            </div>
-            <div className="gold-panel">
-              <h3 id="commitment-results">Verificación de resultados y evidencia</h3>
-              <Empty>
-                No hay OutcomeVerification agregado para esta vista.
-              </Empty>
+              <p>Prioriza seguimiento gobernado: compromiso → ejecución → evidencia → resultado. No convierte actividad completada en mejora.</p>
             </div>
             <form className="gold-panel gold-form" id="commitment-new" onSubmit={createCommitment}>
               <h3>Nuevo compromiso</h3>
-              <label>
-                Declaración
-                <input
-                  value={declaration}
-                  onChange={(event) => setDeclaration(event.target.value)}
-                  required
-                />
-              </label>
-              <label>
-                Área responsable
-                <select
-                  key={area?.areaDomainId}
-                  defaultValue={area?.areaDomainId ?? "area-platform"}
-                  disabled
-                >
-                  <option value={area?.areaDomainId ?? "area-platform"}>
-                    {area?.name ?? "Platform"}
-                  </option>
-                </select>
-              </label>
+              <label>Declaración<input value={declaration} onChange={(event) => setDeclaration(event.target.value)} required /></label>
+              <label>Área responsable<select key={area?.areaDomainId} defaultValue={area?.areaDomainId ?? "area-platform"} disabled><option value={area?.areaDomainId ?? "area-platform"}>{area?.name ?? "Platform"}</option></select></label>
               <label>Resultado esperado<input value={intendedResult} onChange={(event) => setIntendedResult(event.target.value)} /></label>
               <label>Fecha comprometida<input type="date" value={commitmentDueDate} onChange={(event) => setCommitmentDueDate(event.target.value)} /></label>
               <button>Crear compromiso</button>
@@ -759,115 +710,57 @@ export default function ExperienceViewport() {
       <div className="gold-page">
         <WorkspaceRail active={path} navigate={navigate} />
         <Header
-          eyebrow={`SERVICIOS › ${label(detail?.service?.areaDomainId)}`}
+          eyebrow={`SERVICIO · ${label(detail?.service?.areaDomainId)}`}
           title={detail?.service?.name ?? "Service Intelligence"}
-          question={
-            detail?.service
-              ? `${detail.service.conditionContext}. Evidencia operacional disponible.`
-              : "Cargando contexto del servicio."
-          }
+          question={detail?.service ? `¿Qué está ocurriendo en este servicio, qué evidencia lo sustenta y qué contexto operacional falta?` : "Cargando contexto del servicio."}
           period={period}
           onPeriodChange={changePeriod}
         />
         <LensNav labelText="Lentes del servicio" items={[
+          ["service-condition", "Condición"],
+          ["service-evidence", "Evidencia"],
           ["service-slo", "SLO"],
-          ["service-risks", "Riesgos"],
           ["service-incidents", "Incidentes"],
           ["service-changes", "Cambios"],
-          ["service-evidence", "Evidencia"],
         ]} />
-        <div className="gold-metrics">
-          <Metric
-            tone="danger"
-            title="SLO cumplimiento"
-            value="N/D"
-            note="No disponible en la proyección"
-          />
-          <Metric
-            tone="warning"
-            title="Incidentes activos"
-            value="N/D"
-            note="No disponible en la proyección"
-          />
-          <Metric
-            tone="info"
-            title="Cambios recientes"
-            value="N/D"
-            note="No disponible en la proyección"
-          />
-          <Metric
-            tone="purple"
-            title="Compromisos"
-            value={detail?.commitments.length ?? 0}
-            note="En contexto del servicio"
-          />
-        </div>
-        <div className="gold-main-grid">
+        <section className="vx-service-condition" id="service-condition">
+          <div>
+            <small>CONDICIÓN OPERACIONAL</small>
+            <strong>{detail?.service?.conditionContext ?? "Contexto no disponible"}</strong>
+            <span>{detail?.riskFindings.length ?? 0} hallazgos · {detail?.evidence.length ?? 0} evidencias · {detail?.commitments.length ?? 0} compromisos</span>
+          </div>
+          <div>
+            <small>CALIDAD DEL CONTEXTO</small>
+            <strong>{detail?.quality.stale ? "Desactualizado" : detail?.quality.partial ? "Parcial" : "Disponible"}</strong>
+            <span>{detail?.quality.missingContext.length ? detail.quality.missingContext.join(" · ") : "Sin contexto faltante declarado"}</span>
+          </div>
+        </section>
+        <div className="vx-service-workspace">
           <section>
-            <div className="gold-panel">
-              <SectionTitle
-                id="service-slo"
-                title="Tendencia SLO"
-                subtitle="Histórico del período seleccionado"
-              />
-              <Empty>No hay serie SLO disponible para el dataset local.</Empty>
-            </div>
             <div className="gold-panel gold-stack">
-              <SectionTitle id="service-risks" title="Hallazgos y riesgos" />
-              {detail?.riskFindings.map((item) => (
-                <button
-                  className="gold-table-row"
-                  key={item.riskFindingId}
-                  onClick={() =>
-                    navigate(
-                      `/risks/${encodeURIComponent(item.riskFindingId)}`,
-                      {
-                        areaDomainId: detail.service?.areaDomainId ?? "",
-                        serviceId: item.serviceId,
-                        riskFindingId: item.riskFindingId,
-                      },
-                    )
-                  }
-                >
-                  <strong>{item.condition}</strong>
-                  <span>{item.explanation}</span>
-                  <b>Atención</b>
-                  <em>Investigar →</em>
+              <SectionTitle title="Hallazgos que requieren investigación" subtitle="Cada hallazgo mantiene evidencia, limitaciones y contexto del servicio." />
+              {detail?.riskFindings.length ? detail.riskFindings.map((item) => (
+                <button className="vx-service-finding" key={item.riskFindingId} onClick={() => navigate(`/risks/${encodeURIComponent(item.riskFindingId)}`, {
+                  areaDomainId: detail.service?.areaDomainId ?? "",
+                  serviceId: item.serviceId,
+                  riskFindingId: item.riskFindingId,
+                })}>
+                  <small>HALLAZGO</small><strong>{item.condition}</strong><span>{item.explanation}</span><em>Investigar evidencia y relaciones →</em>
                 </button>
-              ))}
+              )) : <Empty>No hay RiskFinding sustentado para el contexto seleccionado.</Empty>}
             </div>
-            <div className="gold-panel">
-              <h3 id="service-incidents">Incidentes recientes</h3>
-              <Empty>No hay incidentes expuestos por esta proyección.</Empty>
+            <div className="gold-panel" id="service-evidence">
+              <SectionTitle title="Evidencia operacional" subtitle="Hechos disponibles para el servicio; ausencia de datos no implica operación normal." />
+              {detail?.evidence.length ? detail.evidence.map((item) => (
+                <div className="gold-evidence" key={item.evidenceId}><b>FACT</b><strong>{item.supportedClaim}</strong><span>{item.observedAt} · {item.sourceReferenceIds.map(label).join(", ")}</span></div>
+              )) : <Empty>No hay evidencia expuesta por esta proyección.</Empty>}
             </div>
           </section>
-          <aside>
-            <div className="gold-intelligence">
-              <strong>✣ VECTOR Intelligence</strong>
-              <p>
-                {detail?.riskFindings[0]?.explanation ??
-                  "No hay hallazgos adicionales."}
-              </p>
-            </div>
-            <div className="gold-panel">
-              <h3 id="service-changes">Cambios recientes</h3>
-              <Empty>No hay cambios expuestos por esta proyección.</Empty>
-            </div>
-            <div className="gold-panel">
-              <h3 id="service-evidence">Evidencia disponible</h3>
-              {detail?.evidence.map((item) => (
-                <div className="gold-signal" key={item.evidenceId}>
-                  <i>•</i>
-                  <div>
-                    <strong>{item.supportedClaim}</strong>
-                    <p>
-                      {item.observedAt} ·{" "}
-                      {item.sourceReferenceIds.map(label).join(", ")}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <aside className="vx-service-context">
+            <div className="gold-panel" id="service-slo"><SectionTitle title="SLO / tendencia" /><Empty>No hay serie SLO disponible para el dataset local.</Empty></div>
+            <div className="gold-panel" id="service-incidents"><SectionTitle title="Incidentes" /><Empty>No hay incidentes expuestos por esta proyección.</Empty></div>
+            <div className="gold-panel" id="service-changes"><SectionTitle title="Cambios y despliegues" /><Empty>No hay cambios expuestos por esta proyección.</Empty></div>
+            <div className="gold-intelligence"><strong>✣ VECTOR Intelligence</strong><p>{detail?.riskFindings[0]?.explanation ?? "No hay hallazgos adicionales."}</p><small>La explicación se limita a la evidencia disponible.</small></div>
           </aside>
         </div>
         <QualityNote quality={detail?.quality} />
