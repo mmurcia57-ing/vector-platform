@@ -85,7 +85,52 @@ public final class LocalExperienceProjectionSource implements ExperienceProjecti
     @Override
     public PreparedExperienceContext load(ProjectionRequest request) {
         var period = request.context().period();
-        if (period == null || period.isBlank() || "local-dataset-v1".equals(period)) return prepared;
+        if (period == null || period.isBlank() || "local-dataset-v1".equals(period)
+                || "local-change-associated".equals(period) || "local-change-predates".equals(period)) return prepared;
+
+        if ("local-healthy-control".equals(period)) {
+            var stableServices = prepared.services().stream()
+                .map(service -> new ServiceProjection(service.serviceId(), service.name(), service.areaDomainId(), "stable synthetic control"))
+                .toList();
+            return new PreparedExperienceContext(
+                prepared.areas().stream().map(area -> new AreaDomainProjection(area.areaDomainId(), area.name(), "STABLE")).toList(),
+                stableServices, List.of(), List.of(), List.of(), List.of(), List.of(),
+                new ProjectionQuality("healthy negative-control fixture", OBSERVED_AT.toString(),
+                    "No evidence-backed attention finding in this deterministic control", List.of(), List.of(),
+                    List.of("Synthetic negative control; absence of a RiskFinding is intentional."), false, false));
+        }
+
+        if ("local-conflicting-evidence".equals(period)) {
+            var conflict = new EvidenceProjection("evidence-conflict", "service-payments",
+                prepared.riskFindings().getFirst().riskFindingId(),
+                "A second synthetic source reports a stable observation in the same analysis context",
+                List.of("source-conflict-local"), "Conflicting synthetic evidence; authority is not silently selected", OBSERVED_AT);
+            var evidence = new java.util.ArrayList<EvidenceProjection>(prepared.evidence());
+            evidence.add(conflict);
+            return new PreparedExperienceContext(
+                prepared.areas(), prepared.services(), prepared.riskFindings(), List.copyOf(evidence),
+                prepared.commitments(), prepared.improvementActions(), List.of(),
+                new ProjectionQuality("conflicting local deterministic fixture", OBSERVED_AT.toString(),
+                    "CONFLICTING evidence requires investigation", List.of(), List.of("Competing observations remain visible."),
+                    List.of("No conclusion is selected solely from conflicting evidence."), false, true));
+        }
+
+        if ("local-outcome-improved".equals(period)) {
+            var improvedEvidence = new EvidenceProjection("evidence-outcome-improved", "service-payments",
+                prepared.riskFindings().getFirst().riskFindingId(),
+                "Comparable post-action synthetic observation no longer shows the prior condition",
+                List.of("source-outcome-local"), "Synthetic verification fixture only", OBSERVED_AT.plusSeconds(3600));
+            var evidence = new java.util.ArrayList<EvidenceProjection>(prepared.evidence());
+            evidence.add(improvedEvidence);
+            var outcome = new OutcomeVerificationProjection("outcome-payments-improved", "action-payments", "IMPROVED",
+                List.of("evidence-latency", "evidence-outcome-improved"));
+            return new PreparedExperienceContext(
+                prepared.areas(), prepared.services(), prepared.riskFindings(), List.copyOf(evidence),
+                prepared.commitments(), prepared.improvementActions(), List.of(outcome),
+                new ProjectionQuality("comparable synthetic before/after fixture", OBSERVED_AT.plusSeconds(3600).toString(),
+                    "Outcome is bounded to deterministic comparable fixture evidence", List.of(), List.of(),
+                    List.of("Synthetic outcome-verification scenario; not a corporate claim."), false, false));
+        }
 
         if ("local-partial-stale".equals(period)) {
             var quality = new ProjectionQuality(
