@@ -662,7 +662,7 @@ export default function ExperienceViewport() {
           <div>
             <small>{tr("CALIDAD DE DECISIÓN", "DECISION QUALITY")}</small>
             <strong>{overview.quality.stale ? "Contexto desactualizado" : "Contexto disponible"}</strong>
-            <span>{overview.quality.missingContext.length ? `${overview.quality.missingContext.length} vacíos de contexto` : "Sin vacíos declarados"}</span>
+            <span>{overview.quality.missingContext?.length ? `${overview.quality.missingContext?.length} vacíos de contexto` : "Sin vacíos declarados"}</span>
           </div>
         </div>
 
@@ -836,7 +836,7 @@ export default function ExperienceViewport() {
           <div>
             <small>CALIDAD DEL CONTEXTO</small>
             <strong>{detail?.quality.stale ? "Desactualizado" : detail?.quality.partial ? "Parcial" : "Disponible"}</strong>
-            <span>{detail?.quality.missingContext.length ? detail.quality.missingContext.join(" · ") : "Sin contexto faltante declarado"}</span>
+            <span>{detail?.quality.missingContext?.length ? detail.quality.missingContext?.join(" · ") : "Sin contexto faltante declarado"}</span>
           </div>
         </section>
         <OperationalCanvas overview={overview} selectedServiceId={detail?.service?.serviceId} navigate={navigate} />
