@@ -1,7 +1,39 @@
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { createPortal } from "react-dom";
 import "./IntelligenceWorkspace.css";
+
+type UiLocale = "es" | "en";
+const COPY = {
+  es: {
+    command:"Panorama", area:"Área", service:"Servicio", investigation:"Investigación", actionOutcome:"Acciones y resultados",
+    workspace:"Espacio de inteligencia basado en evidencia", layers:"Capas de investigación",
+    loop:"SEÑAL → FOCO → EXPLICAR → RELACIONAR → DECIDIR → ACTUAR → VERIFICAR",
+    observed:"Evidencia observada", derived:"Inteligencia derivada", uncertain:"Correlación / incertidumbre", verified:"Resultado verificado",
+    decisionQueue:"Cola de decisiones", investigate:"Investigar", operationalContext:"CONTEXTO OPERACIONAL", attentionMap:"Mapa de atención y servicios",
+    findings:"hallazgos", serviceContext:"servicio en contexto", evidenceAttention:"atención sustentada",
+    contextDisclaimer:"Relación visual de contexto; no representa causalidad ni telemetría en tiempo real.",
+    temporal:"ESPINA TEMPORAL / EVENTOS", evolution:"Cómo evoluciona el contexto", noTimeline:"No hay secuencia temporal suficiente.",
+    loading:"Cargando inteligencia basada en evidencia…", unavailable:"Inteligencia temporalmente no disponible", retry:"Reintentar",
+    quality:"CALIDAD", stale:"DESACTUALIZADA", partial:"PARCIAL", available:"DISPONIBLE", fact:"HECHO",
+    before:"ANTES", change:"CAMBIO", after:"DESPUÉS", intelligence:"Inteligencia VECTOR", locale:"Idioma"
+  },
+  en: {
+    command:"Command", area:"Area", service:"Service", investigation:"Investigation", actionOutcome:"Actions & Outcomes",
+    workspace:"Evidence-led intelligence workspace", layers:"Investigation layers",
+    loop:"SIGNAL → FOCUS → EXPLAIN → RELATE → DECIDE → ACT → VERIFY",
+    observed:"Observed evidence", derived:"Derived intelligence", uncertain:"Correlation / uncertainty", verified:"Verified outcome",
+    decisionQueue:"Decision queue", investigate:"Investigate", operationalContext:"OPERATIONAL CONTEXT", attentionMap:"Attention and service map",
+    findings:"findings", serviceContext:"service in context", evidenceAttention:"evidence-backed attention",
+    contextDisclaimer:"Contextual visual relationship; it does not represent causality or real-time telemetry.",
+    temporal:"TEMPORAL / EVENT SPINE", evolution:"How the context evolves", noTimeline:"There is not enough temporal sequence.",
+    loading:"Loading evidence-backed intelligence…", unavailable:"Intelligence temporarily unavailable", retry:"Retry",
+    quality:"QUALITY", stale:"STALE", partial:"PARTIAL", available:"AVAILABLE", fact:"FACT",
+    before:"BEFORE", change:"CHANGE", after:"AFTER", intelligence:"VECTOR Intelligence", locale:"Language"
+  }
+} as const;
+const LocaleContext = createContext<UiLocale>("es");
+const useCopy = () => COPY[useContext(LocaleContext)];
 
 const DEFAULT_PERIOD = "local-dataset-v1";
 const PERIOD_OPTIONS = [
@@ -214,29 +246,31 @@ export function LensNav({ items, labelText }: { items: readonly (readonly [strin
 }
 
 export function WorkspaceRail({ active, navigate }: { active: string; navigate: (next: string, context?: Record<string, string>) => void }) {
+  const t = useCopy();
   const items = [
-    ["overview", "/", "Command"],
-    ["areas", "/areas", "Area"],
-    ["services", "/services", "Service"],
-    ["risks", "/risks", "Investigation"],
-    ["commitments", "/commitments", "Action & Outcome"],
+    ["overview", "/", t.command],
+    ["areas", "/areas", t.area],
+    ["services", "/services", t.service],
+    ["risks", "/risks", t.investigation],
+    ["commitments", "/commitments", t.actionOutcome],
   ];
   return (
     <div className="vx-workspace-rail" aria-label="VECTOR intelligence workspace">
-      <div><strong>VECTOR / INTELLIGENCE WORKSPACE</strong><small>Evidence-led technology control plane</small></div>
-      <nav aria-label="Investigation layers">
+      <div><strong>VECTOR / INTELLIGENCE WORKSPACE</strong><small>{t.workspace}</small></div>
+      <nav aria-label={t.layers}>
         {items.map(([key, route, text]) => <button key={key} className={active === key ? "active" : ""} onClick={() => navigate(route)}>{text}</button>)}
       </nav>
-      <div className="vx-loop"><b>SIGNAL</b> → FOCUS → EXPLAIN → RELATE → DECIDE → ACT → VERIFY</div>
+      <div className="vx-loop">{t.loop}</div>
     </div>
   );
 }
 export function SemanticLegend() {
+  const t = useCopy();
   return <div className="vx-semantics" aria-label="Semantic evidence legend">
-    <span className="vx-semantic fact">Observed evidence</span>
-    <span className="vx-semantic">Derived intelligence</span>
-    <span className="vx-semantic uncertain">Correlation / uncertainty</span>
-    <span className="vx-semantic outcome">Verified outcome</span>
+    <span className="vx-semantic fact">{t.observed}</span>
+    <span className="vx-semantic">{t.derived}</span>
+    <span className="vx-semantic uncertain">{t.uncertain}</span>
+    <span className="vx-semantic outcome">{t.verified}</span>
   </div>;
 }
 
@@ -248,12 +282,13 @@ function DecisionQueue({ risks, commitments, navigate }: { risks: Risk[]; commit
 }
 
 function OperationalCanvas({ overview, selectedServiceId, navigate }: { overview: Overview; selectedServiceId?: string; navigate: (next: string, context?: Record<string, string>) => void }) {
+  const t = useCopy();
   const services = overview.services.slice(0, 8);
   return <section className="vx-ops-canvas" aria-label="Mapa operacional">
-    <div className="vx-canvas-head"><div><small>LIVE OPERATIONAL CONTEXT</small><strong>Mapa de atención y servicios</strong></div><span>{overview.quality.stale ? "Evidencia desactualizada" : "Evidencia disponible"}</span></div>
+    <div className="vx-canvas-head"><div><small>{t.operationalContext}</small><strong>{t.attentionMap}</strong></div><span>{overview.quality.stale ? "Evidencia desactualizada" : "Evidencia disponible"}</span></div>
     <div className="vx-canvas-stage">
       <div className="vx-orbit orbit-a" /><div className="vx-orbit orbit-b" />
-      <div className="vx-core"><span>VECTOR</span><b>{overview.attentionFindings.length}</b><small>hallazgos</small></div>
+      <div className="vx-core"><span>VECTOR</span><b>{overview.attentionFindings.length}</b><small>{t.findings}</small></div>
       {services.map((service, index) => {
         const riskCount = overview.attentionFindings.filter((risk) => risk.serviceId === service.serviceId).length;
         const angle = (Math.PI * 2 * index) / Math.max(services.length, 1) - Math.PI / 2;
@@ -266,15 +301,16 @@ function OperationalCanvas({ overview, selectedServiceId, navigate }: { overview
       })}
       {overview.attentionFindings.slice(0, 5).map((risk, index) => <button key={risk.riskFindingId} className="vx-risk-beacon" style={{ left: `${18 + index * 15}%` }} onClick={() => navigate(`/risks/${encodeURIComponent(risk.riskFindingId)}`, { serviceId: risk.serviceId, riskFindingId: risk.riskFindingId })}><i /><span>{risk.condition}</span></button>)}
     </div>
-    <div className="vx-canvas-legend"><span><i className="stable" /> servicio en contexto</span><span><i className="attention" /> atención sustentada</span><small>Relación visual de contexto; no representa causalidad ni telemetría en tiempo real.</small></div>
+    <div className="vx-canvas-legend"><span><i className="stable" /> {t.serviceContext}</span><span><i className="attention" /> {t.evidenceAttention}</span><small>{t.contextDisclaimer}</small></div>
   </section>;
 }
 
 function TemporalSpine({ signals, risks }: { signals?: TemporalSignal[]; risks?: Risk[] }) {
+  const t = useCopy();
   const items = signals?.length ? signals.slice(0, 8).map((signal) => ({ id: signal.signalId, type: signal.semanticType, text: signal.statement, time: signal.observedAt.slice(0, 10) })) : (risks ?? []).slice(0, 6).map((risk) => ({ id: risk.riskFindingId, type: "RISK FINDING", text: risk.condition, time: "contexto actual" }));
   return <section className="vx-temporal-spine" aria-label="Espina temporal">
-    <div className="vx-spine-title"><small>TEMPORAL / EVENT SPINE</small><strong>Cómo evoluciona el contexto</strong></div>
-    <div className="vx-spine-track">{items.length ? items.map((item) => <div className="vx-spine-event" key={item.id}><i /><small>{item.time}</small><b>{item.type.replaceAll("_", " ")}</b><span>{item.text}</span></div>) : <span className="vx-spine-empty">No hay secuencia temporal suficiente.</span>}</div>
+    <div className="vx-spine-title"><small>{t.temporal}</small><strong>{t.evolution}</strong></div>
+    <div className="vx-spine-track">{items.length ? items.map((item) => <div className="vx-spine-event" key={item.id}><i /><small>{item.time}</small><b>{item.type.replaceAll("_", " ")}</b><span>{item.text}</span></div>) : <span className="vx-spine-empty">{t.noTimeline}</span>}</div>
   </section>;
 }
 
@@ -295,6 +331,8 @@ function QualityNote({ quality }: { quality?: Quality }) {
 export default function ExperienceViewport() {
   const [host, setHost] = useState<Element | null>(null);
   const [path, setPath] = useState(routePath());
+  const [locale, setLocale] = useState<UiLocale>(() => (localStorage.getItem("vector-ui-locale") === "en" ? "en" : "es"));
+  const t = COPY[locale];
   const [period, setPeriod] = useState(() => new URLSearchParams(window.location.search).get("period") || DEFAULT_PERIOD);
   const [overview, setOverview] = useState<Overview>();
   const [detail, setDetail] = useState<Detail>();
@@ -380,6 +418,11 @@ export default function ExperienceViewport() {
     const params = new URLSearchParams({ period, ...context });
     window.history.pushState({}, "", `${next}?${params}`);
   };
+  const changeLocale = (nextLocale: UiLocale) => {
+    setLocale(nextLocale);
+    localStorage.setItem("vector-ui-locale", nextLocale);
+    document.documentElement.lang = nextLocale;
+  };
   const changePeriod = (nextPeriod: string) => {
     setPeriod(nextPeriod);
     const params = new URLSearchParams(window.location.search);
@@ -447,8 +490,8 @@ export default function ExperienceViewport() {
   const updateCommitmentStatus = (id: string, executionStatus: string) => void fetch(`/api/experience/commitments/${encodeURIComponent(id)}/lifecycle`, { method: "PATCH", headers: { "Content-Type": "application/json", "X-Vector-Subject": "local-experience-operator", "X-Vector-Role": "ANALYST_OPERATOR" }, body: JSON.stringify({ executionStatus, reason: `Operator moved commitment to ${executionStatus}` }) }).then(refreshCommitments).catch((error) => setLoadError(error instanceof Error ? error.message : "Commitment update unavailable"));
   const renegotiateCommitment = (event: FormEvent) => { event.preventDefault(); if (!renegotiationId || !renegotiationDate || !renegotiationReason) return; void fetch(`/api/experience/commitments/${encodeURIComponent(renegotiationId)}/renegotiations`, { method: "POST", headers: { "Content-Type": "application/json", "X-Vector-Subject": "local-experience-operator", "X-Vector-Role": "ANALYST_OPERATOR" }, body: JSON.stringify({ newDueDate: renegotiationDate, reason: renegotiationReason }) }).then(refreshCommitments).then(() => { setRenegotiationId(""); setRenegotiationDate(""); setRenegotiationReason(""); }).catch((error) => setLoadError(error instanceof Error ? error.message : "Renegotiation unavailable")); };
   if (!host) return null;
-  if (loadError) return createPortal(<div className="experience-viewport"><div className="gold-page"><div className="gold-panel" role="alert"><h3>Intelligence temporarily unavailable</h3><p>{loadError}</p><button className="primary-button" onClick={() => window.location.reload()}>Retry</button></div></div></div>, host);
-  if (!overview) return createPortal(<div className="experience-viewport"><div className="loading-screen" role="status" aria-live="polite"><h1>VECTOR</h1><p>Loading evidence-backed intelligence…</p></div></div>, host);
+  if (loadError) return createPortal(<LocaleContext.Provider value={locale}><div className="experience-viewport"><div className="gold-page"><div className="gold-panel" role="alert"><h3>{t.unavailable}</h3><p>{loadError}</p><button className="primary-button" onClick={() => window.location.reload()}>{t.retry}</button></div></div></div></LocaleContext.Provider>, host);
+  if (!overview) return createPortal(<LocaleContext.Provider value={locale}><div className="experience-viewport"><div className="loading-screen" role="status" aria-live="polite"><h1>VECTOR</h1><p>{t.loading}</p></div></div></LocaleContext.Provider>, host);
 
   const panorama = (
     <div className="experience-viewport">
@@ -465,7 +508,7 @@ export default function ExperienceViewport() {
           <div><small>ÁREAS CON ATENCIÓN</small><strong>{overview.areas.filter((item) => item.attentionState !== "STABLE").length}</strong></div>
           <div><small>RIESGOS CON EVIDENCIA</small><strong>{overview.attentionFindings.length}</strong></div>
           <div><small>COMPROMISOS VENCIDOS</small><strong>{commitments?.overdueCount ?? 0}</strong></div>
-          <div><small>CALIDAD</small><strong>{overview.quality.stale ? "STALE" : overview.quality.partial ? "PARTIAL" : "AVAILABLE"}</strong></div>
+          <div><small>{t.quality}</small><strong>{overview.quality.stale ? t.stale : overview.quality.partial ? t.partial : t.available}</strong></div>
         </div>
         <OperationalCanvas overview={overview} navigate={navigate} />
         <TemporalSpine risks={overview.attentionFindings} />
@@ -764,7 +807,7 @@ export default function ExperienceViewport() {
             <div className="gold-panel" id="service-evidence">
               <SectionTitle title="Evidencia operacional" subtitle="Hechos disponibles para el servicio; ausencia de datos no implica operación normal." />
               {detail?.evidence.length ? detail.evidence.map((item) => (
-                <div className="gold-evidence" key={item.evidenceId}><b>FACT</b><strong>{item.supportedClaim}</strong><span>{item.observedAt} · {item.sourceReferenceIds.map(label).join(", ")}</span></div>
+                <div className="gold-evidence" key={item.evidenceId}><b>{t.fact}</b><strong>{item.supportedClaim}</strong><span>{item.observedAt} · {item.sourceReferenceIds.map(label).join(", ")}</span></div>
               )) : <Empty>No hay evidencia expuesta por esta proyección.</Empty>}
             </div>
           </section>
@@ -850,7 +893,7 @@ export default function ExperienceViewport() {
               <SectionTitle id="risk-evidence" title="Evidencia Disponible" />
               {risk?.evidence.map((item) => (
                 <div className="gold-evidence" key={item.evidenceId}>
-                  <b>FACT</b>
+                  <b>{t.fact}</b>
                   <strong>{item.supportedClaim}</strong>
                   <span>{item.sourceReferenceIds.map(label).join(", ")}</span>
                 </div>
@@ -872,7 +915,7 @@ export default function ExperienceViewport() {
             <div className="gold-panel vx-change-association">
               <SectionTitle id="risk-change" title="Degradación asociada a cambio" subtitle="Antes / durante / después · asociación ≠ causalidad" />
               {changeAssociation ? <>
-                <div className="vx-change-path"><span>BEFORE</span><i>→</i><span>CHANGE {label(changeAssociation.changeId)}</span><i>→</i><span>AFTER</span></div>
+                <div className="vx-change-path"><span>{t.before}</span><i>→</i><span>{t.change} {label(changeAssociation.changeId)}</span><i>→</i><span>{t.after}</span></div>
                 <p><strong>{changeAssociation.contextualAssociation ? "Contextual association detected" : "Association not established"}</strong> · Causal claim: {changeAssociation.causalClaim ? "YES" : "NO"}</p>
                 <small>{changeAssociation.limitation}</small>
               </> : <Empty>No change/deployment association context is available.</Empty>}
@@ -936,6 +979,8 @@ export default function ExperienceViewport() {
     </div>
   );
 
+  const localeControl = <label className="vx-locale-control"><span>{t.locale}</span><select aria-label={t.locale} value={locale} onChange={(event) => changeLocale(event.target.value as UiLocale)}><option value="es">Español</option><option value="en">English</option></select></label>;
+
   const view =
     path === "areas"
       ? areaView
@@ -946,5 +991,5 @@ export default function ExperienceViewport() {
           : path === "risks"
             ? riskView
             : panorama;
-  return createPortal(view, host);
+  return createPortal(<LocaleContext.Provider value={locale}><div className="vx-locale-dock">{localeControl}</div>{view}</LocaleContext.Provider>, host);
 }
