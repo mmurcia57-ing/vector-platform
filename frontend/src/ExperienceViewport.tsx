@@ -272,6 +272,7 @@ export default function ExperienceViewport() {
   const [graph, setGraph] = useState<Graph>();
   const [signals, setSignals] = useState<TemporalSignal[]>([]);
   const [graphFocus, setGraphFocus] = useState("");
+  const [graphLimit, setGraphLimit] = useState(6);
   const [aiAssist, setAiAssist] = useState<AiAssist>();
   const [changeAssociation, setChangeAssociation] = useState<ChangeAssociation>();
   const [declaration, setDeclaration] = useState("");
@@ -331,7 +332,7 @@ export default function ExperienceViewport() {
         `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}?period=${period}&serviceId=${encodeURIComponent(serviceId)}`,
       ).then(setRisk).catch((error) => setLoadError(error instanceof Error ? error.message : "Risk intelligence unavailable"));
       void read<Graph>(
-        `/api/experience/graph?period=${period}&serviceId=${encodeURIComponent(serviceId)}&riskFindingId=${encodeURIComponent(selected.riskFindingId)}&maxNodes=12&maxRelationships=16`,
+        `/api/experience/graph?period=${period}&serviceId=${encodeURIComponent(serviceId)}&riskFindingId=${encodeURIComponent(selected.riskFindingId)}&maxNodes=${graphLimit}&maxRelationships=${graphLimit * 2}`,
       ).then(setGraph).catch((error) => setLoadError(error instanceof Error ? error.message : "Graph unavailable"));
       void read<TemporalSignal[]>(
         `/api/experience/signals?period=${period}&serviceId=${encodeURIComponent(serviceId)}&riskFindingId=${encodeURIComponent(selected.riskFindingId)}&limit=50`,
@@ -343,7 +344,7 @@ export default function ExperienceViewport() {
         `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}/change-association?serviceId=${encodeURIComponent(serviceId)}`,
       ).then(setChangeAssociation).catch(() => setChangeAssociation(undefined));
     }
-  }, [overview, path, period]);
+  }, [overview, path, period, graphLimit]);
   const navigate = (next: string, context: Record<string, string> = {}) => {
     const params = new URLSearchParams({ period, ...context });
     window.history.pushState({}, "", `${next}?${params}`);
@@ -1010,7 +1011,13 @@ export default function ExperienceViewport() {
                   </div>
                 ))}
               </div>
-              {graphFocus && <div className="vx-graph-focus" aria-live="polite"><strong>Focused context</strong><span>{graphNodeLabel(graphFocus)}</span><small>Bounded relationship context; selecting a node does not assert causality.</small></div>}
+              {graphFocus && <div className="vx-graph-focus" aria-live="polite"><strong>Contexto seleccionado</strong><span>{graphNodeLabel(graphFocus)}</span><small>Contexto relacional acotado; seleccionar un nodo no afirma causalidad.</small></div>}
+              <div className="vx-graph-controls">
+                <span>{graph?.graph.truncated ? "Vista acotada: existen relaciones adicionales." : "Vista acotada completa para el límite actual."}</span>
+                <span>Frescura: {graph?.graph.freshness ?? "desconocida"}</span>
+                {graph?.graph.truncated && <button type="button" onClick={() => setGraphLimit((current) => Math.min(current + 4, 20))}>Expandir contexto</button>}
+                {graphLimit > 6 && <button type="button" onClick={() => setGraphLimit(6)}>Restablecer límite</button>}
+              </div>
             </div>
             <div className="gold-panel">
               <SectionTitle id="risk-actions" title="Acciones Asociadas" />
