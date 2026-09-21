@@ -165,7 +165,7 @@ const label = (value = "") =>
 const read = async <T,>(url: string) => {
   const response = await fetch(url);
   if (!response.ok)
-    throw new Error(`Experience unavailable (${response.status})`);
+    throw new Error(`HTTP ${response.status}`);
   return response.json() as Promise<T>;
 };
 const routePath = () =>
@@ -384,8 +384,7 @@ export default function ExperienceViewport() {
   const [host, setHost] = useState<Element | null>(null);
   const [path, setPath] = useState(routePath());
   const [locale, setLocale] = useState<UiLocale>(() => (localStorage.getItem("vector-ui-locale") === "en" ? "en" : "es"));
-  const t = COPY[locale];
-  const [period, setPeriod] = useState(() => new URLSearchParams(window.location.search).get("period") || DEFAULT_PERIOD);
+  const t = COPY[locale];\n  const tr = (es: string, en: string) => locale === "es" ? es : en;\n  const [period, setPeriod] = useState(() => new URLSearchParams(window.location.search).get("period") || DEFAULT_PERIOD);
   const [overview, setOverview] = useState<Overview>();
   const [detail, setDetail] = useState<Detail>();
   const [risk, setRisk] = useState<Detail>();
@@ -550,16 +549,16 @@ export default function ExperienceViewport() {
       <div className="gold-page">
         <WorkspaceRail active={path} navigate={navigate} />
         <Header
-          eyebrow="DE LA EVIDENCIA A UNA TECNOLOGÍA MÁS CONFIABLE"
-          title="Panorama Ejecutivo"
-          question="¿Dónde requiere atención Tecnología hoy y por qué?"
+          eyebrow={tr("DE LA EVIDENCIA A UNA TECNOLOGÍA MÁS CONFIABLE", "FROM EVIDENCE TO MORE RELIABLE TECHNOLOGY")}
+          title={tr("Panorama Ejecutivo", "Executive Command")}
+          question={tr("¿Dónde requiere atención Tecnología hoy y por qué?", "Where does Technology require attention today, and why?")}
           period={period}
           onPeriodChange={changePeriod}
         />
         <div className="vx-command-status">
-          <div><small>ÁREAS CON ATENCIÓN</small><strong>{overview.areas.filter((item) => item.attentionState !== "STABLE").length}</strong></div>
-          <div><small>RIESGOS CON EVIDENCIA</small><strong>{overview.attentionFindings.length}</strong></div>
-          <div><small>COMPROMISOS VENCIDOS</small><strong>{commitments?.overdueCount ?? 0}</strong></div>
+          <div><small>{tr("ÁREAS CON ATENCIÓN", "AREAS REQUIRING ATTENTION")}</small><strong>{overview.areas.filter((item) => item.attentionState !== "STABLE").length}</strong></div>
+          <div><small>{tr("RIESGOS CON EVIDENCIA", "EVIDENCE-BACKED RISKS")}</small><strong>{overview.attentionFindings.length}</strong></div>
+          <div><small>{tr("COMPROMISOS VENCIDOS", "OVERDUE COMMITMENTS")}</small><strong>{commitments?.overdueCount ?? 0}</strong></div>
           <div><small>{t.quality}</small><strong>{overview.quality.stale ? t.stale : overview.quality.partial ? t.partial : t.available}</strong></div>
         </div>
         <OperationalCanvas overview={overview} navigate={navigate} />
@@ -567,8 +566,8 @@ export default function ExperienceViewport() {
         <div className="gold-main-grid vx-command-support">
           <section className="gold-panel">
             <SectionTitle
-              title="Áreas que requieren atención"
-              subtitle="Áreas con señales que requieren revisión o intervención"
+              title={tr("Áreas que requieren atención", "Areas requiring attention")}
+              subtitle={tr("Áreas con señales que requieren revisión o intervención", "Areas with signals requiring review or intervention")}
             />
             {overview.areas.map((item) => (
               <button
@@ -591,20 +590,20 @@ export default function ExperienceViewport() {
                   servicios
                 </span>
                 <b>{item.attentionState}</b>
-                <em>Ver detalle →</em>
+                <em>{tr("Ver detalle →", "View detail →")}</em>
               </button>
             ))}
           </section>
           <aside className="gold-panel">
             <SectionTitle
-              title="¿Qué está moviendo la atención?"
-              subtitle="Principales señales en el período"
+              title={tr("¿Qué está moviendo la atención?", "What is driving attention?")}
+              subtitle={tr("Principales señales en el período", "Primary signals in the period")}
             />
             {overview.attentionFindings.map((item) => (
               <div className="gold-signal" key={item.riskFindingId}>
                 <i>↗</i>
                 <div>
-                  <strong>Riesgo</strong>
+                  <strong>{tr("Riesgo", "Risk")}</strong>
                   <p>{item.condition}</p>
                 </div>
               </div>
@@ -613,23 +612,23 @@ export default function ExperienceViewport() {
               <strong>✣ VECTOR Intelligence</strong>
               <p>
                 {overview.attentionFindings[0]?.explanation ??
-                  "No hay hallazgos adicionales en el período."}
+                  tr("No hay hallazgos adicionales en el período.", "No additional findings in the period.")}
               </p>
             </div>
           </aside>
         </div>
         <div className="gold-bottom">
           <section className="gold-panel">
-            <h3>Estado de compromisos</h3>
-            <Empty>Detalle agregado no disponible para el dataset local.</Empty>
+            <h3>{tr("Estado de compromisos", "Commitment status")}</h3>
+            <Empty>{tr("Detalle agregado no disponible para el dataset local.", "Aggregated detail is not available for the local dataset.")}</Empty>
           </section>
           <section className="gold-panel">
-            <h3>Resultado de acciones</h3>
-            <Empty>No hay verificación agregada disponible.</Empty>
+            <h3>{tr("Resultado de acciones", "Action outcomes")}</h3>
+            <Empty>{tr("No hay verificación agregada disponible.", "No aggregated verification is available.")}</Empty>
           </section>
             <section className="gold-panel">
-              <h3>Contexto adicional</h3>
-              <Empty>No hay contexto adicional disponible.</Empty>
+              <h3>{tr("Contexto adicional", "Additional context")}</h3>
+              <Empty>{tr("No hay contexto adicional disponible.", "No additional context is available.")}</Empty>
             </section>
         </div>
         <DecisionQueue risks={path === "areas" ? areaRisks : overview.attentionFindings} commitments={commitments} navigate={navigate} />
@@ -643,25 +642,25 @@ export default function ExperienceViewport() {
       <div className="gold-page">
         <WorkspaceRail active={path} navigate={navigate} />
         <Header
-          eyebrow="ÁREAS / DOMINIOS · WORKSPACE DE DECISIÓN"
-          title={area?.name ?? "Área sin seleccionar"}
+          eyebrow={tr("ÁREAS / DOMINIOS · ESPACIO DE DECISIÓN", "AREAS / DOMAINS · DECISION WORKSPACE")}
+          title={area?.name ?? tr("Área sin seleccionar", "No area selected")}
           question={`¿Qué servicios concentran la atención en ${area?.name ?? "esta área"}, qué la explica y qué seguimiento requiere?`}
           period={period}
           onPeriodChange={changePeriod}
         />
         <div className="vx-area-summary">
           <div>
-            <small>CONTEXTO DEL ÁREA</small>
-            <strong>{areaServices.length} servicios en contexto</strong>
+            <small>{tr("CONTEXTO DEL ÁREA", "AREA CONTEXT")}</small>
+            <strong>{areaServices.length} {tr("servicios", "services")} en contexto</strong>
             <span>{areaRisks.length} hallazgos con evidencia disponible</span>
           </div>
           <div>
-            <small>SEGUIMIENTO</small>
+            <small>{tr("SEGUIMIENTO", "FOLLOW-UP")}</small>
             <strong>{commitments?.activeCount ?? 0} compromisos activos</strong>
             <span>La ejecución no implica resultado verificado.</span>
           </div>
           <div>
-            <small>CALIDAD DE DECISIÓN</small>
+            <small>{tr("CALIDAD DE DECISIÓN", "DECISION QUALITY")}</small>
             <strong>{overview.quality.stale ? "Contexto desactualizado" : "Contexto disponible"}</strong>
             <span>{overview.quality.missingContext.length ? `${overview.quality.missingContext.length} vacíos de contexto` : "Sin vacíos declarados"}</span>
           </div>
@@ -670,10 +669,10 @@ export default function ExperienceViewport() {
         <div className="vx-area-workspace">
           <section className="gold-panel vx-service-portfolio">
             <SectionTitle
-              title="Portafolio de servicios"
-              subtitle="Comparación dentro del área; seleccione un servicio para continuar la investigación."
+              title={tr("Portafolio de servicios", "Service portfolio")}
+              subtitle={tr("Comparación dentro del área; seleccione un servicio para continuar la investigación.", "Compare within the area; select a service to continue the investigation.")}
             />
-            <div className="vx-portfolio-head"><span>Servicio</span><span>Condición</span><span>Hallazgos</span><span>Decisión</span></div>
+            <div className="vx-portfolio-head"><span>{tr("Servicio","Service")}</span><span>{tr("Condición","Condition")}</span><span>{tr("Hallazgos","Findings")}</span><span>{tr("Decisión","Decision")}</span></div>
             {areaServices.length ? areaServices.map((service) => {
               const serviceRisks = areaRisks.filter((item) => item.serviceId === service.serviceId);
               return (
@@ -688,17 +687,17 @@ export default function ExperienceViewport() {
                   <strong>{service.name}</strong>
                   <span>{service.conditionContext}</span>
                   <b>{serviceRisks.length}</b>
-                  <em>{serviceRisks.length ? "Investigar →" : "Revisar contexto →"}</em>
+                  <em>{serviceRisks.length ? tr("Investigar →", "Investigate →") : tr("Revisar contexto →", "Review context →")}</em>
                 </button>
               );
-            }) : <Empty>No hay servicios disponibles para el área seleccionada.</Empty>}
+            }) : <Empty>{tr("No hay servicios disponibles para el área seleccionada.", "No services are available for the selected area.")}</Empty>}
           </section>
 
           <aside className="vx-area-attention">
             <div className="gold-panel">
               <SectionTitle
-                title="Concentración de atención"
-                subtitle="Hallazgos explicables; no es un score ni un ranking de personas."
+                title={tr("Concentración de atención", "Attention concentration")}
+                subtitle={tr("Hallazgos explicables; no es un score ni un ranking de personas.", "Explainable findings; this is not a score or ranking of people.")}
               />
               {areaRisks.length ? areaRisks.map((item) => (
                 <button
@@ -714,7 +713,7 @@ export default function ExperienceViewport() {
                   <strong>{item.condition}</strong>
                   <span>{item.explanation}</span>
                 </button>
-              )) : <Empty>No hay hallazgos de atención sustentados por la evidencia disponible.</Empty>}
+              )) : <Empty>{tr("No hay hallazgos de atención sustentados por la evidencia disponible.", "There are no attention findings supported by available evidence.")}</Empty>}
             </div>
             <div className="gold-intelligence">
               <strong>✣ VECTOR Intelligence</strong>
@@ -724,7 +723,7 @@ export default function ExperienceViewport() {
         </div>
 
         <section className="gold-panel vx-area-followup">
-          <SectionTitle title="Seguimiento del área" subtitle="Riesgo → compromiso → acción → resultado." />
+          <SectionTitle title={tr("Seguimiento del área", "Area follow-up")} subtitle={tr("Riesgo → compromiso → acción → resultado.", "Risk → commitment → action → outcome.")} />
           <div className="vx-followup-grid">
             <div><small>RIESGO</small><strong>{areaRisks.length}</strong><span>hallazgos visibles</span></div>
             <div><small>COMPROMISO</small><strong>{commitments?.activeCount ?? 0}</strong><span>activos</span></div>
@@ -744,8 +743,8 @@ export default function ExperienceViewport() {
       <div className="gold-page">
         <WorkspaceRail active={path} navigate={navigate} />
         <Header
-          eyebrow="COMPROMISOS & MEJORAS · WORKFLOW"
-          title="Compromisos & Mejoras"
+          eyebrow={tr("COMPROMISOS Y MEJORAS · FLUJO", "COMMITMENTS & IMPROVEMENTS · WORKFLOW")}
+          title={tr("Compromisos y Mejoras", "Commitments & Improvements")}
           question="¿Qué se comprometió, qué cambió en la ejecución y qué resultado está realmente verificado?"
           period={period}
           onPeriodChange={changePeriod}
@@ -880,8 +879,8 @@ export default function ExperienceViewport() {
       <div className="gold-page">
         <WorkspaceRail active={path} navigate={navigate} />
         <Header
-          eyebrow="INVESTIGACIÓN"
-          title={risk?.riskFinding?.condition ?? "Risk Investigation"}
+          eyebrow={tr("INVESTIGACIÓN", "INVESTIGATION")}
+          title={risk?.riskFinding?.condition ?? tr("Investigación de riesgo", "Risk Investigation")}
           question={
             risk?.riskFinding?.explanation ??
             "Cargando explicación y evidencia."
@@ -928,7 +927,7 @@ export default function ExperienceViewport() {
         <div className="gold-main-grid">
           <section>
             <div className="gold-panel">
-              <SectionTitle id="risk-timeline" title="Línea de Tiempo del Riesgo" />
+              <SectionTitle id="risk-timeline" title={tr("Línea de tiempo del riesgo", "Risk timeline")} />
               {signals.length ? signals.map((item) => (
                 <div className="gold-timeline" key={item.signalId}>
                   <time>{item.observedAt.slice(0, 10)}</time>
@@ -942,7 +941,7 @@ export default function ExperienceViewport() {
               )) : <Empty>No hay historia temporal suficiente en la evidencia disponible.</Empty>}
             </div>
             <div className="gold-panel">
-              <SectionTitle id="risk-evidence" title="Evidencia Disponible" />
+              <SectionTitle id="risk-evidence" title={tr("Evidencia disponible", "Available evidence")} />
               {risk?.evidence.map((item) => (
                 <div className="gold-evidence" key={item.evidenceId}>
                   <b>{t.fact}</b>
@@ -959,13 +958,13 @@ export default function ExperienceViewport() {
               <small>Correlación temporal/contextual ≠ causalidad.</small>
             </div>
             <div className="gold-panel vx-ai-assist" aria-live="polite">
-              <SectionTitle title="Asistencia de IA basada en evidencia" subtitle="Asesoría únicamente · nunca autoritativa" />
+              <SectionTitle title={tr("Asistencia de IA basada en evidencia", "Evidence-based AI assistance")} subtitle={tr("Solo asesoría · nunca autoritativa", "Advisory only · never authoritative")} />
               <b>{aiAssist?.status ?? "LOADING"}</b>
               <p>{aiAssist?.explanation ?? aiAssist?.limitations?.join(" · ") ?? "Validando el límite del proveedor gobernado…"}</p>
               <small>{aiAssist?.provenance ?? "No se afirma disponibilidad de proveedor sin evidencia."}</small>
             </div>
             <div className="gold-panel vx-change-association">
-              <SectionTitle id="risk-change" title="Degradación asociada a cambio" subtitle="Antes / durante / después · asociación ≠ causalidad" />
+              <SectionTitle id="risk-change" title={tr("Degradación asociada a cambio", "Degradation associated with change")} subtitle={tr("Antes / durante / después · asociación ≠ causalidad", "Before / during / after · association ≠ causality")} />
               {changeAssociation ? <>
                 <div className="vx-change-path"><span>{t.before}</span><i>→</i><span>{t.change} {label(changeAssociation.changeId)}</span><i>→</i><span>{t.after}</span></div>
                 <p><strong>{changeAssociation.contextualAssociation ? "Contextual association detected" : "Association not established"}</strong> · Causal claim: {changeAssociation.causalClaim ? "YES" : "NO"}</p>
@@ -973,11 +972,11 @@ export default function ExperienceViewport() {
               </> : <Empty>No change/deployment association context is available.</Empty>}
             </div>
             <div className="gold-panel">
-              <SectionTitle id="risk-relations" title="Relaciones y topología contextual" />
+              <SectionTitle id="risk-relations" title={tr("Relaciones y topología contextual", "Relationships and contextual topology")} />
               <SpatialGraph graph={graph} focus={graphFocus} onFocus={setGraphFocus} nodeLabel={graphNodeLabel} limit={graphLimit} onExpand={() => setGraphLimit((current) => Math.min(current + 4, 20))} onReset={() => setGraphLimit(6)} />
             </div>
             <div className="gold-panel">
-              <SectionTitle id="risk-actions" title="Acciones Asociadas" />
+              <SectionTitle id="risk-actions" title={tr("Acciones asociadas", "Associated actions")} />
               {risk?.commitments.map((commitment) => (
                 <div className="gold-action" key={commitment.commitmentId}>
                   <strong>{commitment.declaration}</strong>
@@ -998,7 +997,7 @@ export default function ExperienceViewport() {
               )}
             </div>
             <div className="gold-panel">
-              <SectionTitle id="risk-outcome" title="Resultado verificado" />
+              <SectionTitle id="risk-outcome" title={tr("Resultado verificado", "Verified outcome")} />
               {risk?.outcomeVerifications.length ? risk.outcomeVerifications.map((outcome) => (
                 <div className="gold-action" key={outcome.verificationId}>
                   <strong>{outcome.outcome}</strong>
