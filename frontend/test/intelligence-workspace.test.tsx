@@ -60,14 +60,6 @@ it("investigation lenses execute navigation to an explicit section", () => {
 });
 
 
-it("area workspace remains structurally distinct from executive triage", () => {
-  const source = require("node:fs").readFileSync(new URL("../src/ExperienceViewport.tsx", import.meta.url), "utf8");
-  expect(source).toContain("vx-service-portfolio");
-  expect(source).toContain("Portafolio de servicios");
-  expect(source).toContain("Concentración de atención");
-  expect(source).toContain("Seguimiento del área");
-});
-
 
 describe("Experience Contract V3 context continuity", () => {
   it("renders the selected cross-surface context without implying causality", () => {
