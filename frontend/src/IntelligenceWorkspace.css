@@ -15,7 +15,7 @@
 .experience-viewport { background:
   radial-gradient(circle at 78% 4%, rgba(28,124,176,.18), transparent 30%),
   linear-gradient(145deg,#06131f 0%,#091c2b 46%,#071722 100%) !important; color:var(--vx-text); }
-.gold-page { max-width: 1500px !important; padding: 18px 28px 34px !important; }
+.gold-page { width:100% !important; max-width:none !important; min-height:100vh; box-sizing:border-box; padding:18px clamp(14px,1.6vw,34px) 34px !important; }
 .vx-workspace-rail { position:sticky; top:0; z-index:20; display:grid; grid-template-columns:auto 1fr auto; gap:18px; align-items:center; margin:-18px -4px 18px; padding:12px 16px; border:1px solid var(--vx-line); border-radius:0 0 14px 14px; background:rgba(4,18,29,.88); backdrop-filter:blur(16px); box-shadow:0 18px 40px rgba(0,0,0,.18); }
 .vx-workspace-rail strong { font-size:.74rem; letter-spacing:.12em; color:#fff; }
 .vx-workspace-rail small { display:block; margin-top:2px; color:var(--vx-muted); font-size:.58rem; letter-spacing:.04em; }
@@ -104,3 +104,6 @@
 .vx-command-support{margin-top:12px}
 @media(max-width:900px){.vx-command-status{grid-template-columns:1fr 1fr}.vx-canvas-stage{height:430px}.vx-temporal-spine{grid-template-columns:1fr}.vx-canvas-legend{align-items:flex-start;flex-wrap:wrap}.vx-canvas-legend small{margin-left:0;width:100%}}
 @media(max-width:600px){.vx-command-status{grid-template-columns:1fr}.vx-canvas-stage{height:520px}.vx-canvas-node{min-width:96px;max-width:120px}.vx-risk-beacon{display:none}}
+
+.vx-locale-dock{position:fixed;z-index:80;right:clamp(14px,1.6vw,34px);bottom:18px}.vx-locale-control{display:flex;align-items:center;gap:7px;padding:6px 8px;border:1px solid var(--vx-line);border-radius:8px;background:rgba(4,18,29,.94);box-shadow:0 12px 32px rgba(0,0,0,.24);backdrop-filter:blur(14px)}.vx-locale-control span{font-size:.5rem;color:var(--vx-muted)}.vx-locale-control select{border:0;background:transparent;color:var(--vx-text);font-size:.58rem;outline:none}.vx-locale-control option{background:#071725;color:#eaf7ff}
+@media(min-width:1800px){.vx-canvas-stage{height:440px}.vx-area-workspace{grid-template-columns:minmax(0,2fr) minmax(340px,.72fr)}.vx-service-workspace{grid-template-columns:minmax(0,1.8fr) minmax(340px,.62fr)}.vx-commitment-workspace{grid-template-columns:minmax(0,1.9fr) minmax(360px,.65fr)}}
