@@ -2,11 +2,11 @@
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 afterEach(cleanup);
-import { Header, LensNav, SemanticLegend, WorkspaceRail } from "../src/ExperienceViewport";
+import { Header, LensNav, LocaleBoundary, SemanticLegend, WorkspaceRail } from "../src/ExperienceViewport";
 
 describe("EXT-003 intelligence workspace", () => {
   it("communicates the full decision loop and layers without relying on color", () => {
-    render(<><WorkspaceRail active="overview" navigate={() => undefined} /><SemanticLegend /></>);
+    render(<LocaleBoundary locale="en"><WorkspaceRail active="overview" navigate={() => undefined} /><SemanticLegend /></LocaleBoundary>);
     expect(screen.getByText(/SIGNAL/)).toBeTruthy();
     expect(screen.getByText("Command")).toBeTruthy();
     expect(screen.getByText("Investigation")).toBeTruthy();
@@ -18,13 +18,13 @@ describe("EXT-003 intelligence workspace", () => {
 
   it("preserves navigable investigation layers", () => {
     const navigate = vi.fn();
-    render(<WorkspaceRail active="overview" navigate={navigate} />);
+    render(<LocaleBoundary locale="en"><WorkspaceRail active="overview" navigate={navigate} /></LocaleBoundary>);
     fireEvent.click(screen.getByRole("button", { name: "Investigation" }));
     expect(navigate).toHaveBeenCalledWith("/risks");
   });
 
   it("marks the active workspace layer for visual state", () => {
-    render(<WorkspaceRail active="commitments" navigate={() => undefined} />);
+    render(<LocaleBoundary locale="en"><WorkspaceRail active="commitments" navigate={() => undefined} /></LocaleBoundary>);
     expect(screen.getByRole("button", { name: "Action & Outcome" }).className).toContain("active");
   });
 });
@@ -32,7 +32,7 @@ describe("EXT-003 intelligence workspace", () => {
 
 it("keeps workspace navigation behavior explicit rather than decorative", () => {
   const calls: string[] = [];
-  render(<WorkspaceRail active="services" navigate={(next) => calls.push(next)} />);
+  render(<LocaleBoundary locale="en"><WorkspaceRail active="services" navigate={(next) => calls.push(next)} /></LocaleBoundary>);
   fireEvent.click(screen.getByRole("button", { name: "Investigation" }));
   expect(calls).toEqual(["/risks"]);
   expect(screen.getByRole("button", { name: "Service" }).className).toContain("active");
@@ -41,7 +41,7 @@ it("keeps workspace navigation behavior explicit rather than decorative", () => 
 
 it("changes the deterministic analysis scenario through a real control", () => {
   const periods: string[] = [];
-  render(<Header eyebrow="Contexto" title="VECTOR" question="Pregunta" period="local-dataset-v1" onPeriodChange={(period) => periods.push(period)} />);
+  render(<LocaleBoundary locale="es"><Header eyebrow="Contexto" title="VECTOR" question="Pregunta" period="local-dataset-v1" onPeriodChange={(period) => periods.push(period)} /></LocaleBoundary>);
   fireEvent.change(screen.getByRole("combobox", { name: "Escenario de análisis" }), { target: { value: "local-partial-stale" } });
   expect(periods).toEqual(["local-partial-stale"]);
   expect(screen.getByText(/Datos demostrativos locales/)).toBeTruthy();
@@ -66,4 +66,14 @@ it("area workspace remains structurally distinct from executive triage", () => {
   expect(source).toContain("Portafolio de servicios");
   expect(source).toContain("Concentración de atención");
   expect(source).toContain("Seguimiento del área");
+});
+
+
+it("renders the workspace coherently in Spanish through an explicit locale boundary", () => {
+  render(<LocaleBoundary locale="es"><WorkspaceRail active="overview" navigate={() => undefined} /><SemanticLegend /></LocaleBoundary>);
+  expect(screen.getByText("Panorama")).toBeTruthy();
+  expect(screen.getByText("Investigación")).toBeTruthy();
+  expect(screen.getByText("Acciones y resultados")).toBeTruthy();
+  expect(screen.getByText("Evidencia observada")).toBeTruthy();
+  expect(screen.getByText("Correlación / incertidumbre")).toBeTruthy();
 });
