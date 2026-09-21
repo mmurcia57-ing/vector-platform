@@ -109,8 +109,8 @@
       "userInputRequired": false
     }
   ],
-  "currentAction": "North-Star grammar frozen and Experience Target V2 materialized without unsupported live/causal/AI claims.",
-  "nextAutonomousAction": "Run human Expectation Challenge on V2. If aligned, derive functional/engineering contract and implement; if rejected, return to alternatives without cosmetic patch loop.",
+  "currentAction": "North-Star direction formalized and translated into a refined isolated Experience Target V2; quality iteration corrected locale and false-affordance defects.",
+  "nextAutonomousAction": "Obtain expectation signal on V2. If aligned, freeze experience grammar, derive functional/engineering contract, then resume controlled implementation and run FR-050/FR-051 L3.",
   "rules": {
     "progressIsEvidenceBased": true,
     "noBackgroundExecutionClaim": true,
@@ -264,5 +264,29 @@
       "14f0994ae6ad1d1457416cef8025afdd5288c7d0"
     ],
     "disposition": "NORTH_STAR_DIRECTION_HUMAN_VALIDATED; EXPERIENCE_TARGET_V2_PENDING_EXPECTATION_VALIDATION"
+  },
+  "fr051L2": {
+    "state": "NORTH_STAR_TRANSLATED_TO_EXPERIENCE_TARGET_V2_PENDING_HUMAN_EXPECTATION_VALIDATION",
+    "northStar": "docs/framework-pilot/NORTH-STAR-EXPERIENCE.md",
+    "experienceTargetV2": "frontend/experience-target/north-star-v2.html",
+    "evidence": [
+      "9325b33350c0123ebfe639c89599aead78686609",
+      "8e280dc8a2386c5ddc77e1567ea2a572b306481a",
+      "9b7b23cffaa133c204772ec4d6fcb7d4273c8100"
+    ],
+    "qualityIteration": {
+      "firstRenderFindings": [
+        "Mixed ES/EN visible copy",
+        "Inactive rail controls appeared actionable"
+      ],
+      "corrections": [
+        "Spanish-only visible experiment copy",
+        "Out-of-scope rail actions explicitly disabled",
+        "No unsupported real-time claim",
+        "Epistemic fact/derived/limitation/decision separation preserved"
+      ],
+      "status": "REFINED_PENDING_RUNTIME_VISUAL_VALIDATION"
+    },
+    "disposition": "EXPERIMENT REQUIRED"
   }
 }
