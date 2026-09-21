@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import type { FormEvent } from "react";
+import type { FormEvent, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import "./IntelligenceWorkspace.css";
 
@@ -35,6 +35,7 @@ const COPY = {
   }
 } as const;
 const LocaleContext = createContext<UiLocale>("es");
+export function LocaleBoundary({ locale, children }: { locale: UiLocale; children: ReactNode }) { return <LocaleContext.Provider value={locale}>{children}</LocaleContext.Provider>; }
 const useCopy = () => COPY[useContext(LocaleContext)];
 
 const DEFAULT_PERIOD = "local-dataset-v1";
