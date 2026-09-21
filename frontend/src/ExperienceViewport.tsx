@@ -670,13 +670,11 @@ export default function ExperienceViewport() {
           period={period}
           onPeriodChange={changePeriod}
         />
-        <nav className="gold-tabs">
-          <b>Vista general</b>
-          <span>Compromisos</span>
-          <span>Acciones</span>
-          <span>Resultados</span>
-          <span>Evidencia</span>
-        </nav>
+        <LensNav labelText="Lentes de compromisos y resultados" items={[
+          ["commitment-list", "Compromisos"],
+          ["commitment-results", "Resultados y evidencia"],
+          ["commitment-new", "Nuevo compromiso"],
+        ]} />
         <div className="gold-metrics">
           <Metric
             tone="info"
@@ -715,14 +713,14 @@ export default function ExperienceViewport() {
               </div>
             </div>
             <div className="gold-panel gold-stack">
-              <SectionTitle title="Compromisos recientes" />
+              <SectionTitle id="commitment-list" title="Compromisos recientes" />
               {commitments?.commitments.map((item) => (
                 <div className="gold-table-row" key={item.commitmentId}>
                   <strong>{item.declaration}</strong>
                   <span>{label(item.accountableAreaDomainId)}</span>
                   <b>{item.executionStatus ?? item.statusContext}</b>
                   <em>{item.overdue ? "Vencido" : "En seguimiento"}</em>
-                  <div className="vx-commitment-actions"><button onClick={() => updateCommitmentStatus(item.commitmentId, "IN_PROGRESS")}>In progress</button><button onClick={() => updateCommitmentStatus(item.commitmentId, "COMPLETED")}>Complete</button><button onClick={() => setRenegotiationId(item.commitmentId)}>Renegotiate</button></div>
+                  <div className="vx-commitment-actions"><button onClick={() => updateCommitmentStatus(item.commitmentId, "IN_PROGRESS")}>En progreso</button><button onClick={() => updateCommitmentStatus(item.commitmentId, "COMPLETED")}>Completar</button><button onClick={() => setRenegotiationId(item.commitmentId)}>Renegociar</button></div>
                 </div>
               ))}
             </div>
@@ -736,12 +734,12 @@ export default function ExperienceViewport() {
               </p>
             </div>
             <div className="gold-panel">
-              <h3>Verificación de resultados & Evidencia</h3>
+              <h3 id="commitment-results">Verificación de resultados y evidencia</h3>
               <Empty>
                 No hay OutcomeVerification agregado para esta vista.
               </Empty>
             </div>
-            <form className="gold-panel gold-form" onSubmit={createCommitment}>
+            <form className="gold-panel gold-form" id="commitment-new" onSubmit={createCommitment}>
               <h3>Nuevo compromiso</h3>
               <label>
                 Declaración
@@ -985,10 +983,10 @@ export default function ExperienceViewport() {
               <small>Correlación temporal/contextual ≠ causalidad.</small>
             </div>
             <div className="gold-panel vx-ai-assist" aria-live="polite">
-              <SectionTitle title="Evidence-grounded AI Assistance" subtitle="Advisory only · never authoritative" />
+              <SectionTitle title="Asistencia de IA basada en evidencia" subtitle="Asesoría únicamente · nunca autoritativa" />
               <b>{aiAssist?.status ?? "LOADING"}</b>
-              <p>{aiAssist?.explanation ?? aiAssist?.limitations?.join(" · ") ?? "Checking governed provider boundary…"}</p>
-              <small>{aiAssist?.provenance ?? "No provider claim until evidence is returned."}</small>
+              <p>{aiAssist?.explanation ?? aiAssist?.limitations?.join(" · ") ?? "Validando el límite del proveedor gobernado…"}</p>
+              <small>{aiAssist?.provenance ?? "No se afirma disponibilidad de proveedor sin evidencia."}</small>
             </div>
             <div className="gold-panel vx-change-association">
               <SectionTitle id="risk-change" title="Degradación asociada a cambio" subtitle="Antes / durante / después · asociación ≠ causalidad" />
