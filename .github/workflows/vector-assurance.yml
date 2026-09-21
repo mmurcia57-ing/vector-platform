@@ -1,9 +1,12 @@
 name: vector-assurance
 on:
   push:
-    branches: ["framework/vector-full-lifecycle-pilot"]
+    branches:
+      - framework/vector-full-lifecycle-pilot
+      - experiment/vector-knowledge-rechallenge-v2
+  workflow_dispatch:
 concurrency:
-  group: vector-assurance-${{ github.sha }}
+  group: vector-assurance-${{ github.ref }}-${{ github.sha }}
   cancel-in-progress: false
 jobs:
   backend:
