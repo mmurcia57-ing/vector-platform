@@ -3,7 +3,13 @@ import type { FormEvent } from "react";
 import { createPortal } from "react-dom";
 import "./IntelligenceWorkspace.css";
 
-const PERIOD = "local-dataset-v1";
+const DEFAULT_PERIOD = "local-dataset-v1";
+const PERIOD_OPTIONS = [
+  ["local-dataset-v1", "Escenario base"],
+  ["local-partial-stale", "Evidencia parcial / desactualizada"],
+  ["local-outcome-pending", "Acción completa / resultado pendiente"],
+  ["local-insufficient-evidence", "Evidencia insuficiente"],
+] as const;
 type Area = { areaDomainId: string; name: string; attentionState: string };
 type Service = {
   serviceId: string;
@@ -151,10 +157,14 @@ function Header({
   eyebrow,
   title,
   question,
+  period,
+  onPeriodChange,
 }: {
   eyebrow: string;
   title: string;
   question: string;
+  period: string;
+  onPeriodChange: (period: string) => void;
 }) {
   return (
     <header className="gold-header">
@@ -164,8 +174,13 @@ function Header({
         <p>{question}</p>
       </div>
       <div className="gold-filters">
-        <span>Últimos 30 días</span>
-        <span>Contexto local</span>
+        <label className="vx-context-control">
+          <span>Escenario de análisis</span>
+          <select aria-label="Escenario de análisis" value={period} onChange={(event) => onPeriodChange(event.target.value)}>
+            {PERIOD_OPTIONS.map(([value, text]) => <option key={value} value={value}>{text}</option>)}
+          </select>
+        </label>
+        <span className="vx-context-meta">Datos demostrativos locales · no producción</span>
       </div>
     </header>
   );
@@ -237,6 +252,7 @@ function QualityNote({ quality }: { quality?: Quality }) {
 export default function ExperienceViewport() {
   const [host, setHost] = useState<Element | null>(null);
   const [path, setPath] = useState(routePath());
+  const [period, setPeriod] = useState(() => new URLSearchParams(window.location.search).get("period") || DEFAULT_PERIOD);
   const [overview, setOverview] = useState<Overview>();
   const [detail, setDetail] = useState<Detail>();
   const [risk, setRisk] = useState<Detail>();
@@ -273,7 +289,7 @@ export default function ExperienceViewport() {
     return () => window.removeEventListener("popstate", change);
   }, []);
   useEffect(() => {
-    void read<Overview>(`/api/experience/overview?period=${PERIOD}`).then(
+    void read<Overview>(`/api/experience/overview?period=${period}`).then(
       setOverview,
     );
     void read<CommitmentView>(
@@ -288,7 +304,7 @@ export default function ExperienceViewport() {
         routeId() || params.get("serviceId") || overview.services[0]?.serviceId;
       if (serviceId)
         void read<Detail>(
-          `/api/experience/services/${encodeURIComponent(serviceId)}?period=${PERIOD}`,
+          `/api/experience/services/${encodeURIComponent(serviceId)}?period=${period}`,
         ).then(setDetail).catch((error) => setLoadError(error instanceof Error ? error.message : "Service intelligence unavailable"));
     }
     if (path === "risks") {
@@ -300,16 +316,16 @@ export default function ExperienceViewport() {
       if (!selected) return;
       const serviceId = params.get("serviceId") || selected.serviceId;
       void read<Detail>(
-        `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}?period=${PERIOD}&serviceId=${encodeURIComponent(serviceId)}`,
+        `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}?period=${period}&serviceId=${encodeURIComponent(serviceId)}`,
       ).then(setRisk).catch((error) => setLoadError(error instanceof Error ? error.message : "Risk intelligence unavailable"));
       void read<Graph>(
-        `/api/experience/graph?period=${PERIOD}&serviceId=${encodeURIComponent(serviceId)}&riskFindingId=${encodeURIComponent(selected.riskFindingId)}&maxNodes=12&maxRelationships=16`,
+        `/api/experience/graph?period=${period}&serviceId=${encodeURIComponent(serviceId)}&riskFindingId=${encodeURIComponent(selected.riskFindingId)}&maxNodes=12&maxRelationships=16`,
       ).then(setGraph).catch((error) => setLoadError(error instanceof Error ? error.message : "Graph unavailable"));
       void read<TemporalSignal[]>(
-        `/api/experience/signals?period=${PERIOD}&serviceId=${encodeURIComponent(serviceId)}&riskFindingId=${encodeURIComponent(selected.riskFindingId)}&limit=50`,
+        `/api/experience/signals?period=${period}&serviceId=${encodeURIComponent(serviceId)}&riskFindingId=${encodeURIComponent(selected.riskFindingId)}&limit=50`,
       ).then(setSignals).catch((error) => setLoadError(error instanceof Error ? error.message : "Temporal intelligence unavailable"));
       void read<AiAssist>(
-        `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}/assist?period=${PERIOD}&serviceId=${encodeURIComponent(serviceId)}`,
+        `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}/assist?period=${period}&serviceId=${encodeURIComponent(serviceId)}`,
       ).then(setAiAssist).catch(() => setAiAssist({ status: "UNAVAILABLE", limitations: ["Assistance endpoint unavailable"], provenance: "local-safe-degradation" }));
       void read<ChangeAssociation>(
         `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}/change-association?serviceId=${encodeURIComponent(serviceId)}`,
@@ -317,8 +333,19 @@ export default function ExperienceViewport() {
     }
   }, [overview, path]);
   const navigate = (next: string, context: Record<string, string> = {}) => {
-    const params = new URLSearchParams({ period: PERIOD, ...context });
+    const params = new URLSearchParams({ period, ...context });
     window.history.pushState({}, "", `${next}?${params}`);
+  };
+  const changePeriod = (nextPeriod: string) => {
+    setPeriod(nextPeriod);
+    const params = new URLSearchParams(window.location.search);
+    params.set("period", nextPeriod);
+    window.history.replaceState({}, "", `${window.location.pathname}?${params}`);
+    setOverview(undefined);
+    setDetail(undefined);
+    setRisk(undefined);
+    setGraph(undefined);
+    setSignals([]);
   };
   const areaId = new URLSearchParams(window.location.search).get(
     "areaDomainId",
@@ -387,6 +414,8 @@ export default function ExperienceViewport() {
           eyebrow="DE LA EVIDENCIA A UNA TECNOLOGÍA MÁS CONFIABLE"
           title="Panorama Ejecutivo"
           question="¿Dónde requiere atención Tecnología hoy y por qué?"
+          period={period}
+          onPeriodChange={changePeriod}
         />
         <div className="gold-metrics">
           <Metric
@@ -499,6 +528,8 @@ export default function ExperienceViewport() {
           eyebrow="ÁREAS / DOMINIOS"
           title={`Area Intelligence — ${area?.name ?? "Sin área"}`}
           question={`¿Qué está ocurriendo en ${area?.name ?? "esta área"} y qué requiere atención?`}
+          period={period}
+          onPeriodChange={changePeriod}
         />
         <div className="gold-metrics">
           <Metric
@@ -624,6 +655,8 @@ export default function ExperienceViewport() {
           eyebrow="COMPROMISOS & MEJORAS / VISTA GENERAL"
           title="Compromisos & Mejoras"
           question="Seguimiento de compromisos, acciones de mejora y verificación de resultados."
+          period={period}
+          onPeriodChange={changePeriod}
         />
         <nav className="gold-tabs">
           <b>Vista general</b>
@@ -748,6 +781,8 @@ export default function ExperienceViewport() {
               ? `${detail.service.conditionContext}. Evidencia operacional disponible.`
               : "Cargando contexto del servicio."
           }
+          period={period}
+          onPeriodChange={changePeriod}
         />
         <nav className="gold-tabs">
           <b>Vista general</b>
@@ -866,6 +901,8 @@ export default function ExperienceViewport() {
             risk?.riskFinding?.explanation ??
             "Cargando explicación y evidencia."
           }
+          period={period}
+          onPeriodChange={changePeriod}
         />
         <SemanticLegend />
         <nav className="gold-tabs">
