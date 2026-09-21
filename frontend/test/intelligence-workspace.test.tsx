@@ -28,3 +28,12 @@ describe("EXT-003 intelligence workspace", () => {
     expect(screen.getByRole("button", { name: "Action & Outcome" }).className).toContain("active");
   });
 });
+
+
+it("keeps workspace navigation behavior explicit rather than decorative", () => {
+  const calls: string[] = [];
+  render(<WorkspaceRail active="services" navigate={(next) => calls.push(next)} />);
+  fireEvent.click(screen.getByRole("button", { name: "Investigation" }));
+  expect(calls).toEqual(["/risks"]);
+  expect(screen.getByRole("button", { name: "Service" }).className).toContain("active");
+});
