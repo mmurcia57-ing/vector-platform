@@ -6,7 +6,8 @@ const viewport=fs.readFileSync(new URL("../src/ExperienceViewport.tsx",import.me
 const contract=JSON.parse(fs.readFileSync(new URL("../../contracts/vector-experience-contract.schema.json",import.meta.url),"utf8"));
 
 test("commitment source wiring exposes governed lifecycle handlers without coupling assurance to UI language",()=>{
-  for(const token of ["updateCommitmentStatus","renegotiateCommitment","Registrar renegociación","Reliability Rate","Resultado pendiente"]) assert.match(viewport,new RegExp(token));
+  for(const token of ["updateCommitmentStatus","renegotiateCommitment","commitmentReliabilityRate","outcomePendingCount","Registrar renegociación"]) assert.match(viewport,new RegExp(token));
+  assert.match(viewport,/Execution ≠ verified outcome|Ejecución ≠ resultado verificado/);
 });
 test("commitment mutation contracts require authorization and audit",()=>{
   for(const key of ["PATCH /api/experience/commitments/{commitmentId}/lifecycle","POST /api/experience/commitments/{commitmentId}/renegotiations"]){
