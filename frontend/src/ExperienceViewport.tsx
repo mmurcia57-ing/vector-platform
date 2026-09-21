@@ -179,6 +179,21 @@ const routeId = () =>
     window.location.pathname.split("/").filter(Boolean)[1] ?? "",
   );
 
+export function buildJourneyUrl(next: string, currentSearch: string, period: string, currentPath: string, context: Record<string, string> = {}) {
+  const current = new URLSearchParams(currentSearch);
+  const preserved = ["areaDomainId", "serviceId", "riskFindingId", "condition", "origin", "commitmentId", "actionId", "outcomeVerificationId"];
+  const merged: Record<string, string> = { period };
+  preserved.forEach((key) => {
+    const value = current.get(key);
+    if (value) merged[key] = value;
+  });
+  Object.entries(context).forEach(([key, value]) => {
+    if (value) merged[key] = value;
+  });
+  if (!merged.origin) merged.origin = currentPath;
+  return `${next}?${new URLSearchParams(merged)}`;
+}
+
 function Metric({
   tone,
   title,
@@ -506,17 +521,7 @@ export default function ExperienceViewport() {
     }
   }, [overview, path, period, graphLimit]);
   const navigate = (next: string, context: Record<string, string> = {}) => {
-    const current = new URLSearchParams(window.location.search);
-    const preserved = ["areaDomainId", "serviceId", "riskFindingId", "condition", "origin"];
-    const merged: Record<string, string> = { period };
-    preserved.forEach((key) => {
-      const value = current.get(key);
-      if (value) merged[key] = value;
-    });
-    Object.assign(merged, context);
-    if (!merged.origin) merged.origin = window.location.pathname;
-    const params = new URLSearchParams(merged);
-    window.history.pushState({}, "", `${next}?${params}`);
+    window.history.pushState({}, "", buildJourneyUrl(next, window.location.search, period, window.location.pathname, context));
     setPath(next.split("/").filter(Boolean)[0] ?? "overview");
   };
   const changeLocale = (nextLocale: UiLocale) => {
