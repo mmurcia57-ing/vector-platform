@@ -785,7 +785,7 @@ export default function ExperienceViewport() {
         <div className="vx-commitment-workspace">
           <section className="gold-panel">
             <SectionTitle id="commitment-list" title="Flujo de compromisos" subtitle="La fecha y la renegociación preservan historia; completar ejecución no verifica resultado." />
-            <div className="vx-ledger-head"><span>Compromiso</span><span>Área</span><span>Estado</span><span>Fecha</span><span>Acciones</span></div>
+            <div className="vx-ledger-head"><span>{tr("Compromiso","Commitment")}</span><span>{tr("Área","Area")}</span><span>{tr("Estado","Status")}</span><span>{tr("Fecha","Date")}</span><span>{tr("Acciones","Actions")}</span></div>
             {commitments?.commitments.map((item) => (
               <div className="vx-ledger-row" key={item.commitmentId}>
                 <strong>{item.declaration}</strong>
@@ -793,9 +793,9 @@ export default function ExperienceViewport() {
                 <b>{item.executionStatus ?? item.statusContext}</b>
                 <em>{item.currentDueDate ?? (item.overdue ? "Vencido" : "En seguimiento")}</em>
                 <div className="vx-commitment-actions">
-                  <button onClick={() => updateCommitmentStatus(item.commitmentId, "IN_PROGRESS")}>En progreso</button>
-                  <button onClick={() => updateCommitmentStatus(item.commitmentId, "COMPLETED")}>Completar</button>
-                  <button onClick={() => setRenegotiationId(item.commitmentId)}>Renegociar</button>
+                  <button onClick={() => updateCommitmentStatus(item.commitmentId, "IN_PROGRESS")}>{tr("En progreso","In progress")}</button>
+                  <button onClick={() => updateCommitmentStatus(item.commitmentId, "COMPLETED")}>{tr("Completar","Complete")}</button>
+                  <button onClick={() => setRenegotiationId(item.commitmentId)}>{tr("Renegociar","Renegotiate")}</button>
                 </div>
               </div>
             ))}
@@ -810,19 +810,19 @@ export default function ExperienceViewport() {
               <p>Prioriza seguimiento gobernado: compromiso → ejecución → evidencia → resultado. No convierte actividad completada en mejora.</p>
             </div>
             <form className="gold-panel gold-form" id="commitment-new" onSubmit={createCommitment}>
-              <h3>Nuevo compromiso</h3>
-              <label>Declaración<input value={declaration} onChange={(event) => setDeclaration(event.target.value)} required /></label>
-              <label>Área responsable<select key={area?.areaDomainId} defaultValue={area?.areaDomainId ?? "area-platform"} disabled><option value={area?.areaDomainId ?? "area-platform"}>{area?.name ?? "Platform"}</option></select></label>
-              <label>Resultado esperado<input value={intendedResult} onChange={(event) => setIntendedResult(event.target.value)} /></label>
-              <label>Fecha comprometida<input type="date" value={commitmentDueDate} onChange={(event) => setCommitmentDueDate(event.target.value)} /></label>
-              <button>Crear compromiso</button>
+              <h3>{tr("Nuevo compromiso","New commitment")}</h3>
+              <label>{tr("Declaración","Declaration")}<input value={declaration} onChange={(event) => setDeclaration(event.target.value)} required /></label>
+              <label>{tr("Área responsable","Accountable area")}<select key={area?.areaDomainId} defaultValue={area?.areaDomainId ?? "area-platform"} disabled><option value={area?.areaDomainId ?? "area-platform"}>{area?.name ?? "Platform"}</option></select></label>
+              <label>{tr("Resultado esperado","Expected outcome")}<input value={intendedResult} onChange={(event) => setIntendedResult(event.target.value)} /></label>
+              <label>{tr("Fecha comprometida","Committed date")}<input type="date" value={commitmentDueDate} onChange={(event) => setCommitmentDueDate(event.target.value)} /></label>
+              <button>{tr("Crear compromiso","Create commitment")}</button>
             </form>
             {renegotiationId && <form className="gold-panel gold-form" onSubmit={renegotiateCommitment}>
-              <h3>Renegociar compromiso</h3>
+              <h3>{tr("Renegociar compromiso","Renegotiate commitment")}</h3>
               <p>{label(renegotiationId)} · la fecha anterior permanecerá en el historial.</p>
-              <label>Nueva fecha<input type="date" value={renegotiationDate} onChange={(event) => setRenegotiationDate(event.target.value)} required /></label>
-              <label>Razón<input value={renegotiationReason} onChange={(event) => setRenegotiationReason(event.target.value)} required /></label>
-              <button>Registrar renegociación</button>
+              <label>{tr("Nueva fecha","New date")}<input type="date" value={renegotiationDate} onChange={(event) => setRenegotiationDate(event.target.value)} required /></label>
+              <label>{tr("Razón","Reason")}<input value={renegotiationReason} onChange={(event) => setRenegotiationReason(event.target.value)} required /></label>
+              <button>{tr("Registrar renegociación","Record renegotiation")}</button>
             </form>}
           </aside>
         </div>
@@ -851,12 +851,12 @@ export default function ExperienceViewport() {
         ]} />
         <section className="vx-service-condition" id="service-condition">
           <div>
-            <small>CONDICIÓN OPERACIONAL</small>
+            <small>{tr("CONDICIÓN OPERACIONAL","OPERATIONAL CONDITION")}</small>
             <strong>{detail?.service?.conditionContext ?? "Contexto no disponible"}</strong>
             <span>{detail?.riskFindings.length ?? 0} hallazgos · {detail?.evidence.length ?? 0} evidencias · {detail?.commitments.length ?? 0} compromisos</span>
           </div>
           <div>
-            <small>CALIDAD DEL CONTEXTO</small>
+            <small>{tr("CALIDAD DEL CONTEXTO","CONTEXT QUALITY")}</small>
             <strong>{detail?.quality.stale ? "Desactualizado" : detail?.quality.partial ? "Parcial" : "Disponible"}</strong>
             <span>{detail?.quality.missingContext?.length ? detail.quality.missingContext?.join(" · ") : "Sin contexto faltante declarado"}</span>
           </div>
@@ -873,22 +873,22 @@ export default function ExperienceViewport() {
                   serviceId: item.serviceId,
                   riskFindingId: item.riskFindingId,
                 })}>
-                  <small>HALLAZGO</small><strong>{item.condition}</strong><span>{item.explanation}</span><em>Investigar evidencia y relaciones →</em>
+                  <small>{tr("HALLAZGO","FINDING")}</small><strong>{item.condition}</strong><span>{item.explanation}</span><em>{tr("Investigar evidencia y relaciones →","Investigate evidence and relationships →")}</em>
                 </button>
-              )) : <Empty>No hay RiskFinding sustentado para el contexto seleccionado.</Empty>}
+              )) : <Empty>{tr("No hay hallazgo de riesgo sustentado para el contexto seleccionado.","No risk finding is supported for the selected context.")}</Empty>}
             </div>
             <div className="gold-panel" id="service-evidence">
               <SectionTitle title="Evidencia operacional" subtitle="Hechos disponibles para el servicio; ausencia de datos no implica operación normal." />
               {detail?.evidence.length ? detail.evidence.map((item) => (
                 <div className="gold-evidence" key={item.evidenceId}><b>{t.fact}</b><strong>{item.supportedClaim}</strong><span>{item.observedAt} · {item.sourceReferenceIds.map(label).join(", ")}</span></div>
-              )) : <Empty>No hay evidencia expuesta por esta proyección.</Empty>}
+              )) : <Empty>{tr("No hay evidencia expuesta por esta proyección.","No evidence is exposed by this projection.")}</Empty>}
             </div>
           </section>
           <aside className="vx-service-context">
-            <div className="gold-panel" id="service-slo"><SectionTitle title="SLO / tendencia" /><Empty>No hay serie SLO disponible para el dataset local.</Empty></div>
-            <div className="gold-panel" id="service-incidents"><SectionTitle title="Incidentes" /><Empty>No hay incidentes expuestos por esta proyección.</Empty></div>
-            <div className="gold-panel" id="service-changes"><SectionTitle title="Cambios y despliegues" /><Empty>No hay cambios expuestos por esta proyección.</Empty></div>
-            <div className="gold-intelligence"><strong>✣ VECTOR Intelligence</strong><p>{detail?.riskFindings[0]?.explanation ?? "No hay hallazgos adicionales."}</p><small>La explicación se limita a la evidencia disponible.</small></div>
+            <div className="gold-panel" id="service-slo"><SectionTitle title="SLO / tendencia" /><Empty>{tr("No hay serie SLO disponible para el dataset local.","No SLO series is available for the local dataset.")}</Empty></div>
+            <div className="gold-panel" id="service-incidents"><SectionTitle title="Incidentes" /><Empty>{tr("No hay incidentes expuestos por esta proyección.","No incidents are exposed by this projection.")}</Empty></div>
+            <div className="gold-panel" id="service-changes"><SectionTitle title="Cambios y despliegues" /><Empty>{tr("No hay cambios expuestos por esta proyección.","No changes are exposed by this projection.")}</Empty></div>
+            <div className="gold-intelligence"><strong>✣ VECTOR Intelligence</strong><p>{detail?.riskFindings[0]?.explanation ?? "No hay hallazgos adicionales."}</p><small>{tr("La explicación se limita a la evidencia disponible.","The explanation is limited to available evidence.")}</small></div>
           </aside>
         </div>
         <QualityNote quality={detail?.quality} />
@@ -960,7 +960,7 @@ export default function ExperienceViewport() {
                     {item.limitation && <small>{item.limitation}</small>}
                   </div>
                 </div>
-              )) : <Empty>No hay historia temporal suficiente en la evidencia disponible.</Empty>}
+              )) : <Empty>{tr("No hay historia temporal suficiente en la evidencia disponible.","There is not enough temporal history in the available evidence.")}</Empty>}
             </div>
             <div className="gold-panel">
               <SectionTitle id="risk-evidence" title={tr("Evidencia disponible", "Available evidence")} />
@@ -977,7 +977,7 @@ export default function ExperienceViewport() {
             <div className="gold-intelligence">
               <strong>✣ VECTOR Intelligence</strong>
               <p>{risk?.riskFinding?.explanation}</p>
-              <small>Correlación temporal/contextual ≠ causalidad.</small>
+              <small>{tr("Correlación temporal/contextual ≠ causalidad.","Temporal/contextual correlation ≠ causality.")}</small>
             </div>
             <div className="gold-panel vx-ai-assist" aria-live="polite">
               <SectionTitle title={tr("Asistencia de IA basada en evidencia", "Evidence-based AI assistance")} subtitle={tr("Solo asesoría · nunca autoritativa", "Advisory only · never authoritative")} />
@@ -991,7 +991,7 @@ export default function ExperienceViewport() {
                 <div className="vx-change-path"><span>{t.before}</span><i>→</i><span>{t.change} {label(changeAssociation.changeId)}</span><i>→</i><span>{t.after}</span></div>
                 <p><strong>{changeAssociation.contextualAssociation ? "Contextual association detected" : "Association not established"}</strong> · Causal claim: {changeAssociation.causalClaim ? "YES" : "NO"}</p>
                 <small>{changeAssociation.limitation}</small>
-              </> : <Empty>No change/deployment association context is available.</Empty>}
+              </> : <Empty>{tr("No hay contexto disponible de asociación con cambio/despliegue.","No change/deployment association context is available.")}</Empty>}
             </div>
             <div className="gold-panel">
               <SectionTitle id="risk-relations" title={tr("Relaciones y topología contextual", "Relationships and contextual topology")} />
@@ -1015,7 +1015,7 @@ export default function ExperienceViewport() {
                 </div>
               ))}
               {!risk?.commitments.length && (
-                <Empty>No hay compromisos asociados.</Empty>
+                <Empty>{tr("No hay compromisos asociados.","No associated commitments.")}</Empty>
               )}
             </div>
             <div className="gold-panel">
@@ -1025,7 +1025,7 @@ export default function ExperienceViewport() {
                   <strong>{outcome.outcome}</strong>
                   <p>Evidencia: {outcome.evidenceIds.map(label).join(", ")}</p>
                 </div>
-              )) : <Empty>El resultado aún no es verificable con la evidencia disponible.</Empty>}
+              )) : <Empty>{tr("El resultado aún no es verificable con la evidencia disponible.","The outcome is not yet verifiable with available evidence.")}</Empty>}
             </div>
           </aside>
         </div>
