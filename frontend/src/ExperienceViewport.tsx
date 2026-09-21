@@ -650,7 +650,7 @@ export default function ExperienceViewport() {
 
   const areaView = (
     <div className="experience-viewport">
-      <div className="gold-page">
+      <div className="gold-page vx-approved-golden vx-golden-area-page">
         <WorkspaceRail active={path} navigate={navigate} />
         {contextEnvelope}
         <Header
@@ -752,7 +752,7 @@ export default function ExperienceViewport() {
 
   const commitmentView = (
     <div className="experience-viewport">
-      <div className="gold-page">
+      <div className="gold-page vx-approved-golden vx-golden-commitment-page">
         <WorkspaceRail active={path} navigate={navigate} />
         {contextEnvelope}
         <Header
@@ -825,7 +825,7 @@ export default function ExperienceViewport() {
 
   const serviceView = (
     <div className="experience-viewport">
-      <div className="gold-page">
+      <div className="gold-page vx-approved-golden vx-golden-service-page">
         <WorkspaceRail active={path} navigate={navigate} />
         {contextEnvelope}
         <Header
@@ -891,7 +891,7 @@ export default function ExperienceViewport() {
 
   const riskView = (
     <div className="experience-viewport">
-      <div className="gold-page">
+      <div className="gold-page vx-approved-golden vx-golden-risk-page">
         <WorkspaceRail active={path} navigate={navigate} />
         {contextEnvelope}
         <Header
