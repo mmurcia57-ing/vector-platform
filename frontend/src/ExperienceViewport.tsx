@@ -538,123 +538,97 @@ export default function ExperienceViewport() {
       <div className="gold-page">
         <WorkspaceRail active={path} navigate={navigate} />
         <Header
-          eyebrow="ÁREAS / DOMINIOS"
-          title={`Area Intelligence — ${area?.name ?? "Sin área"}`}
-          question={`¿Qué está ocurriendo en ${area?.name ?? "esta área"} y qué requiere atención?`}
+          eyebrow="ÁREAS / DOMINIOS · WORKSPACE DE DECISIÓN"
+          title={area?.name ?? "Área sin seleccionar"}
+          question={`¿Qué servicios concentran la atención en ${area?.name ?? "esta área"}, qué la explica y qué seguimiento requiere?`}
           period={period}
           onPeriodChange={changePeriod}
         />
-        <div className="gold-metrics">
-          <Metric
-            tone="danger"
-            title="Servicios con atención"
-            value={areaServices.length}
-            note={`Dentro de ${area?.name ?? "esta área"}`}
-          />
-          <Metric
-            tone="purple"
-            title="Compromisos"
-            value={commitments?.activeCount ?? 0}
-            note="Contexto actualmente disponible"
-          />
-          <Metric
-            tone="warning"
-            title="Riesgos persistentes"
-            value={areaRisks.length}
-            note="Con evidencia disponible"
-          />
-          <Metric
-            tone="info"
-            title="Resultados"
-            value="N/D"
-            note="Sin verificación agregada"
-          />
+        <div className="vx-area-summary">
+          <div>
+            <small>CONTEXTO DEL ÁREA</small>
+            <strong>{areaServices.length} servicios en contexto</strong>
+            <span>{areaRisks.length} hallazgos con evidencia disponible</span>
+          </div>
+          <div>
+            <small>SEGUIMIENTO</small>
+            <strong>{commitments?.activeCount ?? 0} compromisos activos</strong>
+            <span>La ejecución no implica resultado verificado.</span>
+          </div>
+          <div>
+            <small>CALIDAD DE DECISIÓN</small>
+            <strong>{overview.quality.stale ? "Contexto desactualizado" : "Contexto disponible"}</strong>
+            <span>{overview.quality.missingContext.length ? `${overview.quality.missingContext.length} vacíos de contexto` : "Sin vacíos declarados"}</span>
+          </div>
         </div>
-        <div className="gold-main-grid">
-          <section className="gold-panel">
+
+        <div className="vx-area-workspace">
+          <section className="gold-panel vx-service-portfolio">
             <SectionTitle
-              title="Servicios que requieren atención"
-              subtitle="Servicios del área con señales relevantes"
+              title="Portafolio de servicios"
+              subtitle="Comparación dentro del área; seleccione un servicio para continuar la investigación."
             />
-            {areaServices.length ? (
-              areaServices.map((service) => (
+            <div className="vx-portfolio-head"><span>Servicio</span><span>Condición</span><span>Hallazgos</span><span>Decisión</span></div>
+            {areaServices.length ? areaServices.map((service) => {
+              const serviceRisks = areaRisks.filter((item) => item.serviceId === service.serviceId);
+              return (
                 <button
-                  className="gold-row"
+                  className="vx-portfolio-row"
                   key={service.serviceId}
-                  onClick={() =>
-                    navigate(
-                      `/services/${encodeURIComponent(service.serviceId)}`,
-                      {
-                        areaDomainId: service.areaDomainId,
-                        serviceId: service.serviceId,
-                      },
-                    )
-                  }
+                  onClick={() => navigate(`/services/${encodeURIComponent(service.serviceId)}`, {
+                    areaDomainId: service.areaDomainId,
+                    serviceId: service.serviceId,
+                  })}
                 >
-                  <i className="alert" />
                   <strong>{service.name}</strong>
                   <span>{service.conditionContext}</span>
-                  <b>
-                    {
-                      areaRisks.filter(
-                        (item) => item.serviceId === service.serviceId,
-                      ).length
-                    }{" "}
-                    riesgos
-                  </b>
-                  <em>Ver detalle →</em>
+                  <b>{serviceRisks.length}</b>
+                  <em>{serviceRisks.length ? "Investigar →" : "Revisar contexto →"}</em>
                 </button>
-              ))
-            ) : (
-              <Empty>
-                No hay servicios adicionales que requieran atención.
-              </Empty>
-            )}
+              );
+            }) : <Empty>No hay servicios disponibles para el área seleccionada.</Empty>}
           </section>
-          <aside className="gold-panel">
-            <SectionTitle
-              title="¿Qué explica la situación del área?"
-              subtitle="Señales consolidadas desde evidencia SRE"
-            />
-            {areaRisks.map((item) => (
-              <div className="gold-signal" key={item.riskFindingId}>
-                <i>↗</i>
-                <div>
-                  <strong>Riesgo</strong>
-                  <p>{item.explanation}</p>
-                </div>
-              </div>
-            ))}
+
+          <aside className="vx-area-attention">
+            <div className="gold-panel">
+              <SectionTitle
+                title="Concentración de atención"
+                subtitle="Hallazgos explicables; no es un score ni un ranking de personas."
+              />
+              {areaRisks.length ? areaRisks.map((item) => (
+                <button
+                  className="vx-attention-item"
+                  key={item.riskFindingId}
+                  onClick={() => navigate(`/risks/${encodeURIComponent(item.riskFindingId)}`, {
+                    areaDomainId: area?.areaDomainId ?? "",
+                    serviceId: item.serviceId,
+                    riskFindingId: item.riskFindingId,
+                  })}
+                >
+                  <small>{label(item.serviceId)}</small>
+                  <strong>{item.condition}</strong>
+                  <span>{item.explanation}</span>
+                </button>
+              )) : <Empty>No hay hallazgos de atención sustentados por la evidencia disponible.</Empty>}
+            </div>
             <div className="gold-intelligence">
               <strong>✣ VECTOR Intelligence</strong>
-              <p>
-                La atención del área se explica únicamente con condiciones y
-                evidencia disponibles; no se infiere causalidad.
-              </p>
+              <p>La vista del área organiza contexto para decidir dónde profundizar; no convierte correlación en causalidad ni asigna responsabilidad individual.</p>
             </div>
           </aside>
         </div>
-        <div className="gold-bottom">
-          <section className="gold-panel">
-            <h3>Compromisos del área</h3>
-            <p>
-              {commitments?.activeCount ?? 0} compromisos activos en el contexto
-              disponible.
-            </p>
-          </section>
-          <section className="gold-panel">
-            <h3>Resultado de mejoras</h3>
-            <Empty>No hay verificación agregada disponible.</Empty>
-          </section>
-          <section className="gold-panel">
-            <h3>Contexto SRE del área</h3>
-            <p>
-              {areaServices.length} servicios · {areaRisks.length} condiciones
-              de riesgo.
-            </p>
-          </section>
-        </div>
-        <DecisionQueue risks={path === "areas" ? areaRisks : overview.attentionFindings} commitments={commitments} navigate={navigate} />
+
+        <section className="gold-panel vx-area-followup">
+          <SectionTitle title="Seguimiento del área" subtitle="Riesgo → compromiso → acción → resultado." />
+          <div className="vx-followup-grid">
+            <div><small>RIESGO</small><strong>{areaRisks.length}</strong><span>hallazgos visibles</span></div>
+            <div><small>COMPROMISO</small><strong>{commitments?.activeCount ?? 0}</strong><span>activos</span></div>
+            <div><small>ACCIÓN</small><strong>N/D</strong><span>sin agregado de área</span></div>
+            <div><small>RESULTADO</small><strong>N/D</strong><span>sin verificación agregada</span></div>
+          </div>
+        </section>
+
+        <DecisionQueue risks={areaRisks} commitments={commitments} navigate={navigate} />
         <QualityNote quality={overview.quality} />
       </div>
     </div>
