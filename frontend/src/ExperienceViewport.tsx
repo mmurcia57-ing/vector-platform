@@ -377,6 +377,48 @@ function TemporalSpine({ signals, risks }: { signals?: TemporalSignal[]; risks?:
   </section>;
 }
 
+function NorthStarUniverse({ overview, commitments, period, onPeriodChange, navigate, tr }: { overview: Overview; commitments?: CommitmentView; period: string; onPeriodChange: (period: string) => void; navigate: (next: string, context?: Record<string,string>) => void; tr: (es:string,en:string)=>string }) {
+  const locale = useContext(LocaleContext);
+  const t = COPY[locale];
+  const services = overview.services.slice(0, 8);
+  const positions = [[16,48],[38,27],[53,50],[75,32],[78,69],[37,72],[20,76],[68,78]];
+  const selectedRisk = overview.attentionFindings[0];
+  const selectedService = overview.services.find((item) => item.serviceId === selectedRisk?.serviceId) ?? services[0];
+  const verifiedOutcomes = overview.outcomeVerifications ?? [];
+  return <div className="vx-northstar-shell">
+    <header className="vx-ns-top">
+      <div className="vx-ns-brand"><b>V</b>ECTOR <span>{tr("ENTORNO DE INTELIGENCIA OPERACIONAL","OPERATIONAL INTELLIGENCE ENVIRONMENT")}</span></div>
+      <label><span>{t.scenario}</span><select value={period} onChange={(e)=>onPeriodChange(e.target.value)}>{PERIOD_OPTIONS[locale].map(([value,text])=><option key={value} value={value}>{text}</option>)}</select></label>
+      <span className="vx-ns-quality">{overview.quality.stale ? t.stale : overview.quality.missingContext?.length ? t.partial : t.available}</span>
+    </header>
+    <nav className="vx-ns-rail" aria-label={t.workspaceName}>
+      <button className="active" onClick={()=>navigate("/")}>◎<span>{tr("Orientar","Orient")}</span></button>
+      <button onClick={()=>navigate("/areas",{areaDomainId:selectedService?.areaDomainId ?? ""})}>◫<span>{t.area}</span></button>
+      <button onClick={()=>selectedRisk && navigate(`/risks/${encodeURIComponent(selectedRisk.riskFindingId)}`,{serviceId:selectedRisk.serviceId,riskFindingId:selectedRisk.riskFindingId})}>⌁<span>{t.investigate}</span></button>
+      <button onClick={()=>navigate("/commitments")}>✓<span>{tr("Actuar","Act")}</span></button>
+    </nav>
+    <main className="vx-ns-universe">
+      <div className="vx-ns-head"><small>{tr("UNIVERSO OPERACIONAL","OPERATIONAL UNIVERSE")}</small><h1>{tr("El sistema como contexto, no como tablero","The system as context, not as a dashboard")}</h1><p>{tr("Foco espacial + evidencia temporal + decisión gobernada.","Spatial focus + temporal evidence + governed decision.")}</p></div>
+      <svg className="vx-ns-edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">{services.slice(1).map((service,index)=>{const a=positions[0],b=positions[index+1]??positions[0];return <line key={service.serviceId} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} />})}</svg>
+      <div className="vx-ns-core" aria-hidden="true" />
+      {services.map((service,index)=>{const [left,top]=positions[index]??[50,50];const riskCount=overview.attentionFindings.filter(r=>r.serviceId===service.serviceId).length;return <button key={service.serviceId} className={`vx-ns-node ${riskCount?"risk":"stable"} ${service.serviceId===selectedService?.serviceId?"selected":""}`} style={{left:`${left}%`,top:`${top}%`}} onClick={()=>navigate(`/services/${encodeURIComponent(service.serviceId)}`,{areaDomainId:service.areaDomainId,serviceId:service.serviceId})}><i/><small>{tr("SERVICIO","SERVICE")}</small><strong>{service.name}</strong><span>{service.conditionContext}</span>{riskCount>0&&<b>{riskCount} {t.findings}</b>}</button>})}
+      <div className="vx-ns-boundary">{t.demoBoundary} · {t.contextDisclaimer}</div>
+    </main>
+    <aside className="vx-ns-inspector">
+      <small>{tr("INSPECTOR DE INTELIGENCIA","INTELLIGENCE INSPECTOR")}</small>
+      <h2>{selectedService?.name ?? tr("Contexto operacional","Operational context")}</h2>
+      <p>{selectedRisk?.condition ?? t.supportedContext}</p>
+      <div className="vx-ns-fact"><b>{t.observed.toUpperCase()}</b><span>{overview.attentionFindings.length} {t.findings} · {overview.services.length} {tr("servicios en contexto","services in context")}</span></div>
+      <div className="vx-ns-derived"><b>{t.derived.toUpperCase()}</b><span>{selectedRisk?.explanation ?? t.supportedContext}</span></div>
+      <div className="vx-ns-limit"><b>{tr("LIMITACIÓN","LIMITATION")}</b><span>{overview.quality.limitations?.[0] ?? t.contextDisclaimer}</span></div>
+      <div className="vx-ns-flow"><span>{tr("Señal","Signal")}</span><span className="active">{t.investigate}</span><span>{tr("Decidir","Decide")}</span><span>{tr("Comprometer","Commit")}</span><span>{tr("Verificar","Verify")}</span></div>
+      <button className="vx-ns-action" onClick={()=>selectedRisk && navigate(`/risks/${encodeURIComponent(selectedRisk.riskFindingId)}`,{serviceId:selectedRisk.serviceId,riskFindingId:selectedRisk.riskFindingId})}>{tr("Continuar con el contexto →","Continue with context →")}</button>
+      <div className="vx-ns-commit"><small>{tr("COMPROMISOS ACTIVOS","ACTIVE COMMITMENTS")}</small><strong>{commitments?.activeCount ?? 0}</strong><span>{verifiedOutcomes.length ? `${verifiedOutcomes.length} ${tr("resultados verificados","verified outcomes")}` : tr("Ejecución ≠ resultado verificado","Execution ≠ verified outcome")}</span></div>
+    </aside>
+    <section className="vx-ns-time"><div><small>{tr("INTELIGENCIA TEMPORAL · EJE DE EVIDENCIA","TEMPORAL INTELLIGENCE · EVIDENCE SPINE")}</small><strong>{tr("Contexto sincronizado","Synchronized context")}</strong></div><div className="vx-ns-track">{overview.attentionFindings.slice(0,6).map((risk,index)=><button key={risk.riskFindingId} onClick={()=>navigate(`/risks/${encodeURIComponent(risk.riskFindingId)}`,{serviceId:risk.serviceId,riskFindingId:risk.riskFindingId})}><i/><small>{index+1}</small><span>{risk.condition}</span></button>)}</div></section>
+  </div>;
+}
+
 function SpatialGraph({ graph, focus, onFocus, nodeLabel, onExpand, onReset, limit }: { graph?: Graph; focus: string; onFocus: (id: string) => void; nodeLabel: (id: string) => string; onExpand: () => void; onReset: () => void; limit: number }) {
   const t = useCopy();
   const [graphOpen, setGraphOpen] = useState(false);
@@ -623,96 +665,8 @@ export default function ExperienceViewport() {
   const contextEnvelope = <ContextEnvelope area={area} service={detail?.service ?? risk?.service} risk={risk?.riskFinding} period={period} quality={risk?.quality ?? detail?.quality ?? overview.quality} />;
 
   const panorama = (
-    <div className="experience-viewport">
-      <div className="gold-page">
-        <WorkspaceRail active={path} navigate={navigate} />
-        {contextEnvelope}
-        <Header
-          eyebrow={tr("DE LA EVIDENCIA A UNA TECNOLOGÍA MÁS CONFIABLE", "FROM EVIDENCE TO MORE RELIABLE TECHNOLOGY")}
-          title={tr("Panorama Ejecutivo", "Executive Command")}
-          question={tr("¿Dónde requiere atención Tecnología hoy y por qué?", "Where does Technology require attention today, and why?")}
-          period={period}
-          onPeriodChange={changePeriod}
-        />
-        <div className="vx-command-status">
-          <div><small>{tr("ÁREAS CON ATENCIÓN", "AREAS REQUIRING ATTENTION")}</small><strong>{overview.areas.filter((item) => item.attentionState !== "STABLE").length}</strong></div>
-          <div><small>{tr("RIESGOS CON EVIDENCIA", "EVIDENCE-BACKED RISKS")}</small><strong>{overview.attentionFindings.length}</strong></div>
-          <div><small>{tr("COMPROMISOS VENCIDOS", "OVERDUE COMMITMENTS")}</small><strong>{commitments?.overdueCount ?? 0}</strong></div>
-          <div><small>{t.quality}</small><strong>{overview.quality.stale ? t.stale : overview.quality.missingContext?.length ? t.partial : t.available}</strong></div>
-        </div>
-        <OperationalCanvas overview={overview} navigate={navigate} />
-        <TemporalSpine risks={overview.attentionFindings} />
-        <div className="gold-main-grid vx-command-support">
-          <section className="gold-panel">
-            <SectionTitle
-              title={tr("Áreas que requieren atención", "Areas requiring attention")}
-              subtitle={tr("Áreas con señales que requieren revisión o intervención", "Areas with signals requiring review or intervention")}
-            />
-            {overview.areas.map((item) => (
-              <button
-                className="gold-row"
-                key={item.areaDomainId}
-                onClick={() =>
-                  navigate("/areas", { areaDomainId: item.areaDomainId })
-                }
-              >
-                <i
-                  className={item.attentionState === "STABLE" ? "ok" : "alert"}
-                />{" "}
-                <strong>{item.name}</strong>
-                <span>
-                  {
-                    overview.services.filter(
-                      (service) => service.areaDomainId === item.areaDomainId,
-                    ).length
-                  }{" "}
-                  {tr("servicios", "services")}
-                </span>
-                <b>{item.attentionState === "STABLE" ? tr("ESTABLE","STABLE") : tr("ATENCIÓN","ATTENTION")}</b>
-                <em>{tr("Ver detalle →", "View detail →")}</em>
-              </button>
-            ))}
-          </section>
-          <aside className="gold-panel">
-            <SectionTitle
-              title={tr("¿Qué está moviendo la atención?", "What is driving attention?")}
-              subtitle={tr("Principales señales en el período", "Primary signals in the period")}
-            />
-            {overview.attentionFindings.map((item) => (
-              <div className="gold-signal" key={item.riskFindingId}>
-                <i>↗</i>
-                <div>
-                  <strong>{tr("Riesgo", "Risk")}</strong>
-                  <p>{item.condition}</p>
-                </div>
-              </div>
-            ))}
-            <div className="gold-intelligence">
-              <strong>✣ {t.intelligence}</strong>
-              <p>
-                {overview.attentionFindings[0]?.explanation ??
-                  tr("No hay hallazgos adicionales en el período.", "No additional findings in the period.")}
-              </p>
-            </div>
-          </aside>
-        </div>
-        <div className="gold-bottom">
-          <section className="gold-panel">
-            <h3>{tr("Estado de compromisos", "Commitment status")}</h3>
-            <p><strong>{overview.commitments.length}</strong> {tr("compromisos vinculados a hallazgos del período.","commitments linked to findings in the period.")}</p>
-          </section>
-          <section className="gold-panel">
-            <h3>{tr("Resultado de acciones", "Action outcomes")}</h3>
-            overview.outcomeVerifications.length ? <div>{overview.outcomeVerifications.map((outcome) => <p key={outcome.verificationId}><strong>{outcome.outcome}</strong> · {outcome.evidenceIds.length} {tr("evidencias","evidence references")}</p>)}</div> : <Empty>{tr("No hay resultado verificado; ejecución no implica mejora.", "No verified outcome; execution does not imply improvement.")}</Empty>
-          </section>
-            <section className="gold-panel">
-              <h3>{tr("Contexto adicional", "Additional context")}</h3>
-              <Empty>{tr("No hay contexto adicional disponible.", "No additional context is available.")}</Empty>
-            </section>
-        </div>
-        <DecisionQueue risks={path === "areas" ? areaRisks : overview.attentionFindings} commitments={commitments} navigate={navigate} />
-        <QualityNote quality={overview.quality} />
-      </div>
+    <div className="experience-viewport vx-northstar-runtime">
+      <NorthStarUniverse overview={overview} commitments={commitments} period={period} onPeriodChange={changePeriod} navigate={navigate} tr={tr} />
     </div>
   );
 
