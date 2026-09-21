@@ -3,15 +3,15 @@
   "project": "VECTOR",
   "branch": "framework/vector-full-lifecycle-pilot",
   "state": "IN_PROGRESS",
-  "overallProgressPercent": 61,
+  "overallProgressPercent": 56,
   "completionTarget": "FUNCTIONAL_DEMO_CONVERGED",
   "workstreams": [
     {
       "id": "viewport",
       "label": "Full-browser viewport",
-      "progressPercent": 75,
-      "state": "IMPLEMENTED_ASSURANCE_PENDING",
-      "gate": "FAIL",
+      "progressPercent": 100,
+      "state": "RUNTIME_PASS",
+      "gate": "PASS",
       "evidence": [
         "54bf56423131e4e67e881eb99c377f58342a947a",
         "86b54d0c277b3f75e33e4162468170df74db9bad",
@@ -22,8 +22,8 @@
     {
       "id": "localization",
       "label": "UI localization ES/EN",
-      "progressPercent": 82,
-      "state": "IMPLEMENTED_ASSURANCE_PENDING",
+      "progressPercent": 70,
+      "state": "RUNTIME_FAIL_DERIVED_COPY",
       "gate": "FAIL",
       "evidence": [
         "8d3f5691c8b280d0e2f203d548156874f377def1",
@@ -35,8 +35,8 @@
     {
       "id": "r3",
       "label": "R3 Dual Canvas redesign",
-      "progressPercent": 65,
-      "state": "IMPLEMENTED_ASSURANCE_PENDING",
+      "progressPercent": 42,
+      "state": "RUNTIME_FAIL_MATERIAL_DIFFERENCE",
       "gate": "FAIL",
       "evidence": [
         "e03a5f0888bb30637c19da0d592d4ece63236d7b"
@@ -46,8 +46,8 @@
     {
       "id": "spatial-graph",
       "label": "Spatial operational graph",
-      "progressPercent": 82,
-      "state": "IMPLEMENTED_ASSURANCE_PENDING",
+      "progressPercent": 72,
+      "state": "RUNTIME_PARTIAL_PASS_BASIC",
       "gate": "FAIL",
       "nextAction": "Runtime retest Open graph modal, focus/select behavior, close/recovery and accessible relationship fallback.",
       "evidence": [
@@ -77,7 +77,7 @@
     {
       "id": "visual-qa",
       "label": "Visual and responsive QA",
-      "progressPercent": 15,
+      "progressPercent": 20,
       "state": "RUNTIME_FINDINGS_OPEN",
       "gate": "FAIL",
       "nextAction": "Review hierarchy, density, viewport use, collisions, overflow, responsive behavior and locale coherence."
@@ -109,8 +109,8 @@
       "userInputRequired": false
     }
   ],
-  "currentAction": "Material R3 shell, root viewport constraint, graph expansion and localization chrome corrections committed; static inspection complete for this turn.",
-  "nextAutonomousAction": "On next runtime evidence, fix any parse/behavior/visual failures immediately; then execute scenario assurance, behavioral UX assurance, explicit visual QA refinement and Framework L2/L3 regressions.",
+  "currentAction": "Second runtime validation persisted. Viewport/navigation/affordances pass; R3 material experience, graph depth and derived-copy localization remain open.",
+  "nextAutonomousAction": "Create a structurally different operational intelligence prototype; upgrade topology investigation grammar; replace backend prose localization dependency with structured derived presentation; rerun visual/behavioral gates.",
   "rules": {
     "progressIsEvidenceBased": true,
     "noBackgroundExecutionClaim": true,
@@ -170,5 +170,47 @@
         "evidence": "Neither Spanish nor English mode is completely coherent."
       }
     ]
+  },
+  "runtimeValidationSecondPass": {
+    "source": "human product validation",
+    "findings": [
+      {
+        "id": "UV2-01",
+        "gate": "Viewport Fit",
+        "result": "PASS",
+        "evidence": "Full-screen rendering confirmed."
+      },
+      {
+        "id": "UV2-02",
+        "gate": "Navigation",
+        "result": "PASS",
+        "evidence": "Panorama → Area → Service → Investigation → Commitments understood."
+      },
+      {
+        "id": "UV2-03",
+        "gate": "Complex Visualization",
+        "result": "PARTIAL_PASS",
+        "evidence": "Graph modal works, but graph remains basic for investigation."
+      },
+      {
+        "id": "UV2-04",
+        "gate": "Localization",
+        "result": "FAIL",
+        "evidence": "VECTOR-derived recurrence explanation remains English in Spanish UI; correlation disclaimer is Spanish."
+      },
+      {
+        "id": "UV2-05",
+        "gate": "Visible Affordances",
+        "result": "PASS",
+        "evidence": "Tested visible interactions work."
+      },
+      {
+        "id": "UV2-06",
+        "gate": "Material Difference",
+        "result": "FAIL",
+        "evidence": "Still perceived as a traditional dashboard; visual field remains too blue."
+      }
+    ],
+    "decision": "R3_REJECTED_FOR_MATERIAL_EXPERIENCE; escalate to competing structural prototype rather than cosmetic iteration."
   }
 }
