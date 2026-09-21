@@ -58,3 +58,12 @@ it("investigation lenses execute navigation to an explicit section", () => {
   expect(scrollIntoView).toHaveBeenCalledOnce();
   target.remove();
 });
+
+
+it("area workspace remains structurally distinct from executive triage", () => {
+  const source = require("node:fs").readFileSync(new URL("../src/ExperienceViewport.tsx", import.meta.url), "utf8");
+  expect(source).toContain("vx-service-portfolio");
+  expect(source).toContain("Portafolio de servicios");
+  expect(source).toContain("Concentración de atención");
+  expect(source).toContain("Seguimiento del área");
+});
