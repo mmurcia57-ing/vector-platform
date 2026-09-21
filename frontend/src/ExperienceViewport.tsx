@@ -153,7 +153,7 @@ function Metric({
 function Empty({ children }: { children: string }) {
   return <div className="gold-empty">{children}</div>;
 }
-function Header({
+export function Header({
   eyebrow,
   title,
   question,
@@ -203,7 +203,7 @@ function SectionTitle({
     </div>
   );
 }
-function LensNav({ items, labelText }: { items: readonly (readonly [string, string])[]; labelText: string }) {
+export function LensNav({ items, labelText }: { items: readonly (readonly [string, string])[]; labelText: string }) {
   const focus = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
     window.history.replaceState({}, "", `${window.location.pathname}${window.location.search}#${id}`);
