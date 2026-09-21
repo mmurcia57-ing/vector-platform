@@ -32,8 +32,8 @@ S4 can transition to S5 while preserving Area/Service/Risk/condition context. Co
 ### V3-07 S5 commitments/outcomes — IMPLEMENTED / CI PASS
 EXT-004 lifecycle semantics remain intact: execution status, renegotiation history, reliability denominator and OUTCOME_PENDING remain distinct from outcome verification.
 
-### V3-08 Outcome return propagation — PARTIAL / CI PASS FOR CONTEXT CONTRACT
-The executable `buildJourneyUrl` contract preserves Area/Service/Risk plus Commitment/Action/Outcome identifiers across forward and return navigation. S5 provides explicit return to originating Risk when lineage exists. Full visual propagation to every S3/S2/S1 projection remains the principal product gap.
+### V3-08 Outcome return propagation — IMPLEMENTED / CI PASS
+The executable `buildJourneyUrl` contract preserves Area/Service/Risk plus Commitment/Action/Outcome identifiers across forward and return navigation. S5 provides explicit return to originating Risk when lineage exists. TechnologyOverview now projects Commitment → ImprovementAction → OutcomeVerification continuity so S1 can expose verified outcome state and S2 can derive area-scoped action/outcome follow-up without rewriting historical evidence.
 
 ### V3-09 adversarial deterministic scenarios — IMPLEMENTED / CI PASS
 Executable coverage now includes:
@@ -61,7 +61,7 @@ Locale state and core shared workspace copy support ES/EN. Remaining hard-coded 
 - backend: `mvn -B test`;
 - frontend: `npm ci`, `npm test`, `npm run lint`, `npm run build`.
 
-Latest verified run after V3 adversarial additions: **PASS** on commit `a19d142ee15fe11a2ed7db28dc7a833148b3e5b4`.
+Latest verified run after outcome propagation: **PASS** on commit `86ea47b460678fabafab7e7507f85d923ff167b7`.
 
 ## Defects discovered by executable assurance
 1. CI was scoped only to the historical pilot branch.
@@ -83,7 +83,6 @@ That pattern was promoted from HYPOTHESIS to **DECISION — ADOPT** with these g
 KB commit: `85c1b723682bb86be629bb5d9096800b873c9e35`.
 
 ## Remaining convergence gates
-- close V3-08 full visual outcome propagation across S4 → S3 → S2 → S1;
 - close V3-11 remaining localization boundary;
 - execute final post-status CI and preserve its evidence;
 - perform final functional/demo convergence review.
@@ -91,4 +90,4 @@ KB commit: `85c1b723682bb86be629bb5d9096800b873c9e35`.
 ## Truth boundary
 VECTOR is now materially beyond the original V3-01-only status and has executable CI evidence.
 
-It is **not yet declared FUNCTIONAL DEMO CONVERGED, LOCAL/RELEASE CONVERGED or PRODUCTION READY** because V3-08 visual propagation and V3-11 localization remain partial.
+It is **not yet declared FUNCTIONAL DEMO CONVERGED, LOCAL/RELEASE CONVERGED or PRODUCTION READY** because V3-11 localization remains partial.
