@@ -16,7 +16,7 @@ const COPY = {
     temporal:"ESPINA TEMPORAL / EVENTOS", evolution:"Cómo evoluciona el contexto", noTimeline:"No hay secuencia temporal suficiente.",
     loading:"Cargando inteligencia basada en evidencia…", unavailable:"Inteligencia temporalmente no disponible", retry:"Reintentar",
     quality:"CALIDAD", stale:"DESACTUALIZADA", partial:"PARCIAL", available:"DISPONIBLE", fact:"HECHO",
-    before:"ANTES", change:"CAMBIO", after:"DESPUÉS", intelligence:"Inteligencia VECTOR", locale:"Idioma"
+    before:"ANTES", change:"CAMBIO", after:"DESPUÉS", intelligence:"Inteligencia VECTOR", locale:"Idioma",\n    scenario:"Escenario de análisis", demoBoundary:"Datos demostrativos locales · no producción", workspaceName:"Espacio de trabajo de inteligencia VECTOR", semanticLegend:"Leyenda semántica de evidencia", mapLabel:"Mapa operacional", temporalLabel:"Espina temporal", currentContext:"contexto actual", riskFinding:"HALLAZGO DE RIESGO", evidenceStale:"Evidencia desactualizada", evidenceAvailable:"Evidencia disponible", supportedContext:"Contexto soportado por la evidencia disponible.", footerMotto:"Un mejor mañana, construido con evidencia.", queueSummary:"condiciones sustentadas por evidencia requieren revisión", overdueSummary:"compromisos vencidos en el contexto disponible", spatialGraph:"Topología contextual acotada", accessibleRelations:"Relaciones accesibles", selectedContext:"Contexto seleccionado", boundedContext:"Contexto relacional acotado; seleccionar un nodo no afirma causalidad.", expandContext:"Expandir contexto", resetLimit:"Restablecer límite", freshness:"Frescura", boundedMore:"Vista acotada: existen relaciones adicionales.", boundedComplete:"Vista acotada completa para el límite actual."
   },
   en: {
     command:"Command", area:"Area", service:"Service", investigation:"Investigation", actionOutcome:"Actions & Outcomes",
@@ -29,19 +29,27 @@ const COPY = {
     temporal:"TEMPORAL / EVENT SPINE", evolution:"How the context evolves", noTimeline:"There is not enough temporal sequence.",
     loading:"Loading evidence-backed intelligence…", unavailable:"Intelligence temporarily unavailable", retry:"Retry",
     quality:"QUALITY", stale:"STALE", partial:"PARTIAL", available:"AVAILABLE", fact:"FACT",
-    before:"BEFORE", change:"CHANGE", after:"AFTER", intelligence:"VECTOR Intelligence", locale:"Language"
+    before:"BEFORE", change:"CHANGE", after:"AFTER", intelligence:"VECTOR Intelligence", locale:"Language",\n    scenario:"Analysis scenario", demoBoundary:"Local demonstration data · not production", workspaceName:"VECTOR intelligence workspace", semanticLegend:"Semantic evidence legend", mapLabel:"Operational map", temporalLabel:"Temporal spine", currentContext:"current context", riskFinding:"RISK FINDING", evidenceStale:"Stale evidence", evidenceAvailable:"Evidence available", supportedContext:"Context supported by available evidence.", footerMotto:"A better tomorrow, built with evidence.", queueSummary:"evidence-backed conditions require review", overdueSummary:"overdue commitments in available context", spatialGraph:"Bounded contextual topology", accessibleRelations:"Accessible relationships", selectedContext:"Selected context", boundedContext:"Bounded relational context; selecting a node does not assert causality.", expandContext:"Expand context", resetLimit:"Reset limit", freshness:"Freshness", boundedMore:"Bounded view: additional relationships exist.", boundedComplete:"Bounded view complete for the current limit."
   }
 } as const;
 const LocaleContext = createContext<UiLocale>("es");
 const useCopy = () => COPY[useContext(LocaleContext)];
 
 const DEFAULT_PERIOD = "local-dataset-v1";
-const PERIOD_OPTIONS = [
-  ["local-dataset-v1", "Escenario base"],
-  ["local-partial-stale", "Evidencia parcial / desactualizada"],
-  ["local-outcome-pending", "Acción completa / resultado pendiente"],
-  ["local-insufficient-evidence", "Evidencia insuficiente"],
-] as const;
+const PERIOD_OPTIONS = {
+  es: [
+    ["local-dataset-v1", "Escenario base"],
+    ["local-partial-stale", "Evidencia parcial / desactualizada"],
+    ["local-outcome-pending", "Acción completa / resultado pendiente"],
+    ["local-insufficient-evidence", "Evidencia insuficiente"],
+  ],
+  en: [
+    ["local-dataset-v1", "Baseline scenario"],
+    ["local-partial-stale", "Partial / stale evidence"],
+    ["local-outcome-pending", "Action complete / outcome pending"],
+    ["local-insufficient-evidence", "Insufficient evidence"],
+  ],
+} as const;
 type Area = { areaDomainId: string; name: string; attentionState: string };
 type Service = {
   serviceId: string;
@@ -81,6 +89,7 @@ type Commitment = {
   accountableAreaDomainId?: string;
   overdue?: boolean;
   sourceReferenceSummary?: string;
+  currentDueDate?: string;
 };
 type Action = {
   actionId: string;
@@ -100,6 +109,9 @@ type Quality = {
   confidence: string;
   uncertainty: string;
   limitations: string;
+  stale?: boolean;
+  partial?: boolean;
+  missingContext?: string[];
 };
 type Overview = {
   areas: Area[];
@@ -198,8 +210,7 @@ export function Header({
   period: string;
   onPeriodChange: (period: string) => void;
 }) {
-  return (
-    <header className="gold-header">
+  const locale = useContext(LocaleContext);\n  const t = COPY[locale];\n  return (\n    <header className="gold-header">
       <div>
         <span>{eyebrow}</span>
         <h1>{title}</h1>
@@ -207,12 +218,9 @@ export function Header({
       </div>
       <div className="gold-filters">
         <label className="vx-context-control">
-          <span>Escenario de análisis</span>
-          <select aria-label="Escenario de análisis" value={period} onChange={(event) => onPeriodChange(event.target.value)}>
-            {PERIOD_OPTIONS.map(([value, text]) => <option key={value} value={value}>{text}</option>)}
-          </select>
+          <span>{t.scenario}</span>\n          <select aria-label={t.scenario} value={period} onChange={(event) => onPeriodChange(event.target.value)}>\n            {PERIOD_OPTIONS[locale].map(([value, text]) => <option key={value} value={value}>{text}</option>)}\n          </select>
         </label>
-        <span className="vx-context-meta">Datos demostrativos locales · no producción</span>
+        <span className="vx-context-meta">{t.demoBoundary}</span>
       </div>
     </header>
   );
@@ -255,8 +263,8 @@ export function WorkspaceRail({ active, navigate }: { active: string; navigate: 
     ["commitments", "/commitments", t.actionOutcome],
   ];
   return (
-    <div className="vx-workspace-rail" aria-label="VECTOR intelligence workspace">
-      <div><strong>VECTOR / INTELLIGENCE WORKSPACE</strong><small>{t.workspace}</small></div>
+    <div className="vx-workspace-rail" aria-label={t.workspaceName}>
+      <div><strong>{t.intelligence.toUpperCase()} / WORKSPACE</strong><small>{t.workspace}</small></div>
       <nav aria-label={t.layers}>
         {items.map(([key, route, text]) => <button key={key} className={active === key ? "active" : ""} onClick={() => navigate(route)}>{text}</button>)}
       </nav>
@@ -266,7 +274,7 @@ export function WorkspaceRail({ active, navigate }: { active: string; navigate: 
 }
 export function SemanticLegend() {
   const t = useCopy();
-  return <div className="vx-semantics" aria-label="Semantic evidence legend">
+  return <div className="vx-semantics" aria-label={t.semanticLegend}>
     <span className="vx-semantic fact">{t.observed}</span>
     <span className="vx-semantic">{t.derived}</span>
     <span className="vx-semantic uncertain">{t.uncertain}</span>
@@ -275,17 +283,18 @@ export function SemanticLegend() {
 }
 
 function DecisionQueue({ risks, commitments, navigate }: { risks: Risk[]; commitments?: CommitmentView; navigate: (next: string, context?: Record<string, string>) => void }) {
-  return <section className="vx-decision-queue" aria-label="Decision queue">
-    <div><span>DECISION QUEUE</span><strong>{risks.length} evidence-backed conditions require review</strong><small>{commitments?.overdueCount ?? 0} overdue commitments in available context</small></div>
-    <div className="vx-decision-items">{risks.slice(0, 3).map((risk) => <button key={risk.riskFindingId} onClick={() => navigate("/risks", { riskFindingId: risk.riskFindingId, serviceId: risk.serviceId })}><b>Investigate</b><span>{risk.condition}</span><small>{risk.explanation}</small></button>)}</div>
+  const t = useCopy();
+  return <section className="vx-decision-queue" aria-label={t.decisionQueue}>
+    <div><span>{t.decisionQueue.toUpperCase()}</span><strong>{risks.length} {t.queueSummary}</strong><small>{commitments?.overdueCount ?? 0} {t.overdueSummary}</small></div>
+    <div className="vx-decision-items">{risks.slice(0, 3).map((risk) => <button key={risk.riskFindingId} onClick={() => navigate("/risks", { riskFindingId: risk.riskFindingId, serviceId: risk.serviceId })}><b>{t.investigate}</b><span>{risk.condition}</span><small>{risk.explanation}</small></button>)}</div>
   </section>;
 }
 
 function OperationalCanvas({ overview, selectedServiceId, navigate }: { overview: Overview; selectedServiceId?: string; navigate: (next: string, context?: Record<string, string>) => void }) {
   const t = useCopy();
   const services = overview.services.slice(0, 8);
-  return <section className="vx-ops-canvas" aria-label="Mapa operacional">
-    <div className="vx-canvas-head"><div><small>{t.operationalContext}</small><strong>{t.attentionMap}</strong></div><span>{overview.quality.stale ? "Evidencia desactualizada" : "Evidencia disponible"}</span></div>
+  return <section className="vx-ops-canvas" aria-label={t.mapLabel}>
+    <div className="vx-canvas-head"><div><small>{t.operationalContext}</small><strong>{t.attentionMap}</strong></div><span>{overview.quality.stale ? t.evidenceStale : t.evidenceAvailable}</span></div>
     <div className="vx-canvas-stage">
       <div className="vx-orbit orbit-a" /><div className="vx-orbit orbit-b" />
       <div className="vx-core"><span>VECTOR</span><b>{overview.attentionFindings.length}</b><small>{t.findings}</small></div>
@@ -307,23 +316,66 @@ function OperationalCanvas({ overview, selectedServiceId, navigate }: { overview
 
 function TemporalSpine({ signals, risks }: { signals?: TemporalSignal[]; risks?: Risk[] }) {
   const t = useCopy();
-  const items = signals?.length ? signals.slice(0, 8).map((signal) => ({ id: signal.signalId, type: signal.semanticType, text: signal.statement, time: signal.observedAt.slice(0, 10) })) : (risks ?? []).slice(0, 6).map((risk) => ({ id: risk.riskFindingId, type: "RISK FINDING", text: risk.condition, time: "contexto actual" }));
-  return <section className="vx-temporal-spine" aria-label="Espina temporal">
+  const items = signals?.length ? signals.slice(0, 8).map((signal) => ({ id: signal.signalId, type: signal.semanticType, text: signal.statement, time: signal.observedAt.slice(0, 10) })) : (risks ?? []).slice(0, 6).map((risk) => ({ id: risk.riskFindingId, type: t.riskFinding, text: risk.condition, time: t.currentContext }));
+  return <section className="vx-temporal-spine" aria-label={t.temporalLabel}>
     <div className="vx-spine-title"><small>{t.temporal}</small><strong>{t.evolution}</strong></div>
     <div className="vx-spine-track">{items.length ? items.map((item) => <div className="vx-spine-event" key={item.id}><i /><small>{item.time}</small><b>{item.type.replaceAll("_", " ")}</b><span>{item.text}</span></div>) : <span className="vx-spine-empty">{t.noTimeline}</span>}</div>
   </section>;
 }
 
-function QualityNote({ quality }: { quality?: Quality }) {
-  return (
+function SpatialGraph({ graph, focus, onFocus, nodeLabel, onExpand, onReset, limit }: { graph?: Graph; focus: string; onFocus: (id: string) => void; nodeLabel: (id: string) => string; onExpand: () => void; onReset: () => void; limit: number }) {
+  const t = useCopy();
+  const relationships = graph?.graph.relationships ?? [];
+  const ids = Array.from(new Set(relationships.flatMap((r) => [r.source.canonicalId, r.target.canonicalId])));
+  const positions = new Map(ids.map((id, index) => {
+    const angle = (Math.PI * 2 * index) / Math.max(ids.length, 1) - Math.PI / 2;
+    const radius = ids.length <= 4 ? 31 : 38;
+    return [id, { x: 50 + Math.cos(angle) * radius, y: 50 + Math.sin(angle) * radius }];
+  }));
+  return <div className="vx-spatial-graph">
+    <div className="vx-spatial-stage" role="group" aria-label={t.spatialGraph}>
+      <svg className="vx-spatial-edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        {relationships.map((relation, index) => {
+          const a = positions.get(relation.source.canonicalId); const b = positions.get(relation.target.canonicalId);
+          if (!a || !b) return null;
+          return <line key={`edge-${index}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} />;
+        })}
+      </svg>
+      {ids.map((id) => {
+        const p = positions.get(id)!;
+        const degree = relationships.filter((r) => r.source.canonicalId === id || r.target.canonicalId === id).length;
+        return <button type="button" key={id} className={`vx-spatial-node ${focus === id ? "focused" : ""}`} style={{ left: `${p.x}%`, top: `${p.y}%` }} onClick={() => onFocus(id)} aria-pressed={focus === id}>
+          <strong>{nodeLabel(id)}</strong><small>{degree} rel.</small>
+        </button>;
+      })}
+      {relationships.map((relation, index) => {
+        const a = positions.get(relation.source.canonicalId); const b = positions.get(relation.target.canonicalId);
+        if (!a || !b) return null;
+        return <span aria-hidden="true" className="vx-spatial-edge-label" key={`label-${index}`} style={{ left: `${(a.x+b.x)/2}%`, top: `${(a.y+b.y)/2}%` }}>{relation.predicate.replaceAll("_"," ")}</span>;
+      })}
+    </div>
+    <details className="vx-graph-accessible"><summary>{t.accessibleRelations}</summary>
+      <ul>{relationships.map((relation,index)=><li key={index}><button type="button" onClick={()=>onFocus(relation.source.canonicalId)}>{nodeLabel(relation.source.canonicalId)}</button> <b>{relation.predicate.replaceAll("_"," ")}</b> <button type="button" onClick={()=>onFocus(relation.target.canonicalId)}>{nodeLabel(relation.target.canonicalId)}</button></li>)}</ul>
+    </details>
+    {focus && <div className="vx-graph-focus" aria-live="polite"><strong>{t.selectedContext}</strong><span>{nodeLabel(focus)}</span><small>{t.boundedContext}</small></div>}
+    <div className="vx-graph-controls">
+      <span>{graph?.graph.truncated ? t.boundedMore : t.boundedComplete}</span>
+      <span>{t.freshness}: {graph?.graph.freshness ?? "—"}</span>
+      {graph?.graph.truncated && <button type="button" onClick={onExpand}>{t.expandContext}</button>}
+      {limit > 6 && <button type="button" onClick={onReset}>{t.resetLimit}</button>}
+    </div>
+  </div>;
+}
+
+function QualityNote({ quality }: { quality?: Quality }) {\n  const t = useCopy();\n  return (
     <footer className="gold-footer">
       <strong>VECTOR</strong>
       <span>
         {quality
           ? `${quality.sourceCoverage} · ${quality.freshness}`
-          : "Contexto soportado por la evidencia disponible."}
+          : t.supportedContext}
       </span>
-      <b>Un mejor mañana, construido con evidencia.</b>
+      <b>{t.footerMotto}</b>
     </footer>
   );
 }
@@ -922,25 +974,7 @@ export default function ExperienceViewport() {
             </div>
             <div className="gold-panel">
               <SectionTitle id="risk-relations" title="Relaciones y topología contextual" />
-              <div className="semantic-graph">
-                {graph?.graph.relationships.map((relation, index) => (
-                  <div
-                    className="semantic-edge"
-                    key={`${relation.predicate}-${index}`}
-                  >
-                      <button className={graphFocus === relation.source.canonicalId ? "focused" : ""} onClick={() => setGraphFocus(relation.source.canonicalId)}>{graphNodeLabel(relation.source.canonicalId)}</button>
-                    <b>{relation.predicate.replaceAll("_", " ")}</b>
-                    <button className={graphFocus === relation.target.canonicalId ? "focused" : ""} onClick={() => setGraphFocus(relation.target.canonicalId)}>{graphNodeLabel(relation.target.canonicalId)}</button>
-                  </div>
-                ))}
-              </div>
-              {graphFocus && <div className="vx-graph-focus" aria-live="polite"><strong>Contexto seleccionado</strong><span>{graphNodeLabel(graphFocus)}</span><small>Contexto relacional acotado; seleccionar un nodo no afirma causalidad.</small></div>}
-              <div className="vx-graph-controls">
-                <span>{graph?.graph.truncated ? "Vista acotada: existen relaciones adicionales." : "Vista acotada completa para el límite actual."}</span>
-                <span>Frescura: {graph?.graph.freshness ?? "desconocida"}</span>
-                {graph?.graph.truncated && <button type="button" onClick={() => setGraphLimit((current) => Math.min(current + 4, 20))}>Expandir contexto</button>}
-                {graphLimit > 6 && <button type="button" onClick={() => setGraphLimit(6)}>Restablecer límite</button>}
-              </div>
+              <SpatialGraph graph={graph} focus={graphFocus} onFocus={setGraphFocus} nodeLabel={graphNodeLabel} limit={graphLimit} onExpand={() => setGraphLimit((current) => Math.min(current + 4, 20))} onReset={() => setGraphLimit(6)} />
             </div>
             <div className="gold-panel">
               <SectionTitle id="risk-actions" title="Acciones Asociadas" />
