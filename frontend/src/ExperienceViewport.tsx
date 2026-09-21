@@ -95,7 +95,6 @@ type Evidence = {
 };
 type Commitment = {
   commitmentId: string;
-  riskFindingId?: string;
   declaration: string;
   statusContext?: string;
   executionStatus?: string;
