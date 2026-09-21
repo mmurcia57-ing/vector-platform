@@ -17,7 +17,7 @@ const COPY = {
     loading:"Cargando inteligencia basada en evidencia…", unavailable:"Inteligencia temporalmente no disponible", retry:"Reintentar",
     quality:"CALIDAD", stale:"DESACTUALIZADA", partial:"PARCIAL", available:"DISPONIBLE", fact:"HECHO",
     before:"ANTES", change:"CAMBIO", after:"DESPUÉS", intelligence:"Inteligencia VECTOR", locale:"Idioma",
-    scenario:"Escenario de análisis", demoBoundary:"Datos demostrativos locales · no producción", workspaceName:"Espacio de trabajo de inteligencia VECTOR", semanticLegend:"Leyenda semántica de evidencia", mapLabel:"Mapa operacional", temporalLabel:"Espina temporal", currentContext:"contexto actual", riskFinding:"HALLAZGO DE RIESGO", evidenceStale:"Evidencia desactualizada", evidenceAvailable:"Evidencia disponible", supportedContext:"Contexto soportado por la evidencia disponible.", footerMotto:"Un mejor mañana, construido con evidencia.", queueSummary:"condiciones sustentadas por evidencia requieren revisión", overdueSummary:"compromisos vencidos en el contexto disponible", spatialGraph:"Topología contextual acotada", accessibleRelations:"Relaciones accesibles", selectedContext:"Contexto seleccionado", boundedContext:"Contexto relacional acotado; seleccionar un nodo no afirma causalidad.", expandContext:"Ampliar datos", expandGraph:"Abrir grafo", closeGraph:"Cerrar grafo", resetLimit:"Restablecer límite", freshness:"Frescura", boundedMore:"Vista acotada: existen relaciones adicionales.", boundedComplete:"Vista acotada completa para el límite actual."
+    scenario:"Escenario de análisis", demoBoundary:"Datos demostrativos locales · no producción", workspaceName:"Espacio de trabajo de inteligencia VECTOR", workspaceShort:"ESPACIO", semanticLegend:"Leyenda semántica de evidencia", mapLabel:"Mapa operacional", temporalLabel:"Espina temporal", currentContext:"contexto actual", riskFinding:"HALLAZGO DE RIESGO", evidenceStale:"Evidencia desactualizada", evidenceAvailable:"Evidencia disponible", supportedContext:"Contexto soportado por la evidencia disponible.", footerMotto:"Un mejor mañana, construido con evidencia.", queueSummary:"condiciones sustentadas por evidencia requieren revisión", overdueSummary:"compromisos vencidos en el contexto disponible", spatialGraph:"Topología contextual acotada", accessibleRelations:"Relaciones accesibles", selectedContext:"Contexto seleccionado", boundedContext:"Contexto relacional acotado; seleccionar un nodo no afirma causalidad.", expandContext:"Ampliar datos", expandGraph:"Abrir grafo", closeGraph:"Cerrar grafo", resetLimit:"Restablecer límite", freshness:"Frescura", boundedMore:"Vista acotada: existen relaciones adicionales.", boundedComplete:"Vista acotada completa para el límite actual."
   },
   en: {
     command:"Command", area:"Area", service:"Service", investigation:"Investigation", actionOutcome:"Actions & Outcomes",
@@ -31,7 +31,7 @@ const COPY = {
     loading:"Loading evidence-backed intelligence…", unavailable:"Intelligence temporarily unavailable", retry:"Retry",
     quality:"QUALITY", stale:"STALE", partial:"PARTIAL", available:"AVAILABLE", fact:"FACT",
     before:"BEFORE", change:"CHANGE", after:"AFTER", intelligence:"VECTOR Intelligence", locale:"Language",
-    scenario:"Analysis scenario", demoBoundary:"Local demonstration data · not production", workspaceName:"VECTOR intelligence workspace", semanticLegend:"Semantic evidence legend", mapLabel:"Operational map", temporalLabel:"Temporal spine", currentContext:"current context", riskFinding:"RISK FINDING", evidenceStale:"Stale evidence", evidenceAvailable:"Evidence available", supportedContext:"Context supported by available evidence.", footerMotto:"A better tomorrow, built with evidence.", queueSummary:"evidence-backed conditions require review", overdueSummary:"overdue commitments in available context", spatialGraph:"Bounded contextual topology", accessibleRelations:"Accessible relationships", selectedContext:"Selected context", boundedContext:"Bounded relational context; selecting a node does not assert causality.", expandContext:"Expand data", expandGraph:"Open graph", closeGraph:"Close graph", resetLimit:"Reset limit", freshness:"Freshness", boundedMore:"Bounded view: additional relationships exist.", boundedComplete:"Bounded view complete for the current limit."
+    scenario:"Analysis scenario", demoBoundary:"Local demonstration data · not production", workspaceName:"VECTOR intelligence workspace", workspaceShort:"WORKSPACE", semanticLegend:"Semantic evidence legend", mapLabel:"Operational map", temporalLabel:"Temporal spine", currentContext:"current context", riskFinding:"RISK FINDING", evidenceStale:"Stale evidence", evidenceAvailable:"Evidence available", supportedContext:"Context supported by available evidence.", footerMotto:"A better tomorrow, built with evidence.", queueSummary:"evidence-backed conditions require review", overdueSummary:"overdue commitments in available context", spatialGraph:"Bounded contextual topology", accessibleRelations:"Accessible relationships", selectedContext:"Selected context", boundedContext:"Bounded relational context; selecting a node does not assert causality.", expandContext:"Expand data", expandGraph:"Open graph", closeGraph:"Close graph", resetLimit:"Reset limit", freshness:"Freshness", boundedMore:"Bounded view: additional relationships exist.", boundedComplete:"Bounded view complete for the current limit."
   }
 } as const;
 const LocaleContext = createContext<UiLocale>("es");
@@ -272,7 +272,7 @@ export function WorkspaceRail({ active, navigate }: { active: string; navigate: 
   ];
   return (
     <div className="vx-workspace-rail" aria-label={t.workspaceName}>
-      <div><strong>{t.intelligence.toUpperCase()} / WORKSPACE</strong><small>{t.workspace}</small></div>
+      <div><strong>{t.intelligence.toUpperCase()} / {t.workspaceShort}</strong><small>{t.workspace}</small></div>
       <nav aria-label={t.layers}>
         {items.map(([key, route, text]) => <button key={key} className={active === key ? "active" : ""} onClick={() => navigate(route)}>{text}</button>)}
       </nav>
@@ -609,9 +609,9 @@ export default function ExperienceViewport() {
                       (service) => service.areaDomainId === item.areaDomainId,
                     ).length
                   }{" "}
-                  servicios
+                  {tr("servicios", "services")}
                 </span>
-                <b>{item.attentionState}</b>
+                <b>{item.attentionState === "STABLE" ? tr("ESTABLE","STABLE") : tr("ATENCIÓN","ATTENTION")}</b>
                 <em>{tr("Ver detalle →", "View detail →")}</em>
               </button>
             ))}
@@ -631,7 +631,7 @@ export default function ExperienceViewport() {
               </div>
             ))}
             <div className="gold-intelligence">
-              <strong>✣ VECTOR Intelligence</strong>
+              <strong>✣ {t.intelligence}</strong>
               <p>
                 {overview.attentionFindings[0]?.explanation ??
                   tr("No hay hallazgos adicionales en el período.", "No additional findings in the period.")}
@@ -666,7 +666,7 @@ export default function ExperienceViewport() {
         <Header
           eyebrow={tr("ÁREAS / DOMINIOS · ESPACIO DE DECISIÓN", "AREAS / DOMAINS · DECISION WORKSPACE")}
           title={area?.name ?? tr("Área sin seleccionar", "No area selected")}
-          question={`¿Qué servicios concentran la atención en ${area?.name ?? "esta área"}, qué la explica y qué seguimiento requiere?`}
+          question={tr(`¿Qué servicios concentran la atención en ${area?.name ?? "esta área"}, qué la explica y qué seguimiento requiere?`, `Which services concentrate attention in ${area?.name ?? "this area"}, what explains it, and what follow-up is required?`)}
           period={period}
           onPeriodChange={changePeriod}
         />
@@ -674,17 +674,17 @@ export default function ExperienceViewport() {
           <div>
             <small>{tr("CONTEXTO DEL ÁREA", "AREA CONTEXT")}</small>
             <strong>{areaServices.length} {tr("servicios", "services")} en contexto</strong>
-            <span>{areaRisks.length} hallazgos con evidencia disponible</span>
+            <span>{areaRisks.length} {tr("hallazgos con evidencia disponible","findings with available evidence")}</span>
           </div>
           <div>
             <small>{tr("SEGUIMIENTO", "FOLLOW-UP")}</small>
-            <strong>{commitments?.activeCount ?? 0} compromisos activos</strong>
-            <span>La ejecución no implica resultado verificado.</span>
+            <strong>{commitments?.activeCount ?? 0} {tr("compromisos activos","active commitments")}</strong>
+            <span>{tr("La ejecución no implica resultado verificado.","Execution does not imply a verified outcome.")}</span>
           </div>
           <div>
             <small>{tr("CALIDAD DE DECISIÓN", "DECISION QUALITY")}</small>
-            <strong>{overview.quality.stale ? "Contexto desactualizado" : "Contexto disponible"}</strong>
-            <span>{overview.quality.missingContext?.length ? `${overview.quality.missingContext?.length} vacíos de contexto` : "Sin vacíos declarados"}</span>
+            <strong>{overview.quality.stale ? tr("Contexto desactualizado","Stale context") : tr("Contexto disponible","Context available")}</strong>
+            <span>{overview.quality.missingContext?.length ? `${overview.quality.missingContext?.length} ${tr("vacíos de contexto","context gaps")}` : tr("Sin vacíos declarados","No declared gaps")}</span>
           </div>
         </div>
 
@@ -739,7 +739,7 @@ export default function ExperienceViewport() {
             </div>
             <div className="gold-intelligence">
               <strong>✣ VECTOR Intelligence</strong>
-              <p>La vista del área organiza contexto para decidir dónde profundizar; no convierte correlación en causalidad ni asigna responsabilidad individual.</p>
+              <p>{tr("La vista del área organiza contexto para decidir dónde profundizar; no convierte correlación en causalidad ni asigna responsabilidad individual.","The area view organizes context to decide where to investigate; it does not turn correlation into causality or assign individual responsibility.")}</p>
             </div>
           </aside>
         </div>
@@ -747,10 +747,10 @@ export default function ExperienceViewport() {
         <section className="gold-panel vx-area-followup">
           <SectionTitle title={tr("Seguimiento del área", "Area follow-up")} subtitle={tr("Riesgo → compromiso → acción → resultado.", "Risk → commitment → action → outcome.")} />
           <div className="vx-followup-grid">
-            <div><small>RIESGO</small><strong>{areaRisks.length}</strong><span>hallazgos visibles</span></div>
-            <div><small>COMPROMISO</small><strong>{commitments?.activeCount ?? 0}</strong><span>activos</span></div>
-            <div><small>ACCIÓN</small><strong>N/D</strong><span>sin agregado de área</span></div>
-            <div><small>RESULTADO</small><strong>N/D</strong><span>sin verificación agregada</span></div>
+            <div><small>{tr("RIESGO","RISK")}</small><strong>{areaRisks.length}</strong><span>{tr("hallazgos visibles","visible findings")}</span></div>
+            <div><small>{tr("COMPROMISO","COMMITMENT")}</small><strong>{commitments?.activeCount ?? 0}</strong><span>{tr("activos","active")}</span></div>
+            <div><small>{tr("ACCIÓN","ACTION")}</small><strong>{tr("N/D","N/A")}</strong><span>{tr("sin agregado de área","no area aggregate")}</span></div>
+            <div><small>{tr("RESULTADO","OUTCOME")}</small><strong>{tr("N/D","N/A")}</strong><span>{tr("sin verificación agregada","no aggregate verification")}</span></div>
           </div>
         </section>
 
