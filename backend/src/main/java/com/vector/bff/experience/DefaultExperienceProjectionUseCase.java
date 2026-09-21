@@ -18,7 +18,9 @@ public final class DefaultExperienceProjectionUseCase implements ExperienceProje
 	public TechnologyOverviewProjection technologyOverview(ProjectionRequest request) {
 		var prepared = source.load(request);
 		return new TechnologyOverviewProjection(request.context(), limit(prepared.areas(), request.limit()),
-			limit(prepared.services(), request.limit()), limit(prepared.riskFindings(), request.limit()), prepared.quality());
+			limit(prepared.services(), request.limit()), limit(prepared.riskFindings(), request.limit()),
+            limit(prepared.commitments(), request.limit()), limit(prepared.improvementActions(), request.limit()),
+            limit(prepared.outcomeVerifications(), request.limit()), prepared.quality());
 	}
 
 	@Override
