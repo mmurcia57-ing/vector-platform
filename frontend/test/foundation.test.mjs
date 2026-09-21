@@ -87,7 +87,7 @@ test('all route experiences render inside one persistent application shell', asy
   assert.match(viewport, /document\.querySelector\(["']\.content-shell["']\)/)
   assert.match(viewport, /new MutationObserver/)
   assert.match(viewport, /window\.addEventListener\(["']popstate["']/)
-  for (const experience of ['Panorama Ejecutivo', 'Area Intelligence', 'Compromisos & Mejoras', 'Service Intelligence', 'Risk Investigation']) assert.match(viewport, new RegExp(experience))
+  for (const routeView of ['const panorama =', 'const areaView =', 'const commitmentView =', 'const serviceView =', 'const riskView =']) assert.ok(viewport.includes(routeView))
   for (const path of ['overview', 'areas', 'commitments', 'services', 'risks']) assert.match(shell, new RegExp(`route\\.path === '${path}' \\? 'active'`))
 })
 
