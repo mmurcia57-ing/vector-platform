@@ -826,11 +826,11 @@ export default function ExperienceViewport() {
         <Header
           eyebrow={tr("COMPROMISOS Y MEJORAS · FLUJO", "COMMITMENTS & IMPROVEMENTS · WORKFLOW")}
           title={tr("Compromisos y Mejoras", "Commitments & Improvements")}
-          question="¿Qué se comprometió, qué cambió en la ejecución y qué resultado está realmente verificado?"
+          question={tr("¿Qué se comprometió, qué cambió en la ejecución y qué resultado está realmente verificado?","What was committed, what changed in execution, and what outcome is actually verified?")}
           period={period}
           onPeriodChange={changePeriod}
         />
-        <LensNav labelText="Lentes de compromisos y resultados" items={[
+        <LensNav labelText={tr("Lentes de compromisos y resultados","Commitment and outcome lenses")} items={[
           ["commitment-list", "Flujo de compromisos"],
           ["commitment-results", "Resultado y evidencia"],
           ["commitment-new", "Nuevo compromiso"],
@@ -843,7 +843,7 @@ export default function ExperienceViewport() {
         </div>
         <div className="vx-commitment-workspace">
           <section className="gold-panel">
-            <SectionTitle id="commitment-list" title="Flujo de compromisos" subtitle="La fecha y la renegociación preservan historia; completar ejecución no verifica resultado." />
+            <SectionTitle id="commitment-list" title={tr("Flujo de compromisos","Commitment flow")} subtitle={tr("La fecha y la renegociación preservan historia; completar ejecución no verifica resultado.","Dates and renegotiations preserve history; completing execution does not verify the outcome.")} />
             <div className="vx-ledger-head"><span>{tr("Compromiso","Commitment")}</span><span>{tr("Área","Area")}</span><span>{tr("Estado","Status")}</span><span>{tr("Fecha","Date")}</span><span>{tr("Acciones","Actions")}</span></div>
             {commitments?.commitments.map((item) => (
               <div className="vx-ledger-row" key={item.commitmentId}>
@@ -903,7 +903,7 @@ export default function ExperienceViewport() {
           period={period}
           onPeriodChange={changePeriod}
         />
-        <LensNav labelText="Lentes del servicio" items={[
+        <LensNav labelText={tr("Lentes del servicio","Service lenses")} items={[
           ["service-condition", "Condición"],
           ["service-evidence", "Evidencia"],
           ["service-slo", "SLO"],
@@ -927,7 +927,7 @@ export default function ExperienceViewport() {
         <div className="vx-service-workspace">
           <section>
             <div className="gold-panel gold-stack">
-              <SectionTitle title="Hallazgos que requieren investigación" subtitle="Cada hallazgo mantiene evidencia, limitaciones y contexto del servicio." />
+              <SectionTitle title={tr("Hallazgos que requieren investigación","Findings requiring investigation")} subtitle={tr("Cada hallazgo mantiene evidencia, limitaciones y contexto del servicio.","Each finding retains evidence, limitations, and service context.")} />
               {detail?.riskFindings.length ? detail.riskFindings.map((item) => (
                 <button className="vx-service-finding" key={item.riskFindingId} onClick={() => navigate(`/risks/${encodeURIComponent(item.riskFindingId)}`, {
                   areaDomainId: detail.service?.areaDomainId ?? "",
@@ -939,16 +939,16 @@ export default function ExperienceViewport() {
               )) : <Empty>{tr("No hay hallazgo de riesgo sustentado para el contexto seleccionado.","No risk finding is supported for the selected context.")}</Empty>}
             </div>
             <div className="gold-panel" id="service-evidence">
-              <SectionTitle title="Evidencia operacional" subtitle="Hechos disponibles para el servicio; ausencia de datos no implica operación normal." />
+              <SectionTitle title={tr("Evidencia operacional","Operational evidence")} subtitle={tr("Hechos disponibles para el servicio; ausencia de datos no implica operación normal.","Available service facts; missing data does not imply normal operation.")} />
               {detail?.evidence.length ? detail.evidence.map((item) => (
                 <div className="gold-evidence" key={item.evidenceId}><b>{t.fact}</b><strong>{item.supportedClaim}</strong><span>{item.observedAt} · {item.sourceReferenceIds.map(label).join(", ")}</span></div>
               )) : <Empty>{tr("No hay evidencia expuesta por esta proyección.","No evidence is exposed by this projection.")}</Empty>}
             </div>
           </section>
           <aside className="vx-service-context">
-            <div className="gold-panel" id="service-slo"><SectionTitle title="SLO / tendencia" /><Empty>{tr("No hay serie SLO disponible para el dataset local.","No SLO series is available for the local dataset.")}</Empty></div>
-            <div className="gold-panel" id="service-incidents"><SectionTitle title="Incidentes" /><Empty>{tr("No hay incidentes expuestos por esta proyección.","No incidents are exposed by this projection.")}</Empty></div>
-            <div className="gold-panel" id="service-changes"><SectionTitle title="Cambios y despliegues" /><Empty>{tr("No hay cambios expuestos por esta proyección.","No changes are exposed by this projection.")}</Empty></div>
+            <div className="gold-panel" id="service-slo"><SectionTitle title={tr("SLO / tendencia","SLO / trend")} /><Empty>{tr("No hay serie SLO disponible para el dataset local.","No SLO series is available for the local dataset.")}</Empty></div>
+            <div className="gold-panel" id="service-incidents"><SectionTitle title={tr("Incidentes","Incidents")} /><Empty>{tr("No hay incidentes expuestos por esta proyección.","No incidents are exposed by this projection.")}</Empty></div>
+            <div className="gold-panel" id="service-changes"><SectionTitle title={tr("Cambios y despliegues","Changes and deployments")} /><Empty>{tr("No hay cambios expuestos por esta proyección.","No changes are exposed by this projection.")}</Empty></div>
             <div className="gold-intelligence"><strong>✣ {t.intelligence}</strong><p>{detail?.riskFindings[0]?.explanation ?? tr("No hay hallazgos adicionales.","No additional findings.")}</p><small>{tr("La explicación se limita a la evidencia disponible.","The explanation is limited to available evidence.")}</small></div>
           </aside>
         </div>
@@ -974,7 +974,7 @@ export default function ExperienceViewport() {
         />
         <SemanticLegend />
         <TemporalSpine signals={signals} risks={risk?.riskFindings} />
-        <LensNav labelText="Lentes de investigación" items={[
+        <LensNav labelText={tr("Lentes de investigación","Investigation lenses")} items={[
           ["risk-timeline", "Línea de tiempo"],
           ["risk-evidence", "Evidencia"],
           ["risk-change", "Cambio asociado"],
@@ -985,25 +985,25 @@ export default function ExperienceViewport() {
         <div className="gold-metrics">
           <Metric
             tone="danger"
-            title="Ocurrencias"
+            title={tr("Ocurrencias","Occurrences")}
             value={risk?.evidence.length ?? 0}
             note="Evidencia en el período"
           />
           <Metric
             tone="warning"
-            title="Impacto estimado"
+            title={tr("Impacto estimado","Estimated impact")}
             value="N/D"
             note="No inferido por VECTOR"
           />
           <Metric
             tone="purple"
-            title="Acciones"
+            title={tr("Acciones","Actions")}
             value={risk?.improvementActions.length ?? 0}
             note="Ejecución registrada"
           />
           <Metric
             tone="danger"
-            title="Estado del riesgo"
+            title={tr("Estado del riesgo","Risk state")}
             value={risk?.outcomeVerifications[0]?.outcome ?? "Sin verificar"}
             note="Resultado basado en evidencia"
           />
