@@ -2,7 +2,7 @@
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 afterEach(cleanup);
-import { SemanticLegend, WorkspaceRail } from "../src/ExperienceViewport";
+import { Header, LensNav, SemanticLegend, WorkspaceRail } from "../src/ExperienceViewport";
 
 describe("EXT-003 intelligence workspace", () => {
   it("communicates the full decision loop and layers without relying on color", () => {
