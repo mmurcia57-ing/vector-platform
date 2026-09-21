@@ -5,8 +5,8 @@ import fs from "node:fs";
 const viewport=fs.readFileSync(new URL("../src/ExperienceViewport.tsx",import.meta.url),"utf8");
 const contract=JSON.parse(fs.readFileSync(new URL("../../contracts/vector-experience-contract.schema.json",import.meta.url),"utf8"));
 
-test("commitment capability closes lifecycle beyond create/list representation",()=>{
-  for(const token of ["Reliability Rate","Resultado pendiente","Renegotiate","Registrar renegociación","Complete"]) assert.match(viewport,new RegExp(token));
+test("commitment source wiring exposes governed lifecycle handlers without coupling assurance to UI language",()=>{
+  for(const token of ["updateCommitmentStatus","renegotiateCommitment","Registrar renegociación","Reliability Rate","Resultado pendiente"]) assert.match(viewport,new RegExp(token));
 });
 test("commitment mutation contracts require authorization and audit",()=>{
   for(const key of ["PATCH /api/experience/commitments/{commitmentId}/lifecycle","POST /api/experience/commitments/{commitmentId}/renegotiations"]){
