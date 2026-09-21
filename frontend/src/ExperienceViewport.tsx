@@ -110,11 +110,11 @@ type Outcome = {
 type Quality = {
   sourceCoverage: string;
   freshness: string;
-  confidence: string;
-  uncertainty: string;
+  confidenceContext: string;
+  uncertainty: string[];
   limitations: string;
   stale?: boolean;
-  partial?: boolean;
+  conflicting?: boolean;
   missingContext?: string[];
 };
 type Overview = {
@@ -299,7 +299,7 @@ export function ContextEnvelope({ area, service, risk, period, quality }: { area
     service ? [t.service, service.name] : undefined,
     risk ? [t.riskFinding, risk.condition] : undefined,
     [t.scenario, period],
-    [t.quality, quality?.stale ? t.stale : quality?.partial ? t.partial : quality ? t.available : "—"],
+    [t.quality, quality?.stale ? t.stale : quality?.missingContext?.length ? t.partial : quality ? t.available : "—"],
   ].filter(Boolean) as string[][];
   return <section className="vx-context-envelope" aria-label={t.selectedContext}>
     <strong>{t.selectedContext}</strong>
@@ -614,7 +614,7 @@ export default function ExperienceViewport() {
           <div><small>{tr("ÁREAS CON ATENCIÓN", "AREAS REQUIRING ATTENTION")}</small><strong>{overview.areas.filter((item) => item.attentionState !== "STABLE").length}</strong></div>
           <div><small>{tr("RIESGOS CON EVIDENCIA", "EVIDENCE-BACKED RISKS")}</small><strong>{overview.attentionFindings.length}</strong></div>
           <div><small>{tr("COMPROMISOS VENCIDOS", "OVERDUE COMMITMENTS")}</small><strong>{commitments?.overdueCount ?? 0}</strong></div>
-          <div><small>{t.quality}</small><strong>{overview.quality.stale ? t.stale : overview.quality.partial ? t.partial : t.available}</strong></div>
+          <div><small>{t.quality}</small><strong>{overview.quality.stale ? t.stale : overview.quality.missingContext?.length ? t.partial : t.available}</strong></div>
         </div>
         <OperationalCanvas overview={overview} navigate={navigate} />
         <TemporalSpine risks={overview.attentionFindings} />
@@ -894,7 +894,7 @@ export default function ExperienceViewport() {
           </div>
           <div>
             <small>{tr("CALIDAD DEL CONTEXTO","CONTEXT QUALITY")}</small>
-            <strong>{detail?.quality.stale ? "Desactualizado" : detail?.quality.partial ? "Parcial" : "Disponible"}</strong>
+            <strong>{detail?.quality.stale ? "Desactualizado" : detail?.quality.missingContext?.length ? "Parcial" : "Disponible"}</strong>
             <span>{detail?.quality.missingContext?.length ? detail.quality.missingContext?.join(" · ") : "Sin contexto faltante declarado"}</span>
           </div>
         </section>
