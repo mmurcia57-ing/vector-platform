@@ -84,7 +84,67 @@ public final class LocalExperienceProjectionSource implements ExperienceProjecti
 
     @Override
     public PreparedExperienceContext load(ProjectionRequest request) {
-        return prepared;
+        var period = request.context().period();
+        if (period == null || period.isBlank() || "local-dataset-v1".equals(period)) return prepared;
+
+        if ("local-partial-stale".equals(period)) {
+            var quality = new ProjectionQuality(
+                "partial local deterministic dataset",
+                "stale fixture",
+                "CONFIRMED available source references; incomplete context",
+                List.of("incident recurrence context", "post-action comparison"),
+                List.of("Available evidence is incomplete; no health conclusion is permitted."),
+                List.of("Local scenario fixture.", "No causal attribution is asserted."),
+                true,
+                false);
+            return new PreparedExperienceContext(
+                prepared.areas(), prepared.services(), prepared.riskFindings(),
+                prepared.evidence().stream().limit(1).toList(),
+                prepared.commitments(), List.of(), List.of(), quality);
+        }
+
+        if ("local-outcome-pending".equals(period)) {
+            var quality = new ProjectionQuality(
+                "local deterministic dataset",
+                OBSERVED_AT.toString(),
+                "CONFIRMED source references; outcome not yet verifiable",
+                List.of("post-action outcome evidence"),
+                List.of("Completed action does not establish improvement."),
+                List.of("Local scenario fixture.", "No causal attribution is asserted."),
+                false,
+                false);
+            return new PreparedExperienceContext(
+                prepared.areas(), prepared.services(), prepared.riskFindings(), prepared.evidence(),
+                prepared.commitments(), prepared.improvementActions(), List.of(), quality);
+        }
+
+        if ("local-insufficient-evidence".equals(period)) {
+            var quality = new ProjectionQuality(
+                "limited local deterministic dataset",
+                OBSERVED_AT.toString(),
+                "INSUFFICIENT for outcome conclusion",
+                List.of("comparable post-action evidence"),
+                List.of("Evidence is insufficient to verify improvement or persistence."),
+                List.of("Local scenario fixture.", "No causal attribution is asserted."),
+                false,
+                false);
+            return new PreparedExperienceContext(
+                prepared.areas(), prepared.services(), prepared.riskFindings(),
+                prepared.evidence().stream().limit(1).toList(),
+                List.of(), List.of(), List.of(), quality);
+        }
+
+        return new PreparedExperienceContext(
+            prepared.areas(), prepared.services(), List.of(), List.of(), List.of(), List.of(), List.of(),
+            new ProjectionQuality(
+                "unknown local scenario",
+                "unknown",
+                "No compatible deterministic fixture",
+                List.of("scenario " + period),
+                List.of("No conclusion can be derived."),
+                List.of("Unsupported local scenario requested."),
+                false,
+                false));
     }
 
     private static EvidenceProjection toProjection(Evidence evidence, String serviceId, String riskFindingId) {
