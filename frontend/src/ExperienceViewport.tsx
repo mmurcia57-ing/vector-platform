@@ -188,12 +188,14 @@ function Header({
 function SectionTitle({
   title,
   subtitle,
+  id,
 }: {
   title: string;
   subtitle?: string;
+  id?: string;
 }) {
   return (
-    <div className="gold-section-title">
+    <div className="gold-section-title" id={id}>
       <div>
         <h2>{title}</h2>
         {subtitle && <p>{subtitle}</p>}
@@ -201,6 +203,16 @@ function SectionTitle({
     </div>
   );
 }
+function LensNav({ items, labelText }: { items: readonly (readonly [string, string])[]; labelText: string }) {
+  const focus = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.history.replaceState({}, "", `${window.location.pathname}${window.location.search}#${id}`);
+  };
+  return <nav className="gold-tabs vx-lenses" aria-label={labelText}>
+    {items.map(([id, text]) => <button key={id} type="button" onClick={() => focus(id)}>{text}</button>)}
+  </nav>;
+}
+
 export function WorkspaceRail({ active, navigate }: { active: string; navigate: (next: string, context?: Record<string, string>) => void }) {
   const items = [
     ["overview", "/", "Command"],
@@ -784,14 +796,13 @@ export default function ExperienceViewport() {
           period={period}
           onPeriodChange={changePeriod}
         />
-        <nav className="gold-tabs">
-          <b>Vista general</b>
-          <span>SLO</span>
-          <span>Incidentes</span>
-          <span>Cambios</span>
-          <span>Riesgos</span>
-          <span>Compromisos</span>
-        </nav>
+        <LensNav labelText="Lentes del servicio" items={[
+          ["service-slo", "SLO"],
+          ["service-risks", "Riesgos"],
+          ["service-incidents", "Incidentes"],
+          ["service-changes", "Cambios"],
+          ["service-evidence", "Evidencia"],
+        ]} />
         <div className="gold-metrics">
           <Metric
             tone="danger"
@@ -822,13 +833,14 @@ export default function ExperienceViewport() {
           <section>
             <div className="gold-panel">
               <SectionTitle
+                id="service-slo"
                 title="Tendencia SLO"
                 subtitle="Histórico del período seleccionado"
               />
               <Empty>No hay serie SLO disponible para el dataset local.</Empty>
             </div>
             <div className="gold-panel gold-stack">
-              <SectionTitle title="Hallazgos y riesgos" />
+              <SectionTitle id="service-risks" title="Hallazgos y riesgos" />
               {detail?.riskFindings.map((item) => (
                 <button
                   className="gold-table-row"
@@ -852,7 +864,7 @@ export default function ExperienceViewport() {
               ))}
             </div>
             <div className="gold-panel">
-              <h3>Incidentes recientes</h3>
+              <h3 id="service-incidents">Incidentes recientes</h3>
               <Empty>No hay incidentes expuestos por esta proyección.</Empty>
             </div>
           </section>
@@ -865,11 +877,11 @@ export default function ExperienceViewport() {
               </p>
             </div>
             <div className="gold-panel">
-              <h3>Cambios recientes</h3>
+              <h3 id="service-changes">Cambios recientes</h3>
               <Empty>No hay cambios expuestos por esta proyección.</Empty>
             </div>
             <div className="gold-panel">
-              <h3>Evidencia disponible</h3>
+              <h3 id="service-evidence">Evidencia disponible</h3>
               {detail?.evidence.map((item) => (
                 <div className="gold-signal" key={item.evidenceId}>
                   <i>•</i>
@@ -905,15 +917,14 @@ export default function ExperienceViewport() {
           onPeriodChange={changePeriod}
         />
         <SemanticLegend />
-        <nav className="gold-tabs">
-          <b>Hallazgo</b>
-          <span>Evidencia</span>
-          <span>Línea de tiempo</span>
-          <span>Relaciones</span>
-          <span>Correlaciones</span>
-          <span>Acciones</span>
-          <span>Resultado</span>
-        </nav>
+        <LensNav labelText="Lentes de investigación" items={[
+          ["risk-timeline", "Línea de tiempo"],
+          ["risk-evidence", "Evidencia"],
+          ["risk-change", "Cambio asociado"],
+          ["risk-relations", "Relaciones"],
+          ["risk-actions", "Acciones"],
+          ["risk-outcome", "Resultado"],
+        ]} />
         <div className="gold-metrics">
           <Metric
             tone="danger"
@@ -943,7 +954,7 @@ export default function ExperienceViewport() {
         <div className="gold-main-grid">
           <section>
             <div className="gold-panel">
-              <SectionTitle title="Línea de Tiempo del Riesgo" />
+              <SectionTitle id="risk-timeline" title="Línea de Tiempo del Riesgo" />
               {signals.length ? signals.map((item) => (
                 <div className="gold-timeline" key={item.signalId}>
                   <time>{item.observedAt.slice(0, 10)}</time>
@@ -957,7 +968,7 @@ export default function ExperienceViewport() {
               )) : <Empty>No hay historia temporal suficiente en la evidencia disponible.</Empty>}
             </div>
             <div className="gold-panel">
-              <SectionTitle title="Evidencia Disponible" />
+              <SectionTitle id="risk-evidence" title="Evidencia Disponible" />
               {risk?.evidence.map((item) => (
                 <div className="gold-evidence" key={item.evidenceId}>
                   <b>FACT</b>
@@ -980,7 +991,7 @@ export default function ExperienceViewport() {
               <small>{aiAssist?.provenance ?? "No provider claim until evidence is returned."}</small>
             </div>
             <div className="gold-panel vx-change-association">
-              <SectionTitle title="Change-associated degradation" subtitle="Before / during / after · association ≠ causation" />
+              <SectionTitle id="risk-change" title="Degradación asociada a cambio" subtitle="Antes / durante / después · asociación ≠ causalidad" />
               {changeAssociation ? <>
                 <div className="vx-change-path"><span>BEFORE</span><i>→</i><span>CHANGE {label(changeAssociation.changeId)}</span><i>→</i><span>AFTER</span></div>
                 <p><strong>{changeAssociation.contextualAssociation ? "Contextual association detected" : "Association not established"}</strong> · Causal claim: {changeAssociation.causalClaim ? "YES" : "NO"}</p>
@@ -988,7 +999,7 @@ export default function ExperienceViewport() {
               </> : <Empty>No change/deployment association context is available.</Empty>}
             </div>
             <div className="gold-panel">
-              <SectionTitle title="Grafo de Relaciones" />
+              <SectionTitle id="risk-relations" title="Relaciones y topología contextual" />
               <div className="semantic-graph">
                 {graph?.graph.relationships.map((relation, index) => (
                   <div
@@ -1004,7 +1015,7 @@ export default function ExperienceViewport() {
               {graphFocus && <div className="vx-graph-focus" aria-live="polite"><strong>Focused context</strong><span>{graphNodeLabel(graphFocus)}</span><small>Bounded relationship context; selecting a node does not assert causality.</small></div>}
             </div>
             <div className="gold-panel">
-              <SectionTitle title="Acciones Asociadas" />
+              <SectionTitle id="risk-actions" title="Acciones Asociadas" />
               {risk?.commitments.map((commitment) => (
                 <div className="gold-action" key={commitment.commitmentId}>
                   <strong>{commitment.declaration}</strong>
@@ -1023,6 +1034,15 @@ export default function ExperienceViewport() {
               {!risk?.commitments.length && (
                 <Empty>No hay compromisos asociados.</Empty>
               )}
+            </div>
+            <div className="gold-panel">
+              <SectionTitle id="risk-outcome" title="Resultado verificado" />
+              {risk?.outcomeVerifications.length ? risk.outcomeVerifications.map((outcome) => (
+                <div className="gold-action" key={outcome.verificationId}>
+                  <strong>{outcome.outcome}</strong>
+                  <p>Evidencia: {outcome.evidenceIds.map(label).join(", ")}</p>
+                </div>
+              )) : <Empty>El resultado aún no es verificable con la evidencia disponible.</Empty>}
             </div>
           </aside>
         </div>
