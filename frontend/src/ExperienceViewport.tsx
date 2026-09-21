@@ -738,7 +738,7 @@ export default function ExperienceViewport() {
               )) : <Empty>{tr("No hay hallazgos de atención sustentados por la evidencia disponible.", "There are no attention findings supported by available evidence.")}</Empty>}
             </div>
             <div className="gold-intelligence">
-              <strong>✣ VECTOR Intelligence</strong>
+              <strong>✣ {t.intelligence}</strong>
               <p>{tr("La vista del área organiza contexto para decidir dónde profundizar; no convierte correlación en causalidad ni asigna responsabilidad individual.","The area view organizes context to decide where to investigate; it does not turn correlation into causality or assign individual responsibility.")}</p>
             </div>
           </aside>
@@ -777,10 +777,10 @@ export default function ExperienceViewport() {
           ["commitment-new", "Nuevo compromiso"],
         ]} />
         <div className="vx-commitment-strip">
-          <div><small>ACTIVOS</small><strong>{commitments?.activeCount ?? 0}</strong></div>
-          <div><small>RENEGOCIADOS</small><strong>{commitments?.renegotiatedCount ?? 0}</strong></div>
-          <div><small>RELIABILITY RATE</small><strong>{commitments?.commitmentReliabilityRate == null ? "N/D" : `${Math.round(commitments.commitmentReliabilityRate * 100)}%`}</strong></div>
-          <div><small>OUTCOME PENDIENTE</small><strong>{commitments?.outcomePendingCount ?? 0}</strong></div>
+          <div><small>{tr("ACTIVOS","ACTIVE")}</small><strong>{commitments?.activeCount ?? 0}</strong></div>
+          <div><small>{tr("RENEGOCIADOS","RENEGOTIATED")}</small><strong>{commitments?.renegotiatedCount ?? 0}</strong></div>
+          <div><small>{tr("ÍNDICE DE CONFIABILIDAD","RELIABILITY RATE")}</small><strong>{commitments?.commitmentReliabilityRate == null ? tr("N/D","N/A") : `${Math.round(commitments.commitmentReliabilityRate * 100)}%`}</strong></div>
+          <div><small>{tr("RESULTADO PENDIENTE","OUTCOME PENDING")}</small><strong>{commitments?.outcomePendingCount ?? 0}</strong></div>
         </div>
         <div className="vx-commitment-workspace">
           <section className="gold-panel">
@@ -802,12 +802,12 @@ export default function ExperienceViewport() {
           </section>
           <aside className="vx-commitment-side">
             <div className="gold-panel" id="commitment-results">
-              <SectionTitle title="Resultado y evidencia" />
-              <Empty>No hay OutcomeVerification agregado para esta vista. La ejecución completada permanece separada del resultado.</Empty>
+              <SectionTitle title={tr("Resultado y evidencia","Outcome and evidence")} />
+              <Empty>{tr("No hay verificación de resultado agregada para esta vista. La ejecución completada permanece separada del resultado.","No outcome verification is aggregated for this view. Completed execution remains separate from outcome.")}</Empty>
             </div>
             <div className="gold-intelligence">
-              <strong>✣ VECTOR Intelligence</strong>
-              <p>Prioriza seguimiento gobernado: compromiso → ejecución → evidencia → resultado. No convierte actividad completada en mejora.</p>
+              <strong>✣ {t.intelligence}</strong>
+              <p>{tr("Prioriza seguimiento gobernado: compromiso → ejecución → evidencia → resultado. No convierte actividad completada en mejora.","Prioritizes governed follow-up: commitment → execution → evidence → outcome. It does not turn completed activity into improvement.")}</p>
             </div>
             <form className="gold-panel gold-form" id="commitment-new" onSubmit={createCommitment}>
               <h3>{tr("Nuevo compromiso","New commitment")}</h3>
@@ -888,7 +888,7 @@ export default function ExperienceViewport() {
             <div className="gold-panel" id="service-slo"><SectionTitle title="SLO / tendencia" /><Empty>{tr("No hay serie SLO disponible para el dataset local.","No SLO series is available for the local dataset.")}</Empty></div>
             <div className="gold-panel" id="service-incidents"><SectionTitle title="Incidentes" /><Empty>{tr("No hay incidentes expuestos por esta proyección.","No incidents are exposed by this projection.")}</Empty></div>
             <div className="gold-panel" id="service-changes"><SectionTitle title="Cambios y despliegues" /><Empty>{tr("No hay cambios expuestos por esta proyección.","No changes are exposed by this projection.")}</Empty></div>
-            <div className="gold-intelligence"><strong>✣ VECTOR Intelligence</strong><p>{detail?.riskFindings[0]?.explanation ?? "No hay hallazgos adicionales."}</p><small>{tr("La explicación se limita a la evidencia disponible.","The explanation is limited to available evidence.")}</small></div>
+            <div className="gold-intelligence"><strong>✣ {t.intelligence}</strong><p>{detail?.riskFindings[0]?.explanation ?? tr("No hay hallazgos adicionales.","No additional findings.")}</p><small>{tr("La explicación se limita a la evidencia disponible.","The explanation is limited to available evidence.")}</small></div>
           </aside>
         </div>
         <QualityNote quality={detail?.quality} />
@@ -975,7 +975,7 @@ export default function ExperienceViewport() {
           </section>
           <aside>
             <div className="gold-intelligence">
-              <strong>✣ VECTOR Intelligence</strong>
+              <strong>✣ {t.intelligence}</strong>
               <p>{risk?.riskFinding?.explanation}</p>
               <small>{tr("Correlación temporal/contextual ≠ causalidad.","Temporal/contextual correlation ≠ causality.")}</small>
             </div>
