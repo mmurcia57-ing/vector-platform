@@ -15,4 +15,14 @@ class LocalChangeAssociationExperienceTests {
             assertThat(result.limitation()).contains("Synthetic local").contains("association only");
         }
     }
+    @Test
+    void degradationPredatingChangeIsAnInverseControlAndNeverCausal() {
+        try (var repository = new SqliteCanonicalRepository("jdbc:sqlite::memory:")) {
+            var result = new LocalChangeAssociationExperience(repository).investigate("service-payments","risk-local","local-change-predates");
+            assertThat(result.temporalContext()).isEqualTo("degradation-before-change");
+            assertThat(result.contextualAssociation()).isFalse();
+            assertThat(result.causalClaim()).isFalse();
+            assertThat(result.limitation()).contains("predates");
+        }
+    }
 }
