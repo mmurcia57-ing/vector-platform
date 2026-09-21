@@ -44,12 +44,22 @@ const PERIOD_OPTIONS = {
     ["local-partial-stale", "Evidencia parcial / desactualizada"],
     ["local-outcome-pending", "Acción completa / resultado pendiente"],
     ["local-insufficient-evidence", "Evidencia insuficiente"],
+    ["local-healthy-control", "Control sano / sin riesgo"],
+    ["local-conflicting-evidence", "Evidencia en conflicto"],
+    ["local-outcome-improved", "Mejora verificada"],
+    ["local-change-associated", "Degradación posterior a cambio"],
+    ["local-change-predates", "Degradación anterior al cambio"],
   ],
   en: [
     ["local-dataset-v1", "Baseline scenario"],
     ["local-partial-stale", "Partial / stale evidence"],
     ["local-outcome-pending", "Action complete / outcome pending"],
     ["local-insufficient-evidence", "Insufficient evidence"],
+    ["local-healthy-control", "Healthy / no-risk control"],
+    ["local-conflicting-evidence", "Conflicting evidence"],
+    ["local-outcome-improved", "Verified improvement"],
+    ["local-change-associated", "Degradation after change"],
+    ["local-change-predates", "Degradation predates change"],
   ],
 } as const;
 type Area = { areaDomainId: string; name: string; attentionState: string };
