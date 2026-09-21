@@ -7,25 +7,25 @@ import { ContextEnvelope, Header, LensNav, SemanticLegend, WorkspaceRail } from 
 describe("EXT-003 intelligence workspace", () => {
   it("communicates the full decision loop and layers without relying on color", () => {
     render(<><WorkspaceRail active="overview" navigate={() => undefined} /><SemanticLegend /></>);
-    expect(screen.getByText(/SIGNAL/)).toBeTruthy();
-    expect(screen.getByText("Command")).toBeTruthy();
-    expect(screen.getByText("Investigation")).toBeTruthy();
-    expect(screen.getByText("Action & Outcome")).toBeTruthy();
-    expect(screen.getByText("Observed evidence")).toBeTruthy();
-    expect(screen.getByText("Correlation / uncertainty")).toBeTruthy();
-    expect(screen.getByText("Verified outcome")).toBeTruthy();
+    expect(screen.getByText(/SEÑAL/)).toBeTruthy();
+    expect(screen.getByText("Panorama")).toBeTruthy();
+    expect(screen.getByText("Investigación")).toBeTruthy();
+    expect(screen.getByText("Acciones y resultados")).toBeTruthy();
+    expect(screen.getByText("Evidencia observada")).toBeTruthy();
+    expect(screen.getByText("Correlación / incertidumbre")).toBeTruthy();
+    expect(screen.getByText("Resultado verificado")).toBeTruthy();
   });
 
   it("preserves navigable investigation layers", () => {
     const navigate = vi.fn();
     render(<WorkspaceRail active="overview" navigate={navigate} />);
-    fireEvent.click(screen.getByRole("button", { name: "Investigation" }));
+    fireEvent.click(screen.getByRole("button", { name: "Investigación" }));
     expect(navigate).toHaveBeenCalledWith("/risks");
   });
 
   it("marks the active workspace layer for visual state", () => {
     render(<WorkspaceRail active="commitments" navigate={() => undefined} />);
-    expect(screen.getByRole("button", { name: "Action & Outcome" }).className).toContain("active");
+    expect(screen.getByRole("button", { name: "Acciones y resultados" }).className).toContain("active");
   });
 });
 
@@ -33,9 +33,9 @@ describe("EXT-003 intelligence workspace", () => {
 it("keeps workspace navigation behavior explicit rather than decorative", () => {
   const calls: string[] = [];
   render(<WorkspaceRail active="services" navigate={(next) => calls.push(next)} />);
-  fireEvent.click(screen.getByRole("button", { name: "Investigation" }));
+  fireEvent.click(screen.getByRole("button", { name: "Investigación" }));
   expect(calls).toEqual(["/risks"]);
-  expect(screen.getByRole("button", { name: "Service" }).className).toContain("active");
+  expect(screen.getByRole("button", { name: "Servicio" }).className).toContain("active");
 });
 
 
