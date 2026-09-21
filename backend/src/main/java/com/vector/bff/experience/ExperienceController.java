@@ -65,8 +65,8 @@ public class ExperienceController {
 
     @GetMapping("/risks/{riskFindingId}/change-association")
     ChangeAssociationExperienceProjection changeAssociation(@PathVariable String riskFindingId,
-            @RequestParam String serviceId) {
-        return changeAssociation.investigate(serviceId, riskFindingId);
+            @RequestParam String serviceId, @RequestParam(required = false) String period) {
+        return changeAssociation.investigate(serviceId, riskFindingId, period);
     }
 
     @GetMapping("/risks/{riskFindingId}/assist")
