@@ -1,6 +1,9 @@
 // @vitest-environment jsdom
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 afterEach(cleanup);
 import { Header, LensNav, LocaleBoundary, SemanticLegend, WorkspaceRail } from "../src/ExperienceViewport";
 
@@ -61,7 +64,8 @@ it("investigation lenses execute navigation to an explicit section", () => {
 
 
 it("area workspace remains structurally distinct from executive triage", () => {
-  const source = require("node:fs").readFileSync(new URL("../src/ExperienceViewport.tsx", import.meta.url), "utf8");
+  const here = dirname(fileURLToPath(import.meta.url));
+  const source = readFileSync(resolve(here, "../src/ExperienceViewport.tsx"), "utf8");
   expect(source).toContain("vx-service-portfolio");
   expect(source).toContain('tr("Portafolio de servicios", "Service portfolio")');
   expect(source).toContain('tr("Concentración de atención", "Attention concentration")');
