@@ -86,7 +86,47 @@ At minimum, each critical surface must have executable proof for applicable:
 - dependency error;
 - retry/recovery.
 
-### DX-05 — Behavioral assurance is too shallow
+### DX-05 — Visible context controls are not controls
+
+The header renders `Últimos 30 días` and `Contexto local` as static labels.
+
+Observed implementation:
+- period display is not user-selectable;
+- API context uses a fixed `local-dataset-v1` period token;
+- `Contexto local` does not expose an inspectable/selectable context model to the evaluator.
+
+This conflicts with the existing interaction contract where Period is shared analytical context and applicable context changes coordinate dependent projections.
+
+Requirement:
+- Period must become a real control for the demo, with deterministic scenario-backed options and coordinated refresh; or the UI must explicitly label a fixed dataset context without false filter affordance.
+- Replace ambiguous `Contexto local` wording with a defined inspectable context concept. If it represents demo/local data source context, make that explicit and non-production.
+- Every visible filter/context chip must map to state + behavior + evidence, or be visually non-actionable explanatory metadata.
+
+### DX-06 — Language decision lost from governed baseline
+
+A pending Spanish-language capability was expected by product intent but is not traceable in the inspected UX/interaction specification.
+
+Classification: **INTENT/SPEC TRACEABILITY GAP**.
+
+Requirement:
+- establish the authoritative language requirement before implementation;
+- for the current local demo, remove mixed English/Spanish user-facing copy;
+- if language switching is confirmed in scope, implement a real locale control and scenario/test evidence rather than a decorative selector;
+- do not invent additional supported languages.
+
+### DX-07 — Configuration surface missing from product model
+
+No first-class Configuration/Settings experience is traceable in the inspected UX/interaction baseline.
+
+Classification: **PRODUCT DISCOVERY GAP / REQUIREMENT TO RECONCILE**, not permission to invent settings.
+
+Required reconciliation:
+- identify which user-adjustable concerns genuinely require configuration in current scope (for example locale, demo context/period, display/accessibility preferences, integration/source context only if authorized);
+- separate user preferences from administrative/integration configuration;
+- define permissions, persistence and defaults before implementing stateful settings;
+- if no current-scope setting is justified, explicitly record the non-goal.
+
+### DX-08 — Behavioral assurance is too shallow
 Current Testing Library coverage demonstrates workspace grammar/navigation rail but does not execute J01–J04 as complete user scenarios. Source-text tests are supplementary, not behavioral assurance.
 
 Required:
@@ -120,7 +160,37 @@ Executable assertion
 
 A demo scenario is complete only when a reviewer can perform the intended task rather than infer it from labels.
 
-## 5. Demo acceptance matrix
+## 5. Visible Affordance Inventory Gate
+
+Before demo convergence, inventory every visible element that communicates actionability or selectable context.
+
+Minimum columns:
+`Surface | Visible element | User expectation | Intended behavior | Implemented? | State source | Scenario | Behavioral test | Disposition`.
+
+The inventory MUST include at least:
+- primary navigation;
+- every tab;
+- buttons;
+- links;
+- filters;
+- period/date controls;
+- context selectors/chips;
+- language/locale control when in scope;
+- configuration entry points when in scope;
+- graph nodes/expand/focus controls;
+- retry/recovery controls;
+- commitment lifecycle controls.
+
+A visible element may be classified:
+- FUNCTIONAL;
+- INTENTIONALLY INFORMATIONAL;
+- DISABLED WITH EXPLANATION;
+- OUT OF SCOPE AND REMOVED;
+- GAP.
+
+No GAP may remain in a demo-convergence PASS.
+
+## 6. Demo acceptance matrix
 
 | Surface | Required demonstrable behavior |
 |---|---|
@@ -136,7 +206,7 @@ A demo scenario is complete only when a reviewer can perform the intended task r
 | Recovery | demonstrate dependency failure and retry |
 | AI | demonstrate available/unavailable boundary without authority inflation |
 
-## 6. Demo Quality Gate
+## 7. Demo Quality Gate
 PASS only if:
 1. no false interactive affordances remain;
 2. J01–J04 are executable as user scenarios;
@@ -147,9 +217,10 @@ PASS only if:
 7. demo limitations are explicit;
 8. visual polish does not substitute for interaction proof.
 
-## 7. Work packages
+## 8. Work packages
 - WP1 Scenario fixture/model + local scenario selector/harness.
-- WP2 Remove false affordances or implement their behavior.
+- WP2 Visible Affordance Inventory; implement/remove/reclassify static tabs, period/context controls and other false affordances.
+- WP2B Reconcile language and Configuration/Settings product intent before implementation.
 - WP3 Graph investigation interaction.
 - WP4 J01–J04 executable demo paths.
 - WP5 State/degradation/permission/recovery scenarios.
@@ -160,7 +231,7 @@ PASS only if:
 Dependencies:
 `WP1 → {WP2,WP3,WP4,WP5} → WP6 → WP7 → WP8`.
 
-## 8. Boundary
+## 9. Boundary
 This extension improves the local demonstrable product. It does not:
 - invent corporate data;
 - claim production readiness;
@@ -169,7 +240,7 @@ This extension improves the local demonstrable product. It does not:
 - replace valid EXT-003/004 semantics;
 - require a redesign merely for novelty.
 
-## 9. Gate
+## 10. Gate
 - Product gap demonstrated: PASS
 - Knowledge challenge applicable: PASS
 - Current implementation evidence inspected: PASS
