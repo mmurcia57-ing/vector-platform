@@ -3,55 +3,56 @@
   "project": "VECTOR",
   "branch": "framework/vector-full-lifecycle-pilot",
   "state": "IN_PROGRESS",
-  "overallProgressPercent": 48,
+  "overallProgressPercent": 61,
   "completionTarget": "FUNCTIONAL_DEMO_CONVERGED",
   "workstreams": [
     {
       "id": "viewport",
       "label": "Full-browser viewport",
-      "progressPercent": 35,
-      "state": "RUNTIME_FAIL",
+      "progressPercent": 75,
+      "state": "IMPLEMENTED_ASSURANCE_PENDING",
       "gate": "FAIL",
       "evidence": [
-        "abab912749ea9ce5edce6bbb205cc97624b15972"
-      ]
+        "54bf56423131e4e67e881eb99c377f58342a947a",
+        "86b54d0c277b3f75e33e4162468170df74db9bad",
+        "e03a5f0888bb30637c19da0d592d4ece63236d7b"
+      ],
+      "nextAction": "Runtime retest must confirm root→shell→workspace now uses the intended browser canvas."
     },
     {
       "id": "localization",
       "label": "UI localization ES/EN",
-      "progressPercent": 55,
-      "state": "RUNTIME_FAIL",
+      "progressPercent": 82,
+      "state": "IMPLEMENTED_ASSURANCE_PENDING",
       "gate": "FAIL",
       "evidence": [
-        "9fee48c9356b10d41e4b200fd7f82bc1fed8356a",
-        "8454afce845b39d26eac165137bbde9d45ada4e5",
-        "7e6e9a0f090cdc80ce41f71d21bf7e4cb303b5d8"
+        "8d3f5691c8b280d0e2f203d548156874f377def1",
+        "fff7a656d9b8eae8560f8ea9a522b959cad9d349",
+        "cdc5eaa2e0fd89526b1cfc6ca4d3e23b651949c3"
       ],
-      "nextAction": "Run behavioral locale assurance and finish remaining secondary chrome/source-content policy."
+      "nextAction": "Behavioral ES/EN retest; preserve source evidence text without silent translation."
     },
     {
       "id": "r3",
       "label": "R3 Dual Canvas redesign",
-      "progressPercent": 45,
-      "state": "RUNTIME_FAIL",
+      "progressPercent": 65,
+      "state": "IMPLEMENTED_ASSURANCE_PENDING",
       "gate": "FAIL",
       "evidence": [
-        "f9e03c25608cbac82496bd4152d96a4f83865e0c",
-        "19237d43a35ac05c4907835ba96c55d806f014f4",
-        "e156c27c65ac8715c4146ec8c7c226666e18c10f"
+        "e03a5f0888bb30637c19da0d592d4ece63236d7b"
       ],
-      "nextAction": "Complete material-difference comparison and runtime visual QA."
+      "nextAction": "User/runtime material-difference retest against prior baseline; visual QA still mandatory."
     },
     {
       "id": "spatial-graph",
       "label": "Spatial operational graph",
-      "progressPercent": 78,
+      "progressPercent": 82,
       "state": "IMPLEMENTED_ASSURANCE_PENDING",
       "gate": "FAIL",
-      "nextAction": "Run behavioral/accessibility and visual assurance for bounded node-edge topology.",
+      "nextAction": "Runtime retest Open graph modal, focus/select behavior, close/recovery and accessible relationship fallback.",
       "evidence": [
-        "e156c27c65ac8715c4146ec8c7c226666e18c10f",
-        "ea9c911dabb4988cbfc9d6cc6a80d6e3f4454e98"
+        "8ab97203f5dbbec7fca61bfa92738562ce7967f6",
+        "f294755460280e9f4198c18d3ae83138f6d0f4c6"
       ]
     },
     {
@@ -84,15 +85,13 @@
     {
       "id": "framework-regression",
       "label": "Framework regression",
-      "progressPercent": 60,
-      "state": "L1_CONTROL_ADDED_L2_L3_PENDING",
+      "progressPercent": 68,
+      "state": "L1_CONTROLS_EXPANDED_L2_L3_PENDING",
       "gate": "FAIL",
       "nextAction": "Execute new autonomous knowledge, redesign materialization, viewport, localization and execution-observability regressions.",
       "evidence": [
-        "d84bbe1dd9913848dce7567d21210b02c6856e46",
-        "ce666a548f4c56f62b26c29f6f441ba77c20499c",
-        "a8976cd36860db60b7f122a21feb9c097b283e7a",
-        "396551c9ba03cb6967837eb753e6f73a19a6c0f4"
+        "2cf8b102d67a49451e1a03eb132928a728189cfb",
+        "f8953dd61486389a45e8f9d65c4d5eca3038536d"
       ]
     }
   ],
@@ -100,18 +99,24 @@
     {
       "type": "EXTERNAL_DEPENDENCY",
       "id": "ASSURANCE-RUNNER",
-      "description": "Pilot workflow definition was committed, but GitHub exposed no workflow run or status check for the commit; no existing main-branch CI workflow was found at common paths. Build/test PASS cannot be claimed.",
+      "description": "Current pilot commits expose no GitHub workflow run/status. Executable build/test PASS cannot be claimed from repository inspection.",
+      "userInputRequired": false
+    },
+    {
+      "type": "EVIDENCE_DEPENDENCY",
+      "id": "RUNTIME-VISUAL-RETEST",
+      "description": "Viewport material difference, expanded graph and locale coherence require rendered runtime evidence before their gates can pass.",
       "userInputRequired": false
     }
   ],
-  "currentAction": "User runtime validation rejected material visual redesign, viewport fit and localization completeness; graph expansion requirement implemented.",
-  "nextAutonomousAction": "Trace actual viewport constraint in runtime structure; materially differentiate R3 composition from baseline; complete locale boundary; then rerun user visual validation and executable assurance.",
+  "currentAction": "Material R3 shell, root viewport constraint, graph expansion and localization chrome corrections committed; static inspection complete for this turn.",
+  "nextAutonomousAction": "On next runtime evidence, fix any parse/behavior/visual failures immediately; then execute scenario assurance, behavioral UX assurance, explicit visual QA refinement and Framework L2/L3 regressions.",
   "rules": {
     "progressIsEvidenceBased": true,
     "noBackgroundExecutionClaim": true,
     "readyRequiresAllRequiredGatesPass": true
   },
-  "agentActivity": "AGENT_EXECUTING",
+  "agentActivity": "STOPPED_EXTERNAL_ASSURANCE_DEPENDENCY",
   "progressCalculation": {
     "method": "weighted_workstream_progress",
     "weights": {
