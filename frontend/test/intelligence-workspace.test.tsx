@@ -10,7 +10,7 @@ describe("EXT-003 intelligence workspace", () => {
     expect(screen.getByText(/SIGNAL/)).toBeTruthy();
     expect(screen.getByText("Command")).toBeTruthy();
     expect(screen.getByText("Investigation")).toBeTruthy();
-    expect(screen.getByText("Action & Outcome")).toBeTruthy();
+    expect(screen.getByText("Actions & Outcomes")).toBeTruthy();
     expect(screen.getByText("Observed evidence")).toBeTruthy();
     expect(screen.getByText("Correlation / uncertainty")).toBeTruthy();
     expect(screen.getByText("Verified outcome")).toBeTruthy();
@@ -25,7 +25,7 @@ describe("EXT-003 intelligence workspace", () => {
 
   it("marks the active workspace layer for visual state", () => {
     render(<LocaleBoundary locale="en"><WorkspaceRail active="commitments" navigate={() => undefined} /></LocaleBoundary>);
-    expect(screen.getByRole("button", { name: "Action & Outcome" }).className).toContain("active");
+    expect(screen.getByRole("button", { name: "Actions & Outcomes" }).className).toContain("active");
   });
 });
 
@@ -63,9 +63,9 @@ it("investigation lenses execute navigation to an explicit section", () => {
 it("area workspace remains structurally distinct from executive triage", () => {
   const source = require("node:fs").readFileSync(new URL("../src/ExperienceViewport.tsx", import.meta.url), "utf8");
   expect(source).toContain("vx-service-portfolio");
-  expect(source).toContain("Portafolio de servicios");
-  expect(source).toContain("Concentración de atención");
-  expect(source).toContain("Seguimiento del área");
+  expect(source).toContain('tr("Portafolio de servicios", "Service portfolio")');
+  expect(source).toContain('tr("Concentración de atención", "Attention concentration")');
+  expect(source).toContain('tr("Seguimiento del área", "Area follow-up")');
 });
 
 
