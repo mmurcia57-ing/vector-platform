@@ -831,9 +831,9 @@ export default function ExperienceViewport() {
           onPeriodChange={changePeriod}
         />
         <LensNav labelText={tr("Lentes de compromisos y resultados","Commitment and outcome lenses")} items={[
-          ["commitment-list", "Flujo de compromisos"],
-          ["commitment-results", "Resultado y evidencia"],
-          ["commitment-new", "Nuevo compromiso"],
+          ["commitment-list", tr("Flujo de compromisos","Commitment flow")],
+          ["commitment-results", tr("Resultado y evidencia","Outcome and evidence")],
+          ["commitment-new", tr("Nuevo compromiso","New commitment")],
         ]} />
         <div className="vx-commitment-strip">
           <div><small>{tr("ACTIVOS","ACTIVE")}</small><strong>{commitments?.activeCount ?? 0}</strong></div>
@@ -904,11 +904,11 @@ export default function ExperienceViewport() {
           onPeriodChange={changePeriod}
         />
         <LensNav labelText={tr("Lentes del servicio","Service lenses")} items={[
-          ["service-condition", "Condición"],
-          ["service-evidence", "Evidencia"],
+          ["service-condition", tr("Condición","Condition")],
+          ["service-evidence", tr("Evidencia","Evidence")],
           ["service-slo", "SLO"],
-          ["service-incidents", "Incidentes"],
-          ["service-changes", "Cambios"],
+          ["service-incidents", tr("Incidentes","Incidents")],
+          ["service-changes", tr("Cambios","Changes")],
         ]} />
         <section className="vx-service-condition" id="service-condition">
           <div>
@@ -975,12 +975,12 @@ export default function ExperienceViewport() {
         <SemanticLegend />
         <TemporalSpine signals={signals} risks={risk?.riskFindings} />
         <LensNav labelText={tr("Lentes de investigación","Investigation lenses")} items={[
-          ["risk-timeline", "Línea de tiempo"],
-          ["risk-evidence", "Evidencia"],
-          ["risk-change", "Cambio asociado"],
-          ["risk-relations", "Relaciones"],
-          ["risk-actions", "Acciones"],
-          ["risk-outcome", "Resultado"],
+          ["risk-timeline", tr("Línea de tiempo","Timeline")],
+          ["risk-evidence", tr("Evidencia","Evidence")],
+          ["risk-change", tr("Cambio asociado","Associated change")],
+          ["risk-relations", tr("Relaciones","Relationships")],
+          ["risk-actions", tr("Acciones","Actions")],
+          ["risk-outcome", tr("Resultado","Outcome")],
         ]} />
         <div className="gold-metrics">
           <Metric
