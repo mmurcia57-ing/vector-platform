@@ -17,7 +17,7 @@ const COPY = {
     loading:"Cargando inteligencia basada en evidencia…", unavailable:"Inteligencia temporalmente no disponible", retry:"Reintentar",
     quality:"CALIDAD", stale:"DESACTUALIZADA", partial:"PARCIAL", available:"DISPONIBLE", fact:"HECHO",
     before:"ANTES", change:"CAMBIO", after:"DESPUÉS", intelligence:"Inteligencia VECTOR", locale:"Idioma",
-    scenario:"Escenario de análisis", demoBoundary:"Datos demostrativos locales · no producción", workspaceName:"Espacio de trabajo de inteligencia VECTOR", semanticLegend:"Leyenda semántica de evidencia", mapLabel:"Mapa operacional", temporalLabel:"Espina temporal", currentContext:"contexto actual", riskFinding:"HALLAZGO DE RIESGO", evidenceStale:"Evidencia desactualizada", evidenceAvailable:"Evidencia disponible", supportedContext:"Contexto soportado por la evidencia disponible.", footerMotto:"Un mejor mañana, construido con evidencia.", queueSummary:"condiciones sustentadas por evidencia requieren revisión", overdueSummary:"compromisos vencidos en el contexto disponible", spatialGraph:"Topología contextual acotada", accessibleRelations:"Relaciones accesibles", selectedContext:"Contexto seleccionado", boundedContext:"Contexto relacional acotado; seleccionar un nodo no afirma causalidad.", expandContext:"Expandir contexto", resetLimit:"Restablecer límite", freshness:"Frescura", boundedMore:"Vista acotada: existen relaciones adicionales.", boundedComplete:"Vista acotada completa para el límite actual."
+    scenario:"Escenario de análisis", demoBoundary:"Datos demostrativos locales · no producción", workspaceName:"Espacio de trabajo de inteligencia VECTOR", semanticLegend:"Leyenda semántica de evidencia", mapLabel:"Mapa operacional", temporalLabel:"Espina temporal", currentContext:"contexto actual", riskFinding:"HALLAZGO DE RIESGO", evidenceStale:"Evidencia desactualizada", evidenceAvailable:"Evidencia disponible", supportedContext:"Contexto soportado por la evidencia disponible.", footerMotto:"Un mejor mañana, construido con evidencia.", queueSummary:"condiciones sustentadas por evidencia requieren revisión", overdueSummary:"compromisos vencidos en el contexto disponible", spatialGraph:"Topología contextual acotada", accessibleRelations:"Relaciones accesibles", selectedContext:"Contexto seleccionado", boundedContext:"Contexto relacional acotado; seleccionar un nodo no afirma causalidad.", expandContext:"Ampliar datos", expandGraph:"Abrir grafo", closeGraph:"Cerrar grafo", resetLimit:"Restablecer límite", freshness:"Frescura", boundedMore:"Vista acotada: existen relaciones adicionales.", boundedComplete:"Vista acotada completa para el límite actual."
   },
   en: {
     command:"Command", area:"Area", service:"Service", investigation:"Investigation", actionOutcome:"Actions & Outcomes",
@@ -31,7 +31,7 @@ const COPY = {
     loading:"Loading evidence-backed intelligence…", unavailable:"Intelligence temporarily unavailable", retry:"Retry",
     quality:"QUALITY", stale:"STALE", partial:"PARTIAL", available:"AVAILABLE", fact:"FACT",
     before:"BEFORE", change:"CHANGE", after:"AFTER", intelligence:"VECTOR Intelligence", locale:"Language",
-    scenario:"Analysis scenario", demoBoundary:"Local demonstration data · not production", workspaceName:"VECTOR intelligence workspace", semanticLegend:"Semantic evidence legend", mapLabel:"Operational map", temporalLabel:"Temporal spine", currentContext:"current context", riskFinding:"RISK FINDING", evidenceStale:"Stale evidence", evidenceAvailable:"Evidence available", supportedContext:"Context supported by available evidence.", footerMotto:"A better tomorrow, built with evidence.", queueSummary:"evidence-backed conditions require review", overdueSummary:"overdue commitments in available context", spatialGraph:"Bounded contextual topology", accessibleRelations:"Accessible relationships", selectedContext:"Selected context", boundedContext:"Bounded relational context; selecting a node does not assert causality.", expandContext:"Expand context", resetLimit:"Reset limit", freshness:"Freshness", boundedMore:"Bounded view: additional relationships exist.", boundedComplete:"Bounded view complete for the current limit."
+    scenario:"Analysis scenario", demoBoundary:"Local demonstration data · not production", workspaceName:"VECTOR intelligence workspace", semanticLegend:"Semantic evidence legend", mapLabel:"Operational map", temporalLabel:"Temporal spine", currentContext:"current context", riskFinding:"RISK FINDING", evidenceStale:"Stale evidence", evidenceAvailable:"Evidence available", supportedContext:"Context supported by available evidence.", footerMotto:"A better tomorrow, built with evidence.", queueSummary:"evidence-backed conditions require review", overdueSummary:"overdue commitments in available context", spatialGraph:"Bounded contextual topology", accessibleRelations:"Accessible relationships", selectedContext:"Selected context", boundedContext:"Bounded relational context; selecting a node does not assert causality.", expandContext:"Expand data", expandGraph:"Open graph", closeGraph:"Close graph", resetLimit:"Reset limit", freshness:"Freshness", boundedMore:"Bounded view: additional relationships exist.", boundedComplete:"Bounded view complete for the current limit."
   }
 } as const;
 const LocaleContext = createContext<UiLocale>("es");
@@ -333,6 +333,7 @@ function TemporalSpine({ signals, risks }: { signals?: TemporalSignal[]; risks?:
 
 function SpatialGraph({ graph, focus, onFocus, nodeLabel, onExpand, onReset, limit }: { graph?: Graph; focus: string; onFocus: (id: string) => void; nodeLabel: (id: string) => string; onExpand: () => void; onReset: () => void; limit: number }) {
   const t = useCopy();
+  const [graphOpen, setGraphOpen] = useState(false);
   const relationships = graph?.graph.relationships ?? [];
   const ids = Array.from(new Set(relationships.flatMap((r) => [r.source.canonicalId, r.target.canonicalId])));
   const positions = new Map(ids.map((id, index) => {
@@ -340,8 +341,7 @@ function SpatialGraph({ graph, focus, onFocus, nodeLabel, onExpand, onReset, lim
     const radius = ids.length <= 4 ? 31 : 38;
     return [id, { x: 50 + Math.cos(angle) * radius, y: 50 + Math.sin(angle) * radius }];
   }));
-  return <div className="vx-spatial-graph">
-    <div className="vx-spatial-stage" role="group" aria-label={t.spatialGraph}>
+  const stage = (expanded = false) => <div className={`vx-spatial-stage ${expanded ? "expanded" : ""}`} role="group" aria-label={t.spatialGraph}>
       <svg className="vx-spatial-edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
         {relationships.map((relation, index) => {
           const a = positions.get(relation.source.canonicalId); const b = positions.get(relation.target.canonicalId);
@@ -361,7 +361,17 @@ function SpatialGraph({ graph, focus, onFocus, nodeLabel, onExpand, onReset, lim
         if (!a || !b) return null;
         return <span aria-hidden="true" className="vx-spatial-edge-label" key={`label-${index}`} style={{ left: `${(a.x+b.x)/2}%`, top: `${(a.y+b.y)/2}%` }}>{relation.predicate.replaceAll("_"," ")}</span>;
       })}
-    </div>
+    </div>;
+  return <div className="vx-spatial-graph">
+    {stage()}
+    <div className="vx-graph-primary-actions"><button type="button" onClick={() => setGraphOpen(true)}>{t.expandGraph}</button></div>
+    {graphOpen && createPortal(<div className="vx-graph-modal-backdrop" role="presentation" onMouseDown={() => setGraphOpen(false)}>
+      <section className="vx-graph-modal" role="dialog" aria-modal="true" aria-label={t.spatialGraph} onMouseDown={(event) => event.stopPropagation()}>
+        <header><div><small>{t.investigation.toUpperCase()}</small><h2>{t.spatialGraph}</h2></div><button type="button" onClick={() => setGraphOpen(false)} aria-label={t.closeGraph}>× <span>{t.closeGraph}</span></button></header>
+        {stage(true)}
+        <div className="vx-graph-modal-meta"><span>{graph?.graph.truncated ? t.boundedMore : t.boundedComplete}</span><span>{t.freshness}: {graph?.graph.freshness ?? "—"}</span></div>
+      </section>
+    </div>, document.body)}
     <details className="vx-graph-accessible"><summary>{t.accessibleRelations}</summary>
       <ul>{relationships.map((relation,index)=><li key={index}><button type="button" onClick={()=>onFocus(relation.source.canonicalId)}>{nodeLabel(relation.source.canonicalId)}</button> <b>{relation.predicate.replaceAll("_"," ")}</b> <button type="button" onClick={()=>onFocus(relation.target.canonicalId)}>{nodeLabel(relation.target.canonicalId)}</button></li>)}</ul>
     </details>
