@@ -1,43 +1,45 @@
 # VECTOR — Framework Execution Status
 
-**State:** IN PROGRESS  
-**Overall evidence-based progress:** 63%  
+**Project state:** IN PROGRESS  
+**Agent activity:** STOPPED — EXTERNAL ASSURANCE DEPENDENCY  
+**Overall calculated progress:** 60%  
 **Completion target:** FUNCTIONAL DEMO CONVERGED  
 **Branch:** `framework/vector-full-lifecycle-pilot`
 
-> Progress is a persisted execution snapshot, not a claim that work continues while no agent turn is active. READY requires the required gates to pass.
+> Project IN PROGRESS does not mean an agent is running in the background. The percentage is now derived from declared workstream weights and persisted progress.
 
-| Workstream | Progress | State | Gate |
-|---|---:|---|---|
-| Full-browser viewport | 95% | IMPLEMENTED | ASSURANCE PENDING |
-| UI localization ES/EN | 60% | IN PROGRESS | FAIL |
-| R3 Dual Canvas redesign | 60% | IN PROGRESS | FAIL |
-| Spatial operational graph | 20% | IN PROGRESS | FAIL |
-| Scenario assurance | 50% | DEFINED / ASSURANCE PENDING | FAIL |
-| Build and tests | 0% | NOT VERIFIED | FAIL |
-| Visual and responsive QA | 0% | PENDING | FAIL |
-| Framework regression | 40% | IN PROGRESS | FAIL |
+| Workstream | Weight | Progress | State | Gate |
+|---|---:|---:|---|---|
+| Full-browser viewport | 10% | 95% | IMPLEMENTED | ASSURANCE PENDING |
+| UI localization ES/EN | 15% | 75% | IMPLEMENTED / ASSURANCE PENDING | FAIL |
+| R3 Dual Canvas redesign | 20% | 70% | IN PROGRESS | FAIL |
+| Spatial operational graph | 15% | 70% | IMPLEMENTED / ASSURANCE PENDING | FAIL |
+| Scenario assurance | 15% | 50% | DEFINED / ASSURANCE PENDING | FAIL |
+| Build and tests | 10% | 10% | ASSURANCE INFRA CREATED / RUN NOT OBSERVED | FAIL |
+| Visual and responsive QA | 5% | 0% | PENDING | FAIL |
+| Framework regression | 10% | 60% | L1 CONTROL ADDED / L2-L3 PENDING | FAIL |
 
-## Current action
-Complete the UI localization boundary and materialize the R3 experience.
+Calculation: `round(sum(weight × progress / 100)) = 60%`.
+
+## Evidence added in this execution
+- Localization + type corrections: `e156c27c...`, `8454afce...`, `7e6e9a0f...`
+- Spatial bounded topology + accessible fallback: `e156c27c...`, `ea9c911d...`
+- Pilot assurance workflow: `4ea00596...`
+- Framework Execution Observatory / FR-044: `d84bbe1d...`, `ce666a54...`, `a8976cd3...`, `396551c9...`
+
+## External dependency
+The pilot workflow was committed, but GitHub exposed no workflow run/status check for the commit. No existing CI workflow was found in `main` at the common workflow paths inspected. Therefore build/test PASS is **not verified**.
+
+This is **not a VECTOR SPEC-BLOCKER** and does not require a product decision from the user. It is an execution/assurance environment dependency.
 
 ## Next autonomous action
-Implement the bounded spatial investigation graph, then execute representative adversarial/negative scenarios and engineering assurance.
-
-## Blockers
-None currently identified.
-
-## Evidence anchors
-- Operational Canvas: `f9e03c25608cbac82496bd4152d96a4f83865e0c`
-- Temporal spine / visual materialization: `19237d43a35ac05c4907835ba96c55d806f014f4`
-- Localization boundary: `9fee48c9356b10d41e4b200fd7f82bc1fed8356a`
-- Full viewport: `abab912749ea9ce5edce6bbb205cc97624b15972`
-
-## Completion semantics
-`IN PROGRESS` → active gaps remain.  
-`IMPLEMENTED — ASSURANCE PENDING` → code exists but required evidence is incomplete.  
-`SPEC-BLOCKER — NEEDS USER INPUT` → a genuine user-only decision blocks the affected workstream.  
-`FUNCTIONAL DEMO CONVERGED` → functional demo gates have passed.  
-`READY` → the declared iteration boundary and its required gates are complete.
+When a command/CI runner is available:
+1. frontend: `npm ci` → `npm run build` → `npm test`;
+2. backend: `mvn -B test`;
+3. repair any failures;
+4. behavioral locale + topology/accessibility assurance;
+5. explicit visual/responsive QA iteration;
+6. scenario and Framework L2/L3 regression;
+7. evaluate `FUNCTIONAL DEMO CONVERGED`.
 
 Machine-readable source of truth: `docs/framework-pilot/execution-status.json`.
