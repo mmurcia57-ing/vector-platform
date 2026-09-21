@@ -25,16 +25,19 @@ EXT-004 closed locally:
 - Action & Outcome UX controls;
 - contract/test coverage.
 
-## Framework extraction completed
-Reusable findings were extracted to the Knowledge Base:
-- Capability Mission Closure Gate;
-- Commitment Lifecycle Intelligence pattern;
-- Product Completion Discovery refinement;
-- Pilot Learning Extraction Protocol/register;
-- autonomous Skill candidate behavior;
-- Framework repository bootstrap manifest.
+## Framework learning routing — reconciled
 
-The Framework rule is now:
+Historical pilot work originally routed reusable method artifacts through the Engineering Intelligence Knowledge Base while the Framework was still incubating there. That repository architecture has since been corrected.
+
+Current ownership is:
+- VECTOR-specific requirements, UX, architecture, implementation, tests and product evidence → `vector-platform`;
+- reusable engineering method/gates/patterns → `engineering-intelligence-framework`;
+- external reusable knowledge, strategy, research and primary sources → `engineering-intelligence-knowledge-base`;
+- future Skill behavior → derived only after Framework stabilization.
+
+No VECTOR implementation evidence is automatically promoted into the Knowledge Base.
+
+The reusable Framework rule demonstrated by this pilot remains:
 **Representation != Mission Closure**.
 
 ## Remaining work classification
@@ -49,6 +52,6 @@ No local SPEC-BLOCKER remains.
 
 ## Pilot conclusion
 The local VECTOR pilot has now demonstrated the intended autonomous behavior:
-`inspect → preserve → discover → challenge false completion → specify delta → implement → assure → converge → extract reusable learning`.
+`inspect → preserve → discover → challenge false completion → classify finding ownership → specify delta → implement → assure → converge → calibrate the Framework when a reusable method lesson is demonstrated`.
 
 The branch remains isolated from `main`. Promotion/merge remains a human release decision.
