@@ -1,9 +1,9 @@
 {
-  "schemaVersion": "1.0",
+  "schemaVersion": "1.1",
   "project": "VECTOR",
   "branch": "framework/vector-full-lifecycle-pilot",
   "state": "IN_PROGRESS",
-  "overallProgressPercent": 63,
+  "overallProgressPercent": 60,
   "completionTarget": "FUNCTIONAL_DEMO_CONVERGED",
   "workstreams": [
     {
@@ -19,33 +19,40 @@
     {
       "id": "localization",
       "label": "UI localization ES/EN",
-      "progressPercent": 60,
-      "state": "IN_PROGRESS",
+      "progressPercent": 75,
+      "state": "IMPLEMENTED_ASSURANCE_PENDING",
       "gate": "FAIL",
       "evidence": [
-        "9fee48c9356b10d41e4b200fd7f82bc1fed8356a"
+        "9fee48c9356b10d41e4b200fd7f82bc1fed8356a",
+        "8454afce845b39d26eac165137bbde9d45ada4e5",
+        "7e6e9a0f090cdc80ce41f71d21bf7e4cb303b5d8"
       ],
-      "nextAction": "Extract remaining visible copy and add behavioral locale assurance."
+      "nextAction": "Run behavioral locale assurance and finish remaining secondary chrome/source-content policy."
     },
     {
       "id": "r3",
       "label": "R3 Dual Canvas redesign",
-      "progressPercent": 60,
+      "progressPercent": 70,
       "state": "IN_PROGRESS",
       "gate": "FAIL",
       "evidence": [
         "f9e03c25608cbac82496bd4152d96a4f83865e0c",
-        "19237d43a35ac05c4907835ba96c55d806f014f4"
+        "19237d43a35ac05c4907835ba96c55d806f014f4",
+        "e156c27c65ac8715c4146ec8c7c226666e18c10f"
       ],
-      "nextAction": "Materialize investigation canvas and prove material difference from baseline."
+      "nextAction": "Complete material-difference comparison and runtime visual QA."
     },
     {
       "id": "spatial-graph",
       "label": "Spatial operational graph",
-      "progressPercent": 20,
-      "state": "IN_PROGRESS",
+      "progressPercent": 70,
+      "state": "IMPLEMENTED_ASSURANCE_PENDING",
       "gate": "FAIL",
-      "nextAction": "Replace semantic edge rows with bounded node-edge investigation visualization and accessible fallback."
+      "nextAction": "Run behavioral/accessibility and visual assurance for bounded node-edge topology.",
+      "evidence": [
+        "e156c27c65ac8715c4146ec8c7c226666e18c10f",
+        "ea9c911dabb4988cbfc9d6cc6a80d6e3f4454e98"
+      ]
     },
     {
       "id": "scenarios",
@@ -58,10 +65,13 @@
     {
       "id": "build-tests",
       "label": "Build and tests",
-      "progressPercent": 0,
-      "state": "NOT_VERIFIED",
+      "progressPercent": 10,
+      "state": "ASSURANCE_INFRA_CREATED_RUN_NOT_OBSERVED",
       "gate": "FAIL",
-      "nextAction": "Run TypeScript build, behavioral tests and available CI after implementation closure."
+      "nextAction": "Obtain an actual GitHub Actions run or equivalent command-execution evidence; do not infer PASS from workflow definition.",
+      "evidence": [
+        "4ea0059645ae18082947f7f05cab76606d444ca5"
+      ]
     },
     {
       "id": "visual-qa",
@@ -74,18 +84,47 @@
     {
       "id": "framework-regression",
       "label": "Framework regression",
-      "progressPercent": 40,
-      "state": "IN_PROGRESS",
+      "progressPercent": 60,
+      "state": "L1_CONTROL_ADDED_L2_L3_PENDING",
       "gate": "FAIL",
-      "nextAction": "Execute new autonomous knowledge, redesign materialization, viewport, localization and execution-observability regressions."
+      "nextAction": "Execute new autonomous knowledge, redesign materialization, viewport, localization and execution-observability regressions.",
+      "evidence": [
+        "d84bbe1dd9913848dce7567d21210b02c6856e46",
+        "ce666a548f4c56f62b26c29f6f441ba77c20499c",
+        "a8976cd36860db60b7f122a21feb9c097b283e7a",
+        "396551c9ba03cb6967837eb753e6f73a19a6c0f4"
+      ]
     }
   ],
-  "blockers": [],
-  "currentAction": "Complete UI localization boundary and R3 materialization.",
-  "nextAutonomousAction": "Implement bounded spatial investigation graph after localization closure.",
+  "blockers": [
+    {
+      "type": "EXTERNAL_DEPENDENCY",
+      "id": "ASSURANCE-RUNNER",
+      "description": "Pilot workflow definition was committed, but GitHub exposed no workflow run or status check for the commit; no existing main-branch CI workflow was found at common paths. Build/test PASS cannot be claimed.",
+      "userInputRequired": false
+    }
+  ],
+  "currentAction": "Execution paused at external assurance runner boundary after material runtime changes.",
+  "nextAutonomousAction": "When command/CI execution evidence becomes available: run frontend npm ci/build/test and backend mvn test; fix failures; then perform behavioral locale/topology assurance and explicit visual QA.",
   "rules": {
     "progressIsEvidenceBased": true,
     "noBackgroundExecutionClaim": true,
     "readyRequiresAllRequiredGatesPass": true
+  },
+  "agentActivity": "STOPPED_EXTERNAL_ASSURANCE_DEPENDENCY",
+  "progressCalculation": {
+    "method": "weighted_workstream_progress",
+    "weights": {
+      "viewport": 10,
+      "localization": 15,
+      "r3": 20,
+      "spatial-graph": 15,
+      "scenarios": 15,
+      "build-tests": 10,
+      "visual-qa": 5,
+      "framework-regression": 10
+    },
+    "totalWeight": 100,
+    "formula": "round(sum(weight * progressPercent / 100))"
   }
 }
