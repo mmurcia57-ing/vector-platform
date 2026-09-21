@@ -295,7 +295,7 @@ export default function ExperienceViewport() {
     void read<CommitmentView>(
       "/api/experience/commitments?asOf=2025-01-01&limit=20",
     ).then(setCommitments).catch((error) => setLoadError(error instanceof Error ? error.message : "Commitments unavailable"));
-  }, [path]);
+  }, [path, period]);
   useEffect(() => {
     if (!overview) return;
     const params = new URLSearchParams(window.location.search);
@@ -331,7 +331,7 @@ export default function ExperienceViewport() {
         `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}/change-association?serviceId=${encodeURIComponent(serviceId)}`,
       ).then(setChangeAssociation).catch(() => setChangeAssociation(undefined));
     }
-  }, [overview, path]);
+  }, [overview, path, period]);
   const navigate = (next: string, context: Record<string, string> = {}) => {
     const params = new URLSearchParams({ period, ...context });
     window.history.pushState({}, "", `${next}?${params}`);
