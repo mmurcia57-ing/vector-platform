@@ -1,49 +1,53 @@
 # VECTOR — North-Star Experience
 
 ## Status
-**HUMAN DIRECTION VALIDATED — EXPERIENCE GRAMMAR ACCEPTED, CAPABILITY CLAIMS NOT IMPLIED**
+**HUMAN DIRECTION VALIDATED / ASPIRATIONAL EXPERIENCE / NOT IMPLEMENTATION EVIDENCE**
 
-The approved direction is represented by the high-definition VECTOR operational-intelligence concept generated during FR-050/FR-051 calibration. The image is an expectation artifact, not implementation evidence.
+The approved high-definition concept establishes the experiential ceiling for VECTOR. It is not evidence that depicted telemetry, AI reasoning, causal inference, projected impact or real-time behavior exists.
+
+## North-Star thesis
+VECTOR should feel like an **Operational Intelligence Environment**, not a collection of dashboard pages.
+
+The browser becomes a contextual operational field where spatial relationships, temporal evidence and governed decision/action remain coordinated.
 
 ## Experience grammar to preserve
+1. **Topology-dominant operational field** — services/dependencies are the primary investigative surface, not a decorative graph below KPI cards.
+2. **Depth and focus** — selection creates clear visual focus while retaining surrounding operational context.
+3. **Coordinated temporal intelligence** — incidents, changes, events, actions and outcomes share a time spine synchronized with the selected topology context.
+4. **Intelligence inspector** — evidence, deterministic derived findings, hypotheses/limitations and human/governed decisions are visibly separated.
+5. **Context continuity** — orient → investigate → decide → commit/act → verify without losing service/area/time/evidence context.
+6. **Progressive disclosure** — dense information appears when relevant to the current task; the initial field is not a wall of cards.
+7. **Advanced technical character** — high-density, precise, spatial, layered and modern; futuristic means richer interaction/context, not neon decoration.
+8. **Evidence quality visible** — freshness, provenance, partial/stale/unknown state and identity confidence are first-class.
+9. **Accessible alternate representation** — topology has a non-spatial relationship/table representation and keyboard/focus semantics.
+10. **Coherent locale** — presentation resolves entirely through the active UI locale; canonical/internal engineering language remains independent.
 
-1. **Operational universe dominates the browser** — topology/context is the primary spatial surface, not a secondary widget.
-2. **Depth and focus** — selected service/entity is visually central; surrounding dependencies remain comprehensible and bounded.
-3. **Temporal intelligence is coordinated** — incidents, changes, events, actions and outcomes align with the selected operational context.
-4. **Investigation is adjacent, not a route reset** — evidence and intelligence remain available beside the operational universe.
-5. **Progressive disclosure** — dense information appears by focus/selection rather than permanent card proliferation.
-6. **Decision continuity** — finding → decision → commitment → action → outcome verification remains in one contextual flow.
-7. **Advanced visual character** — layered depth, restrained luminous signals, spatial relationships and high information density should feel like an operational intelligence system rather than a conventional business dashboard.
+## What NOT to copy literally from the concept image
+- KPI strips as the dominant information architecture.
+- Any claim of live/real-time data unless the source contract supports it.
+- AI “best action” as authoritative truth.
+- causal arrows or root-cause certainty from temporal/topological proximity.
+- projected impact percentages without an evidenced model.
+- invented service counts, SLO values, incident/change counts or environments.
+- visual effects that reduce legibility/accessibility.
 
-## Evidence boundaries
+## Epistemic visual model
+The target must distinguish:
+- **OBSERVED FACT** — source-backed evidence.
+- **DERIVED FINDING** — deterministic rule/model output with provenance.
+- **HYPOTHESIS** — probabilistic/AI candidate, explicitly non-authoritative.
+- **LIMITATION / UNKNOWN** — missing, stale, conflicting or insufficient evidence.
+- **HUMAN/GOVERNED DECISION** — accepted operational decision.
+- **ACTION / COMMITMENT** — execution state.
+- **VERIFIED OUTCOME** — post-action evidence.
 
-The North-Star MUST NOT be interpreted as evidence that VECTOR currently has:
-- real-time topology or telemetry;
-- causal inference/root-cause proof;
-- AI recommendations;
-- numeric impact prediction;
-- global SLO values;
-- production integrations;
-- autonomous remediation.
+## North-Star → Experience Target translation
+The Experience Target V2 must prove the grammar with bounded deterministic demo data. It may visually simulate motion/focus to test interaction, but it must label demo/synthetic boundaries and must not represent unsupported capability as production truth.
 
-Those visual concepts may only enter a functional target when supported by existing product semantics or explicitly labeled experiment/fixture.
+## Expectation evidence
+Human validation:
+- prior runtime: improved but still too blue / traditional dashboard;
+- first Dual Canvas HTML: direction accepted but insufficiently futuristic;
+- HD North-Star concept: confirmed as materially closer to expected VECTOR direction.
 
-## Semantic hierarchy
-
-`OBSERVED FACT → DETERMINISTIC DERIVED FINDING → HYPOTHESIS (when supported) → HUMAN/GOVERNED DECISION → COMMITMENT → ACTION → OUTCOME VERIFICATION`
-
-Correlation/contextual or temporal association is not causality.
-
-## Translation constraint
-
-An Experience Target fails if it preserves the data objects but loses the North-Star grammar by reverting to:
-- stacked KPI-card dashboard;
-- tiny/decorative topology;
-- disconnected timeline;
-- page-per-entity navigation that loses investigation context;
-- visually equivalent panels differentiated mainly by color;
-- unbounded graph hairball;
-- unsupported AI/causal/live claims.
-
-## V2 target
-Translate the North-Star into an executable prototype using only evidence-bounded fixture semantics. The prototype must be visually ambitious enough to test expectation while remaining honest about what is demonstrated.
+Disposition: **NORTH-STAR DIRECTION ACCEPTED; TRANSLATE TO EXPERIENCE TARGET V2.**
