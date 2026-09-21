@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "1.0",
+  "project": "VECTOR",
+  "branch": "framework/vector-full-lifecycle-pilot",
+  "state": "IN_PROGRESS",
+  "overallProgressPercent": 63,
+  "completionTarget": "FUNCTIONAL_DEMO_CONVERGED",
+  "workstreams": [
+    {
+      "id": "viewport",
+      "label": "Full-browser viewport",
+      "progressPercent": 95,
+      "state": "IMPLEMENTED",
+      "gate": "ASSURANCE_PENDING",
+      "evidence": [
+        "abab912749ea9ce5edce6bbb205cc97624b15972"
+      ]
+    },
+    {
+      "id": "localization",
+      "label": "UI localization ES/EN",
+      "progressPercent": 60,
+      "state": "IN_PROGRESS",
+      "gate": "FAIL",
+      "evidence": [
+        "9fee48c9356b10d41e4b200fd7f82bc1fed8356a"
+      ],
+      "nextAction": "Extract remaining visible copy and add behavioral locale assurance."
+    },
+    {
+      "id": "r3",
+      "label": "R3 Dual Canvas redesign",
+      "progressPercent": 60,
+      "state": "IN_PROGRESS",
+      "gate": "FAIL",
+      "evidence": [
+        "f9e03c25608cbac82496bd4152d96a4f83865e0c",
+        "19237d43a35ac05c4907835ba96c55d806f014f4"
+      ],
+      "nextAction": "Materialize investigation canvas and prove material difference from baseline."
+    },
+    {
+      "id": "spatial-graph",
+      "label": "Spatial operational graph",
+      "progressPercent": 20,
+      "state": "IN_PROGRESS",
+      "gate": "FAIL",
+      "nextAction": "Replace semantic edge rows with bounded node-edge investigation visualization and accessible fallback."
+    },
+    {
+      "id": "scenarios",
+      "label": "Scenario assurance",
+      "progressPercent": 50,
+      "state": "DEFINED_ASSURANCE_PENDING",
+      "gate": "FAIL",
+      "nextAction": "Expand deterministic harness and execute representative adversarial and negative controls."
+    },
+    {
+      "id": "build-tests",
+      "label": "Build and tests",
+      "progressPercent": 0,
+      "state": "NOT_VERIFIED",
+      "gate": "FAIL",
+      "nextAction": "Run TypeScript build, behavioral tests and available CI after implementation closure."
+    },
+    {
+      "id": "visual-qa",
+      "label": "Visual and responsive QA",
+      "progressPercent": 0,
+      "state": "PENDING",
+      "gate": "FAIL",
+      "nextAction": "Review hierarchy, density, viewport use, collisions, overflow, responsive behavior and locale coherence."
+    },
+    {
+      "id": "framework-regression",
+      "label": "Framework regression",
+      "progressPercent": 40,
+      "state": "IN_PROGRESS",
+      "gate": "FAIL",
+      "nextAction": "Execute new autonomous knowledge, redesign materialization, viewport, localization and execution-observability regressions."
+    }
+  ],
+  "blockers": [],
+  "currentAction": "Complete UI localization boundary and R3 materialization.",
+  "nextAutonomousAction": "Implement bounded spatial investigation graph after localization closure.",
+  "rules": {
+    "progressIsEvidenceBased": true,
+    "noBackgroundExecutionClaim": true,
+    "readyRequiresAllRequiredGatesPass": true
+  }
+}
