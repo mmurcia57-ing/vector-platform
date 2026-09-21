@@ -53,8 +53,8 @@ The demo selector exposes the relevant evidence scenarios; security/lifecycle ad
 ### V3-10 accessibility/non-spatial — IMPLEMENTED / CI PASS
 Bounded topology includes an accessible non-spatial relationship representation and explicit focus/freshness/truncation semantics.
 
-### V3-11 localization boundary — PARTIAL
-Locale state and core shared workspace copy support ES/EN. Remaining hard-coded surface copy prevents a full localization PASS.
+### V3-11 localization boundary — IMPLEMENTED / CI PASS
+Core S1–S5 questions, navigation/lens controls and shared workspace semantics respect the ES/EN UI boundary. Backend evidence/domain values remain source data and are not translated into altered semantics.
 
 ### V3-12 engineering assurance — PASS
 `vector-assurance` is now branch-aware for this experiment and executes:
@@ -83,11 +83,12 @@ That pattern was promoted from HYPOTHESIS to **DECISION — ADOPT** with these g
 KB commit: `85c1b723682bb86be629bb5d9096800b873c9e35`.
 
 ## Remaining convergence gates
-- close V3-11 remaining localization boundary;
 - execute final post-status CI and preserve its evidence;
-- perform final functional/demo convergence review.
+- browser-level visual/click-through E2E remains NOT EXECUTED by the current GitHub connector; do not relabel jsdom/contract assurance as browser evidence.
 
 ## Truth boundary
 VECTOR is now materially beyond the original V3-01-only status and has executable CI evidence.
 
-It is **not yet declared FUNCTIONAL DEMO CONVERGED, LOCAL/RELEASE CONVERGED or PRODUCTION READY** because V3-11 localization remains partial.
+Contract, component, backend and build assurance are converged for the local/demo V3 scope.
+
+**Browser-level E2E/visual assurance remains NOT EXECUTED**, therefore this status does not claim browser-assured FUNCTIONAL DEMO CONVERGED, LOCAL/RELEASE CONVERGED or PRODUCTION READY.
