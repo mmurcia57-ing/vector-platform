@@ -2,7 +2,7 @@
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 afterEach(cleanup);
-import { Header, LensNav, SemanticLegend, WorkspaceRail } from "../src/ExperienceViewport";
+import { ContextEnvelope, Header, LensNav, SemanticLegend, WorkspaceRail } from "../src/ExperienceViewport";
 
 describe("EXT-003 intelligence workspace", () => {
   it("communicates the full decision loop and layers without relying on color", () => {
@@ -66,4 +66,22 @@ it("area workspace remains structurally distinct from executive triage", () => {
   expect(source).toContain("Portafolio de servicios");
   expect(source).toContain("Concentración de atención");
   expect(source).toContain("Seguimiento del área");
+});
+
+
+describe("Experience Contract V3 context continuity", () => {
+  it("renders the selected cross-surface context without implying causality", () => {
+    render(<ContextEnvelope
+      area={{ areaDomainId: "area-a", name: "Área A", attentionState: "ATTENTION" }}
+      service={{ serviceId: "service-a", name: "Servicio A", areaDomainId: "area-a", conditionContext: "Condición observada" }}
+      risk={{ riskFindingId: "risk-a", serviceId: "service-a", condition: "Persistencia", explanation: "Evidencia disponible" }}
+      period="local-dataset-v1"
+      quality={{ sourceCoverage: "PARTIAL", freshness: "CURRENT", confidence: "BOUNDED", uncertainty: "VISIBLE", limitations: "Demo", partial: true }}
+    />);
+    expect(screen.getByText("Área A")).toBeTruthy();
+    expect(screen.getByText("Servicio A")).toBeTruthy();
+    expect(screen.getByText("Persistencia")).toBeTruthy();
+    expect(screen.getByText(/no representa causalidad/i)).toBeTruthy();
+    expect(screen.getByText("PARCIAL")).toBeTruthy();
+  });
 });
