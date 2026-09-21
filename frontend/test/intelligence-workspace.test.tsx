@@ -68,7 +68,7 @@ describe("Experience Contract V3 context continuity", () => {
       service={{ serviceId: "service-a", name: "Servicio A", areaDomainId: "area-a", conditionContext: "Condición observada" }}
       risk={{ riskFindingId: "risk-a", serviceId: "service-a", condition: "Persistencia", explanation: "Evidencia disponible" }}
       period="local-dataset-v1"
-      quality={{ sourceCoverage: "PARTIAL", freshness: "CURRENT", confidence: "BOUNDED", uncertainty: "VISIBLE", limitations: "Demo", partial: true }}
+      quality={{ sourceCoverage: "PARTIAL", freshness: "CURRENT", confidenceContext: "BOUNDED", uncertainty: ["VISIBLE"], limitations: ["Demo"], missingContext: ["partial fixture"] }}
     />);
     expect(screen.getByText("Área A")).toBeTruthy();
     expect(screen.getByText("Servicio A")).toBeTruthy();
