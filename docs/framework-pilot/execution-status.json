@@ -109,8 +109,8 @@
       "userInputRequired": false
     }
   ],
-  "currentAction": "FR-050 L2 produced Product Vision, three competing experience alternatives and an isolated Dual Canvas materialization before deeper implementation.",
-  "nextAutonomousAction": "After expectation signal, record EXPECTATION ALIGNED or REJECTED CANDIDATE. If aligned, derive functional/engineering contract and only then resume implementation; if rejected, return autonomously to alternatives.",
+  "currentAction": "North-Star grammar frozen and Experience Target V2 materialized without unsupported live/causal/AI claims.",
+  "nextAutonomousAction": "Run human Expectation Challenge on V2. If aligned, derive functional/engineering contract and implement; if rejected, return to alternatives without cosmetic patch loop.",
   "rules": {
     "progressIsEvidenceBased": true,
     "noBackgroundExecutionClaim": true,
@@ -227,7 +227,7 @@
     }
   ],
   "fr050L2": {
-    "state": "EXPECTATION_TARGET_MATERIALIZED_PENDING_HUMAN_VALIDATION",
+    "state": "V2_MATERIALIZED_PENDING_HUMAN_EXPECTATION_VALIDATION",
     "minimalInput": "Build VECTOR as an operational intelligence and performance platform.",
     "outputs": {
       "productVision": "docs/framework-pilot/PRODUCT-VISION-EXPERIENCE-TARGET.md",
@@ -237,7 +237,9 @@
         "C Dual Canvas"
       ],
       "selectedExperiment": "C Dual Canvas",
-      "materializedTarget": "frontend/experience-target/dual-canvas.html"
+      "materializedTarget": "frontend/experience-target/dual-canvas.html",
+      "northStar": "docs/framework-pilot/NORTH-STAR-EXPERIENCE.md",
+      "materializedTargetV2": "frontend/experience-target/north-star-v2.html"
     },
     "evidence": [
       "5aef487434f249669cbe33b521c04883fa739df0",
@@ -248,5 +250,19 @@
       "Material difference validation against rejected baseline"
     ],
     "currentDisposition": "EXPERIMENT REQUIRED"
+  },
+  "fr051": {
+    "state": "L2_CONTROL_ADDED_V2_TARGET_MATERIALIZED",
+    "finding": "First Experience Target preserved conceptual structure but under-materialized visual/interaction ambition; human had to request a more futuristic vision.",
+    "frameworkEvidence": [
+      "845943ad74d0622018ec42024c7f6c5a6ce0c240",
+      "5383344e34092a05dd78d848f5c4b98c36fc5a05",
+      "55f46a035968abe5b6733ffad72bcb31310b450f"
+    ],
+    "productEvidence": [
+      "9686088cf1e2a4ca013f63e6f933ed57a39556a5",
+      "14f0994ae6ad1d1457416cef8025afdd5288c7d0"
+    ],
+    "disposition": "NORTH_STAR_DIRECTION_HUMAN_VALIDATED; EXPERIENCE_TARGET_V2_PENDING_EXPECTATION_VALIDATION"
   }
 }
