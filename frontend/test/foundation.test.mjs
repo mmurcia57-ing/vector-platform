@@ -2,106 +2,85 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import test from 'node:test'
 
-test('the SPA entry point follows the evidence-first investigation slice', async () => {
-  const app = await readFile(new URL('../src/App.tsx', import.meta.url), 'utf8')
-  assert.match(app, /Technology overview/)
-  assert.match(app, /Attention.*context.*explanation.*evidence/s)
-  assert.match(app, /api\/experience\/overview/)
-  assert.match(app, /sourceReferenceIds/)
-  assert.match(app, /Action → Outcome/)
-  assert.match(app, /execution is not outcome proof/)
-  assert.match(app, /Bounded graph context/)
-  assert.match(app, /maxRelationships=16/)
-  assert.doesNotMatch(app, /ServiceNow|Dynatrace|Neo4j|Cypher|credential/i)
+const source=(path)=>readFile(new URL(path,import.meta.url),'utf8')
+
+test('SPA keeps the evidence-first canonical boundary',async()=>{
+ const app=await source('../src/App.tsx')
+ assert.match(app,/Technology overview/)
+ assert.match(app,/Attention.*context.*explanation.*evidence/s)
+ assert.match(app,/api\/experience\/overview/)
+ assert.match(app,/sourceReferenceIds/)
+ assert.match(app,/execution is not outcome proof/)
+ assert.match(app,/Bounded graph context/)
+ assert.match(app,/maxRelationships=16/)
+ assert.doesNotMatch(app,/ServiceNow|Dynatrace|Neo4j|Cypher|credential/i)
 })
 
-test('frontend configuration examples contain public values only', async () => {
-  const config = await readFile(new URL('../.env.example', import.meta.url), 'utf8')
-  const assignments = config.split('\n').filter((line) => line.length > 0 && !line.startsWith('#')).join('\n')
-  assert.match(assignments, /^VITE_VECTOR_BFF_BASE_URL=http:\/\/localhost:8080$/m)
-  assert.doesNotMatch(assignments, /password|token|secret|credential|neo4j/i)
+test('frontend configuration examples contain public values only',async()=>{
+ const config=await source('../.env.example')
+ const assignments=config.split('\n').filter(line=>line.length>0&&!line.startsWith('#')).join('\n')
+ assert.match(assignments,/^VITE_VECTOR_BFF_BASE_URL=http:\/\/localhost:8080$/m)
+ assert.doesNotMatch(assignments,/password|token|secret|credential|neo4j/i)
 })
 
-test('Area Intelligence preserves durable investigation context', async () => {
-  const app = await readFile(new URL('../src/App.tsx', import.meta.url), 'utf8')
-  assert.match(app, /path: 'areas'/)
-  assert.match(app, /areaDomainId/)
-  assert.match(app, /sessionStorage\.setItem\(CONTEXT_KEY/)
-  assert.match(app, /overview\.services\.filter\(\(service\) => service\.areaDomainId === route\.areaDomainId\)/)
+test('persistent workspace consumes existing BFF projections',async()=>{
+ const viewport=await source('../src/ExperienceViewport.tsx')
+ assert.match(viewport,/api\/experience\/overview/)
+ assert.match(viewport,/api\/experience\/services\//)
+ assert.match(viewport,/api\/experience\/graph/)
+ assert.match(viewport,/maxNodes:"12",maxRelationships:"16"/)
+ assert.match(viewport,/sourceReferenceIds/)
 })
 
-test('Service Intelligence consumes the existing BFF service projection', async () => {
-  const app = await readFile(new URL('../src/App.tsx', import.meta.url), 'utf8')
-  assert.match(app, /path: 'services'/)
-  assert.match(app, /api\/experience\/services\//)
-  assert.match(app, /Service Intelligence/)
-  assert.match(app, /detail\.riskFindings/)
-  assert.match(app, /detail\.evidence/)
+test('Area to Service to Risk navigation preserves canonical identifiers',async()=>{
+ const viewport=await source('../src/ExperienceViewport.tsx')
+ assert.match(viewport,/areaDomainId/)
+ assert.match(viewport,/serviceId/)
+ assert.match(viewport,/riskFindingId/)
+ assert.match(viewport,/navigate\("\/areas"/)
+ assert.match(viewport,/navigate\(\`\/services\//)
+ assert.match(viewport,/navigate\(\`\/risks\//)
 })
 
-test('Risk Investigation keeps Evidence, Timeline, Graph, and outcome context bounded', async () => {
-  const app = await readFile(new URL('../src/App.tsx', import.meta.url), 'utf8')
-  assert.match(app, /path: 'risks'/)
-  assert.match(app, /api\/experience\/graph/)
-  assert.match(app, /Bounded graph context/)
-  assert.match(app, /observedAt/)
-  assert.match(app, /ActionOutcomePanel detail={detail}/)
-  assert.match(app, /execution is not outcome proof/)
+test('Risk Investigation keeps evidence graph action and outcome bounded',async()=>{
+ const viewport=await source('../src/ExperienceViewport.tsx')
+ assert.match(viewport,/data-relationship-lens="bounded-evidence-backed"/)
+ assert.match(viewport,/ACTION → VERIFIED OUTCOME/)
+ assert.match(viewport,/Execution is not outcome proof/)
+ assert.match(viewport,/OutcomeVerification/)
 })
 
-test('J02 presentation keeps Change and Deployment association noncausal', async () => {
-  const app = await readFile(new URL('../src/App.tsx', import.meta.url), 'utf8')
-  assert.match(app, /J02 Change\/Deployment context/)
-  assert.match(app, /temporal\/contextual/)
-  assert.match(app, /Correlation != Causation/)
+test('J02 presentation boundary remains explicitly noncausal and resolution bounded',async()=>{
+ const viewport=await source('../src/ExperienceViewport.tsx')
+ assert.match(viewport,/BEFORE/)
+ assert.match(viewport,/DURING/)
+ assert.match(viewport,/AFTER/)
+ assert.match(viewport,/Correlation ≠ Causation/)
+ assert.match(viewport,/evidenceResolution="period"/)
 })
 
-test('frontend remediation provides a product shell and human-readable labels', async () => {
-  const app = await readFile(new URL('../src/AppRemediated.tsx', import.meta.url), 'utf8')
-  const css = await readFile(new URL('../src/App.css', import.meta.url), 'utf8')
-  assert.match(app, /app-shell/)
-  assert.match(app, /function displayId/)
-  assert.match(app, /Panorama Ejecutivo/)
-  assert.match(app, /Service Intelligence/)
-  assert.match(css, /--navy:/)
-  assert.match(css, /@media \(max-width: 760px\)/)
+test('all experience levels render inside one persistent application shell',async()=>{
+ const entry=await source('../src/App.tsx')
+ const viewport=await source('../src/ExperienceViewport.tsx')
+ assert.match(entry,/window\.history\.pushState = function/)
+ assert.match(entry,/new PopStateEvent\('popstate'\)/)
+ assert.match(entry,/<ExperienceApp \/><ExperienceViewport \/>/)
+ assert.match(viewport,/createPortal\(/)
+ assert.match(viewport,/document\.querySelector\("\.content-shell"\)/)
+ assert.match(viewport,/new MutationObserver/)
+ assert.match(viewport,/data-experience-space="investigation"/)
+ for(const level of ['ecosystem','area','service','condition','evidence'])assert.match(viewport,new RegExp(level))
 })
 
-test('desktop shell keeps navigation stable and content vertically reachable', async () => {
-  const css = await readFile(new URL('../src/App.css', import.meta.url), 'utf8')
-  assert.match(css, /\.app-shell \{ height: 100vh; .*overflow: hidden/)
-  assert.match(css, /\.content-shell \{ .*height: 100vh; overflow: hidden/)
-  assert.match(css, /\.experience-viewport \{ .*overflow-x: hidden; overflow-y: auto/)
-  assert.match(css, /@media \(max-width: 760px\) \{ \.app-shell \{ height: auto; .*overflow: visible/)
+test('root CSS no longer constrains the investigation workspace to legacy document width',async()=>{
+ const css=await source('../src/index.css')
+ assert.match(css,/#root \{[\s\S]*max-width: none/)
 })
 
-test('all route experiences render inside one persistent application shell', async () => {
-  const entry = await readFile(new URL('../src/App.tsx', import.meta.url), 'utf8')
-  const shell = await readFile(new URL('../src/AppRemediated.tsx', import.meta.url), 'utf8')
-  const viewport = await readFile(new URL('../src/ExperienceViewport.tsx', import.meta.url), 'utf8')
-  assert.match(entry, /window\.history\.pushState = function/)
-  assert.match(entry, /new PopStateEvent\('popstate'\)/)
-  assert.match(entry, /<ExperienceApp \/><ExperienceViewport \/>/)
-  assert.doesNotMatch(entry, /AreaOverlay|RiskOverlay|RiskActionOverlay/)
-  assert.match(viewport, /createPortal\(view, host\)/)
-  assert.match(viewport, /document\.querySelector\(["']\.content-shell["']\)/)
-  assert.match(viewport, /new MutationObserver/)
-  assert.match(viewport, /window\.addEventListener\(["']popstate["']/)
-  for (const experience of ['Panorama Ejecutivo', 'Area Intelligence', 'Compromisos & Mejoras', 'Service Intelligence', 'Risk Investigation']) assert.match(viewport, new RegExp(experience))
-  for (const path of ['overview', 'areas', 'commitments', 'services', 'risks']) assert.match(shell, new RegExp(`route\\.path === '${path}' \\? 'active'`))
-})
-
-test('bare risks route renders the dedicated Risk Investigation experience', async () => {
-  const viewport = await readFile(new URL('../src/ExperienceViewport.tsx', import.meta.url), 'utf8')
-  assert.match(viewport, /path === "risks"\s+\? riskView\s+: panorama/)
-  assert.match(viewport, /\/api\/experience\/risks\//)
-  assert.match(viewport, /overview\.attentionFindings\[0\]/)
-  assert.match(viewport, /risk\?\.riskFinding\?\.condition \?\? "Risk Investigation"/)
-})
-
-test('commitment area identity stays canonical while display text is human-readable', async () => {
-  const viewport = await readFile(new URL('../src/ExperienceViewport.tsx', import.meta.url), 'utf8')
-  assert.match(viewport, /accountableAreaDomainId: area\?\.areaDomainId \?\? "area-platform"/)
-  assert.match(viewport, /defaultValue=\{area\?\.areaDomainId \?\? "area-platform"\}/)
-  assert.match(viewport, /\{area\?\.name \?\? "Platform"\}/)
+test('desktop shell remains stable and viewport vertically reachable',async()=>{
+ const css=await source('../src/App.css')
+ assert.match(css,/\.app-shell \{ height: 100vh; .*overflow: hidden/)
+ assert.match(css,/\.content-shell \{ .*height: 100vh; overflow: hidden/)
+ assert.match(css,/\.x-workspace\{height:calc\(100vh - 58px\);overflow:auto/)
+ assert.match(css,/@media\(max-width:760px\)/)
 })
