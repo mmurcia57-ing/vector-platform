@@ -22,11 +22,17 @@ npm --prefix frontend run build
 if ($LASTEXITCODE -ne 0) { throw "Frontend build failed. Runtime not started." }
 
 Write-Host "Running backend tests..."
-& .\backend\mvnw.cmd test
+Push-Location (Join-Path $repoRoot "backend")
+try {
+  & .\mvnw.cmd test
+} finally {
+  Pop-Location
+}
 if ($LASTEXITCODE -ne 0) { throw "Backend tests failed. Runtime not started." }
 
 Write-Host "Starting VECTOR BFF on http://localhost:8080 ..."
-$backend = Start-Process powershell -PassThru -ArgumentList "-NoExit","-Command","cd '$repoRoot'; .\backend\mvnw.cmd spring-boot:run"
+$backendPath = Join-Path $repoRoot "backend"
+$backend = Start-Process powershell -PassThru -WorkingDirectory $backendPath -ArgumentList "-NoExit","-Command",".\mvnw.cmd spring-boot:run"
 
 Write-Host "Waiting for BFF health..."
 $healthy = $false
