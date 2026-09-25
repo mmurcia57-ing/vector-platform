@@ -41,8 +41,8 @@ test('EL-09 keeps investigated subset connected to its universe', async () => {
 test('EL-10 keeps graph as a bounded relationship lens', async () => {
   const viewport = await source('../src/ExperienceViewport.tsx')
   const entry = await source('../src/App.tsx')
-  assert.match(viewport, /maxNodes=12/)
-  assert.match(viewport, /maxRelationships=16/)
+  assert.match(viewport, /maxNodes(?:=|:)["']?12/)
+  assert.match(viewport, /maxRelationships(?:=|:)["']?16/)
   assert.match(viewport, /data-relationship-lens=/)
   assert.match(entry, /Bounded graph context/)
 })
