@@ -1,899 +1,115 @@
-import { useEffect, useState } from "react";
-import type { FormEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
 const PERIOD = "local-dataset-v1";
-type Area = { areaDomainId: string; name: string; attentionState: string };
-type Service = {
-  serviceId: string;
-  name: string;
-  areaDomainId: string;
-  conditionContext: string;
-};
-type Risk = {
-  riskFindingId: string;
-  serviceId: string;
-  condition: string;
-  explanation: string;
-};
-type Evidence = {
-  evidenceId: string;
-  supportedClaim: string;
-  sourceReferenceIds: string[];
-  observedAt: string;
-};
-type Commitment = {
-  commitmentId: string;
-  declaration: string;
-  statusContext?: string;
-  executionStatus?: string;
-  accountableAreaDomainId?: string;
-  overdue?: boolean;
-  sourceReferenceSummary?: string;
-};
-type Action = {
-  actionId: string;
-  commitmentId: string;
-  action: string;
-  executionStatusContext: string;
-};
-type Outcome = {
-  verificationId: string;
-  actionId: string;
-  outcome: string;
-  evidenceIds: string[];
-};
-type Quality = {
-  sourceCoverage: string;
-  freshness: string;
-  confidence: string;
-  uncertainty: string;
-  limitations: string;
-};
-type Overview = {
-  areas: Area[];
-  services: Service[];
-  attentionFindings: Risk[];
-  quality: Quality;
-};
-type Detail = {
-  service?: Service;
-  riskFinding?: Risk;
-  riskFindings: Risk[];
-  evidence: Evidence[];
-  commitments: Commitment[];
-  improvementActions: Action[];
-  outcomeVerifications: Outcome[];
-  quality: Quality;
-};
-type CommitmentView = {
-  commitments: Commitment[];
-  activeCount: number;
-  inProgressCount: number;
-  completedCount: number;
-  overdueCount: number;
-};
-type Graph = {
-  graph: {
-    relationships: {
-      source: { canonicalId: string };
-      predicate: string;
-      target: { canonicalId: string };
-    }[];
-    freshness: string;
-    truncated: boolean;
-  };
-  state: string;
-};
+type Area={areaDomainId:string;name:string;attentionState:string};
+type Service={serviceId:string;name:string;areaDomainId:string;conditionContext:string};
+type Risk={riskFindingId:string;serviceId:string;condition:string;explanation:string};
+type Evidence={evidenceId:string;supportedClaim:string;sourceReferenceIds:string[];observedAt:string};
+type Commitment={commitmentId:string;declaration:string;statusContext?:string};
+type Action={actionId:string;commitmentId:string;action:string;executionStatusContext:string};
+type Outcome={verificationId:string;actionId:string;outcome:string;evidenceIds:string[]};
+type Quality={sourceCoverage:string;freshness:string;confidence:string;uncertainty:string;limitations:string};
+type Overview={areas:Area[];services:Service[];attentionFindings:Risk[];quality:Quality};
+type Detail={service?:Service;riskFinding?:Risk;riskFindings:Risk[];evidence:Evidence[];commitments:Commitment[];improvementActions:Action[];outcomeVerifications:Outcome[];quality:Quality};
+type Graph={graph:{relationships:{source:{canonicalId:string};predicate:string;target:{canonicalId:string}}[];freshness:string;truncated:boolean};state:string};
 
-const label = (value = "") =>
-  value
-    .replace(
-      /^(area-|service-|evidence-|risk-finding:|commitment-|action-)/,
-      "",
-    )
-    .replace(/[-:]/g, " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
-const read = async <T,>(url: string) => {
-  const response = await fetch(url);
-  if (!response.ok)
-    throw new Error(`Experience unavailable (${response.status})`);
-  return response.json() as Promise<T>;
-};
-const routePath = () =>
-  window.location.pathname.split("/").filter(Boolean)[0] ?? "overview";
-const routeId = () =>
-  decodeURIComponent(
-    window.location.pathname.split("/").filter(Boolean)[1] ?? "",
-  );
+const read=async<T,>(url:string)=>{const r=await fetch(url);if(!r.ok)throw new Error(`Experience unavailable (${r.status})`);return r.json() as Promise<T>};
+const route=()=>{const p=window.location.pathname.split("/").filter(Boolean);return {path:p[0]??"overview",id:decodeURIComponent(p[1]??"")}};
+const label=(v="")=>v.replace(/^(area-|service-|evidence-|risk-finding:|commitment-|action-)/,"").replace(/[-:]/g," ").replace(/\b\w/g,l=>l.toUpperCase());
+const evidenceResolution="period" as const;
+const evidenceTime=(e:Evidence)=>evidenceResolution==="period"?"Observed in selected period":e.observedAt;
 
-function Metric({
-  tone,
-  title,
-  value,
-  note,
-}: {
-  tone: string;
-  title: string;
-  value: string | number;
-  note: string;
-}) {
-  return (
-    <article className={`gold-metric ${tone}`}>
-      <span>{title}</span>
-      <strong>{value}</strong>
-      <small>{note}</small>
-    </article>
-  );
-}
-function Empty({ children }: { children: string }) {
-  return <div className="gold-empty">{children}</div>;
-}
-function Header({
-  eyebrow,
-  title,
-  question,
-}: {
-  eyebrow: string;
-  title: string;
-  question: string;
-}) {
-  return (
-    <header className="gold-header">
-      <div>
-        <span>{eyebrow}</span>
-        <h1>{title}</h1>
-        <p>{question}</p>
-      </div>
-      <div className="gold-filters">
-        <span>Últimos 30 días</span>
-        <span>Contexto local</span>
-      </div>
-    </header>
-  );
-}
-function SectionTitle({
-  title,
-  subtitle,
-}: {
-  title: string;
-  subtitle?: string;
-}) {
-  return (
-    <div className="gold-section-title">
-      <div>
-        <h2>{title}</h2>
-        {subtitle && <p>{subtitle}</p>}
-      </div>
-    </div>
-  );
-}
-function QualityNote({ quality }: { quality?: Quality }) {
-  return (
-    <footer className="gold-footer">
-      <strong>VECTOR</strong>
-      <span>
-        {quality
-          ? `${quality.sourceCoverage} · ${quality.freshness}`
-          : "Contexto soportado por la evidencia disponible."}
-      </span>
-      <b>Un mejor mañana, construido con evidencia.</b>
-    </footer>
-  );
-}
+function Badge({children}:{children:string}){return <span className="x-badge">{children}</span>}
+function Quality({quality}:{quality?:Quality}){if(!quality)return null;return <div className="x-quality" data-space-role="evidence"><b>Evidence boundary</b><span>{quality.sourceCoverage} · {quality.freshness}</span><small>{quality.uncertainty||quality.limitations||"No additional limitation exposed."}</small></div>}
 
-export default function ExperienceViewport() {
-  const [host, setHost] = useState<Element | null>(null);
-  const [path, setPath] = useState(routePath());
-  const [overview, setOverview] = useState<Overview>();
-  const [detail, setDetail] = useState<Detail>();
-  const [risk, setRisk] = useState<Detail>();
-  const [commitments, setCommitments] = useState<CommitmentView>();
-  const [graph, setGraph] = useState<Graph>();
-  const [declaration, setDeclaration] = useState("");
-  useEffect(() => {
-    const attach = () => {
-      const contentShell = document.querySelector(".content-shell");
-      if (!contentShell) return false;
-      setHost(contentShell);
-      return true;
-    };
-    if (attach()) return;
-    const observer = new MutationObserver(() => {
-      if (attach()) observer.disconnect();
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, []);
-  useEffect(() => {
-    const change = () => setPath(routePath());
-    window.addEventListener("popstate", change);
-    return () => window.removeEventListener("popstate", change);
-  }, []);
-  useEffect(() => {
-    void read<Overview>(`/api/experience/overview?period=${PERIOD}`).then(
-      setOverview,
-    );
-    void read<CommitmentView>(
-      "/api/experience/commitments?asOf=2025-01-01&limit=20",
-    ).then(setCommitments);
-  }, [path]);
-  useEffect(() => {
-    if (!overview) return;
-    const params = new URLSearchParams(window.location.search);
-    if (path === "services") {
-      const serviceId =
-        routeId() || params.get("serviceId") || overview.services[0]?.serviceId;
-      if (serviceId)
-        void read<Detail>(
-          `/api/experience/services/${encodeURIComponent(serviceId)}?period=${PERIOD}`,
-        ).then(setDetail);
-    }
-    if (path === "risks") {
-      const selected =
-        overview.attentionFindings.find(
-          (item) =>
-            item.riskFindingId === (routeId() || params.get("riskFindingId")),
-        ) ?? overview.attentionFindings[0];
-      if (!selected) return;
-      const serviceId = params.get("serviceId") || selected.serviceId;
-      void read<Detail>(
-        `/api/experience/risks/${encodeURIComponent(selected.riskFindingId)}?period=${PERIOD}&serviceId=${encodeURIComponent(serviceId)}`,
-      ).then(setRisk);
-      void read<Graph>(
-        `/api/experience/graph?period=${PERIOD}&serviceId=${encodeURIComponent(serviceId)}&riskFindingId=${encodeURIComponent(selected.riskFindingId)}&maxNodes=12&maxRelationships=16`,
-      ).then(setGraph);
-    }
-  }, [overview, path]);
-  const navigate = (next: string, context: Record<string, string> = {}) => {
-    const params = new URLSearchParams({ period: PERIOD, ...context });
-    window.history.pushState({}, "", `${next}?${params}`);
-  };
-  const areaId = new URLSearchParams(window.location.search).get(
-    "areaDomainId",
-  );
-  const area =
-    overview?.areas.find((item) => item.areaDomainId === areaId) ??
-    overview?.areas[0];
-  const areaServices =
-    overview?.services.filter(
-      (item) => item.areaDomainId === area?.areaDomainId,
-    ) ?? [];
-  const areaServiceIds = new Set(areaServices.map((item) => item.serviceId));
-  const areaRisks =
-    overview?.attentionFindings.filter((item) =>
-      areaServiceIds.has(item.serviceId),
-    ) ?? [];
-  const graphNodeLabel = (canonicalId: string) =>
-    (risk?.service?.serviceId === canonicalId && risk.service.name) ||
-    (risk?.riskFinding?.riskFindingId === canonicalId &&
-      risk.riskFinding.condition) ||
-    risk?.evidence.find((item) => item.evidenceId === canonicalId)
-      ?.supportedClaim ||
-    risk?.commitments.find((item) => item.commitmentId === canonicalId)
-      ?.declaration ||
-    risk?.improvementActions.find((item) => item.actionId === canonicalId)
-      ?.action ||
-    risk?.outcomeVerifications.find(
-      (item) => item.verificationId === canonicalId,
-    )?.outcome ||
-    label(canonicalId);
-  const createCommitment = (event: FormEvent) => {
-    event.preventDefault();
-    if (!declaration) return;
-    void fetch("/api/experience/commitments", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        commitmentId: `commitment-${Date.now()}`,
-        declaration,
-        accountableAreaDomainId: area?.areaDomainId ?? "area-platform",
-        executionStatus: "OPEN",
-        intendedResult: declaration,
-      }),
-    })
-      .then(() =>
-        read<CommitmentView>(
-          "/api/experience/commitments?asOf=2025-01-01&limit=20",
-        ),
-      )
-      .then(setCommitments);
-    setDeclaration("");
-  };
-  if (!host || !overview) return null;
+export default function ExperienceViewport(){
+  const [host,setHost]=useState<Element|null>(null);
+  const [location,setLocation]=useState(route());
+  const [overview,setOverview]=useState<Overview>();
+  const [detail,setDetail]=useState<Detail>();
+  const [graph,setGraph]=useState<Graph>();
+  const [error,setError]=useState<string>();
+  useEffect(()=>{const attach=()=>{const el=document.querySelector(".content-shell");if(!el)return false;setHost(el);return true};if(attach())return;const observer=new MutationObserver(()=>{if(attach())observer.disconnect()});observer.observe(document.body,{childList:true,subtree:true});return()=>observer.disconnect()},[]);
+  useEffect(()=>{const change=()=>setLocation(route());window.addEventListener("popstate",change);return()=>window.removeEventListener("popstate",change)},[]);
+  useEffect(()=>{void read<Overview>(`/api/experience/overview?period=${PERIOD}`).then(setOverview).catch(e=>setError(e.message))},[]);
+  const params=new URLSearchParams(window.location.search);
+  const selectedRisk=overview?.attentionFindings.find(r=>r.riskFindingId===(location.path==="risks"?location.id:params.get("riskFindingId")));
+  const serviceId=location.path==="services"?location.id:(params.get("serviceId")||selectedRisk?.serviceId||"");
+  useEffect(()=>{if(!serviceId){setDetail(undefined);setGraph(undefined);return}void read<Detail>(`/api/experience/services/${encodeURIComponent(serviceId)}?period=${PERIOD}`).then(setDetail).catch(e=>setError(e.message));const gp=new URLSearchParams({period:PERIOD,serviceId,maxNodes:"12",maxRelationships:"16"});if(selectedRisk?.riskFindingId)gp.set("riskFindingId",selectedRisk.riskFindingId);void read<Graph>(`/api/experience/graph?${gp}`).then(setGraph).catch(()=>setGraph(undefined))},[serviceId,selectedRisk?.riskFindingId]);
+  const areaId=params.get("areaDomainId")||detail?.service?.areaDomainId||"";
+  const selectedArea=overview?.areas.find(a=>a.areaDomainId===areaId);
+  const areaServices=useMemo(()=>overview?.services.filter(s=>!areaId||s.areaDomainId===areaId)??[],[overview,areaId]);
+  const risks=detail?.riskFindings??overview?.attentionFindings??[];
+  const navigate=(path:string,ctx:Record<string,string>={})=>{const q=new URLSearchParams({period:PERIOD,...ctx});window.history.pushState({},"",`${path}?${q}`);window.dispatchEvent(new PopStateEvent("popstate"))};
+  if(!host||!overview)return null;
+  if(error)return createPortal(<div className="x-error">{error}</div>,host);
 
-  const panorama = (
-    <div className="experience-viewport">
-      <div className="gold-page">
-        <Header
-          eyebrow="DE LA EVIDENCIA A UNA TECNOLOGÍA MÁS CONFIABLE"
-          title="Panorama Ejecutivo"
-          question="¿Dónde requiere atención Tecnología hoy y por qué?"
-        />
-        <div className="gold-metrics">
-          <Metric
-            tone="danger"
-            title="Áreas con atención"
-            value={
-              overview.areas.filter((item) => item.attentionState !== "STABLE")
-                .length
-            }
-            note="Requieren revisión o intervención"
-          />
-          <Metric
-            tone="purple"
-            title="Compromisos vencidos"
-            value={commitments?.overdueCount ?? 0}
-            note="Según contexto disponible"
-          />
-          <Metric
-            tone="warning"
-            title="Riesgos persistentes"
-            value={overview.attentionFindings.length}
-            note="Con evidencia disponible"
-          />
-          <Metric
-            tone="info"
-            title="Acciones sin efecto"
-            value="N/D"
-            note="No disponible en esta proyección"
-          />
-        </div>
-        <div className="gold-main-grid">
-          <section className="gold-panel">
-            <SectionTitle
-              title="Áreas que requieren atención"
-              subtitle="Áreas con señales que requieren revisión o intervención"
-            />
-            {overview.areas.map((item) => (
-              <button
-                className="gold-row"
-                key={item.areaDomainId}
-                onClick={() =>
-                  navigate("/areas", { areaDomainId: item.areaDomainId })
-                }
-              >
-                <i
-                  className={item.attentionState === "STABLE" ? "ok" : "alert"}
-                />{" "}
-                <strong>{item.name}</strong>
-                <span>
-                  {
-                    overview.services.filter(
-                      (service) => service.areaDomainId === item.areaDomainId,
-                    ).length
-                  }{" "}
-                  servicios
-                </span>
-                <b>{item.attentionState}</b>
-                <em>Ver detalle →</em>
-              </button>
-            ))}
-          </section>
-          <aside className="gold-panel">
-            <SectionTitle
-              title="¿Qué está moviendo la atención?"
-              subtitle="Principales señales en el período"
-            />
-            {overview.attentionFindings.map((item) => (
-              <div className="gold-signal" key={item.riskFindingId}>
-                <i>↗</i>
-                <div>
-                  <strong>Riesgo</strong>
-                  <p>{item.condition}</p>
-                </div>
-              </div>
-            ))}
-            <div className="gold-intelligence">
-              <strong>✣ VECTOR Intelligence</strong>
-              <p>
-                {overview.attentionFindings[0]?.explanation ??
-                  "No hay hallazgos adicionales en el período."}
-              </p>
-            </div>
-          </aside>
-        </div>
-        <div className="gold-bottom">
-          <section className="gold-panel">
-            <h3>Estado de compromisos</h3>
-            <Empty>Detalle agregado no disponible para el dataset local.</Empty>
-          </section>
-          <section className="gold-panel">
-            <h3>Resultado de acciones</h3>
-            <Empty>No hay verificación agregada disponible.</Empty>
-          </section>
-            <section className="gold-panel">
-              <h3>Contexto adicional</h3>
-              <Empty>No hay contexto adicional disponible.</Empty>
-            </section>
-        </div>
-        <QualityNote quality={overview.quality} />
-      </div>
-    </div>
-  );
+  const level=location.path==="risks"?"condition":location.path==="services"?"service":location.path==="areas"?"area":"ecosystem";
+  const focus=selectedRisk?.condition||detail?.service?.name||selectedArea?.name||"Technology";
+  const near=detail?.service?.name||selectedArea?.name||"Technology landscape";
+  const global="VECTOR / Technology";
+  const cardinality=overview.services.length>24?"aggregate":overview.services.length>8?"cluster":"individual";
+  const universe=`${overview.areas.length} areas · ${overview.services.length} services · ${overview.attentionFindings.length} findings`;
+  const contextTransform=`ecosystem → area → service → risk → evidence`;
 
-  const areaView = (
-    <div className="experience-viewport">
-      <div className="gold-page">
-        <Header
-          eyebrow="ÁREAS / DOMINIOS"
-          title={`Area Intelligence — ${area?.name ?? "Sin área"}`}
-          question={`¿Qué está ocurriendo en ${area?.name ?? "esta área"} y qué requiere atención?`}
-        />
-        <div className="gold-metrics">
-          <Metric
-            tone="danger"
-            title="Servicios con atención"
-            value={areaServices.length}
-            note={`Dentro de ${area?.name ?? "esta área"}`}
-          />
-          <Metric
-            tone="purple"
-            title="Compromisos"
-            value={commitments?.activeCount ?? 0}
-            note="Contexto actualmente disponible"
-          />
-          <Metric
-            tone="warning"
-            title="Riesgos persistentes"
-            value={areaRisks.length}
-            note="Con evidencia disponible"
-          />
-          <Metric
-            tone="info"
-            title="Resultados"
-            value="N/D"
-            note="Sin verificación agregada"
-          />
-        </div>
-        <div className="gold-main-grid">
-          <section className="gold-panel">
-            <SectionTitle
-              title="Servicios que requieren atención"
-              subtitle="Servicios del área con señales relevantes"
-            />
-            {areaServices.length ? (
-              areaServices.map((service) => (
-                <button
-                  className="gold-row"
-                  key={service.serviceId}
-                  onClick={() =>
-                    navigate(
-                      `/services/${encodeURIComponent(service.serviceId)}`,
-                      {
-                        areaDomainId: service.areaDomainId,
-                        serviceId: service.serviceId,
-                      },
-                    )
-                  }
-                >
-                  <i className="alert" />
-                  <strong>{service.name}</strong>
-                  <span>{service.conditionContext}</span>
-                  <b>
-                    {
-                      areaRisks.filter(
-                        (item) => item.serviceId === service.serviceId,
-                      ).length
-                    }{" "}
-                    riesgos
-                  </b>
-                  <em>Ver detalle →</em>
-                </button>
-              ))
-            ) : (
-              <Empty>
-                No hay servicios adicionales que requieran atención.
-              </Empty>
-            )}
-          </section>
-          <aside className="gold-panel">
-            <SectionTitle
-              title="¿Qué explica la situación del área?"
-              subtitle="Señales consolidadas desde evidencia SRE"
-            />
-            {areaRisks.map((item) => (
-              <div className="gold-signal" key={item.riskFindingId}>
-                <i>↗</i>
-                <div>
-                  <strong>Riesgo</strong>
-                  <p>{item.explanation}</p>
-                </div>
-              </div>
-            ))}
-            <div className="gold-intelligence">
-              <strong>✣ VECTOR Intelligence</strong>
-              <p>
-                La atención del área se explica únicamente con condiciones y
-                evidencia disponibles; no se infiere causalidad.
-              </p>
-            </div>
-          </aside>
-        </div>
-        <div className="gold-bottom">
-          <section className="gold-panel">
-            <h3>Compromisos del área</h3>
-            <p>
-              {commitments?.activeCount ?? 0} compromisos activos en el contexto
-              disponible.
-            </p>
-          </section>
-          <section className="gold-panel">
-            <h3>Resultado de mejoras</h3>
-            <Empty>No hay verificación agregada disponible.</Empty>
-          </section>
-          <section className="gold-panel">
-            <h3>Contexto SRE del área</h3>
-            <p>
-              {areaServices.length} servicios · {areaRisks.length} condiciones
-              de riesgo.
-            </p>
-          </section>
-        </div>
-        <QualityNote quality={overview.quality} />
-      </div>
-    </div>
-  );
+  return createPortal(
+    <main className="x-workspace" data-experience-space="investigation" data-focus-level={level} data-near-context={near} data-global-context={global} data-context-transform={contextTransform} data-semantic-level={level} data-cardinality-mode={cardinality} data-universe-context={universe} data-investigated-subset={focus}>
+      <header className="x-head">
+        <div><span className="x-kicker">VECTOR · RELIABILITY INTELLIGENCE</span><h1>{focus}</h1><p>{location.path==="overview"?"Where should Technology intervene, and what evidence explains it?":"Investigation preserves origin, context, evidence and outcome."}</p></div>
+        <div className="x-meta"><Badge>{level.toUpperCase()}</Badge><span>{PERIOD}</span></div>
+      </header>
 
-  const commitmentView = (
-    <div className="experience-viewport">
-      <div className="gold-page">
-        <Header
-          eyebrow="COMPROMISOS & MEJORAS / VISTA GENERAL"
-          title="Compromisos & Mejoras"
-          question="Seguimiento de compromisos, acciones de mejora y verificación de resultados."
-        />
-        <nav className="gold-tabs">
-          <b>Vista general</b>
-          <span>Compromisos</span>
-          <span>Acciones</span>
-          <span>Resultados</span>
-          <span>Evidencia</span>
-        </nav>
-        <div className="gold-metrics">
-          <Metric
-            tone="info"
-            title="Compromisos activos"
-            value={commitments?.activeCount ?? 0}
-            note="En el contexto disponible"
-          />
-          <Metric
-            tone="purple"
-            title="Acciones ejecutadas"
-            value={commitments?.completedCount ?? 0}
-            note="Ejecución no implica resultado"
-          />
-          <Metric
-            tone="success"
-            title="Mejora verificada"
-            value="N/D"
-            note="Sin agregado disponible"
-          />
-          <Metric
-            tone="danger"
-            title="Sin mejora"
-            value="N/D"
-            note="Sin agregado disponible"
-          />
-        </div>
-        <div className="gold-main-grid">
-          <section>
-            <div className="gold-panel">
-              <h3>Estado de compromisos</h3>
-              <div className="gold-progress">
-                <i />
-                <i />
-                <i />
-                <i />
-              </div>
-            </div>
-            <div className="gold-panel gold-stack">
-              <SectionTitle title="Compromisos recientes" />
-              {commitments?.commitments.map((item) => (
-                <div className="gold-table-row" key={item.commitmentId}>
-                  <strong>{item.declaration}</strong>
-                  <span>{label(item.accountableAreaDomainId)}</span>
-                  <b>{item.executionStatus ?? item.statusContext}</b>
-                  <em>{item.overdue ? "Vencido" : "En seguimiento"}</em>
-                </div>
-              ))}
-            </div>
-          </section>
-          <aside>
-            <div className="gold-intelligence">
-              <strong>✣ VECTOR Intelligence</strong>
-              <p>
-                La ejecución se presenta separada de la verificación del
-                resultado estructural.
-              </p>
-            </div>
-            <div className="gold-panel">
-              <h3>Verificación de resultados & Evidencia</h3>
-              <Empty>
-                No hay OutcomeVerification agregado para esta vista.
-              </Empty>
-            </div>
-            <form className="gold-panel gold-form" onSubmit={createCommitment}>
-              <h3>Nuevo compromiso</h3>
-              <label>
-                Declaración
-                <input
-                  value={declaration}
-                  onChange={(event) => setDeclaration(event.target.value)}
-                  required
-                />
-              </label>
-              <label>
-                Área responsable
-                <select
-                  key={area?.areaDomainId}
-                  defaultValue={area?.areaDomainId ?? "area-platform"}
-                  disabled
-                >
-                  <option value={area?.areaDomainId ?? "area-platform"}>
-                    {area?.name ?? "Platform"}
-                  </option>
-                </select>
-              </label>
-              <button>Crear compromiso</button>
-            </form>
-          </aside>
-        </div>
-        <QualityNote />
-      </div>
-    </div>
-  );
+      <nav className="x-context" aria-label="Investigation context">
+        <button onClick={()=>navigate("/")}>Technology</button><span>›</span>
+        <button disabled={!selectedArea} onClick={()=>selectedArea&&navigate("/areas",{areaDomainId:selectedArea.areaDomainId})}>{selectedArea?.name??"Area"}</button><span>›</span>
+        <button disabled={!detail?.service} onClick={()=>detail?.service&&navigate(`/services/${encodeURIComponent(detail.service.serviceId)}`,{areaDomainId:detail.service.areaDomainId,serviceId:detail.service.serviceId})}>{detail?.service?.name??"Service"}</button><span>›</span>
+        <strong>{selectedRisk?.condition??(location.path==="risks"?"Risk":"Focus")}</strong>
+      </nav>
 
-  const serviceView = (
-    <div className="experience-viewport">
-      <div className="gold-page">
-        <Header
-          eyebrow={`SERVICIOS › ${label(detail?.service?.areaDomainId)}`}
-          title={detail?.service?.name ?? "Service Intelligence"}
-          question={
-            detail?.service
-              ? `${detail.service.conditionContext}. Evidencia operacional disponible.`
-              : "Cargando contexto del servicio."
-          }
-        />
-        <nav className="gold-tabs">
-          <b>Vista general</b>
-          <span>SLO</span>
-          <span>Incidentes</span>
-          <span>Cambios</span>
-          <span>Riesgos</span>
-          <span>Compromisos</span>
-        </nav>
-        <div className="gold-metrics">
-          <Metric
-            tone="danger"
-            title="SLO cumplimiento"
-            value="N/D"
-            note="No disponible en la proyección"
-          />
-          <Metric
-            tone="warning"
-            title="Incidentes activos"
-            value="N/D"
-            note="No disponible en la proyección"
-          />
-          <Metric
-            tone="info"
-            title="Cambios recientes"
-            value="N/D"
-            note="No disponible en la proyección"
-          />
-          <Metric
-            tone="purple"
-            title="Compromisos"
-            value={detail?.commitments.length ?? 0}
-            note="En contexto del servicio"
-          />
-        </div>
-        <div className="gold-main-grid">
-          <section>
-            <div className="gold-panel">
-              <SectionTitle
-                title="Tendencia SLO"
-                subtitle="Histórico del período seleccionado"
-              />
-              <Empty>No hay serie SLO disponible para el dataset local.</Empty>
-            </div>
-            <div className="gold-panel gold-stack">
-              <SectionTitle title="Hallazgos y riesgos" />
-              {detail?.riskFindings.map((item) => (
-                <button
-                  className="gold-table-row"
-                  key={item.riskFindingId}
-                  onClick={() =>
-                    navigate(
-                      `/risks/${encodeURIComponent(item.riskFindingId)}`,
-                      {
-                        areaDomainId: detail.service?.areaDomainId ?? "",
-                        serviceId: item.serviceId,
-                        riskFindingId: item.riskFindingId,
-                      },
-                    )
-                  }
-                >
-                  <strong>{item.condition}</strong>
-                  <span>{item.explanation}</span>
-                  <b>Atención</b>
-                  <em>Investigar →</em>
-                </button>
-              ))}
-            </div>
-            <div className="gold-panel">
-              <h3>Incidentes recientes</h3>
-              <Empty>No hay incidentes expuestos por esta proyección.</Empty>
-            </div>
-          </section>
-          <aside>
-            <div className="gold-intelligence">
-              <strong>✣ VECTOR Intelligence</strong>
-              <p>
-                {detail?.riskFindings[0]?.explanation ??
-                  "No hay hallazgos adicionales."}
-              </p>
-            </div>
-            <div className="gold-panel">
-              <h3>Cambios recientes</h3>
-              <Empty>No hay cambios expuestos por esta proyección.</Empty>
-            </div>
-            <div className="gold-panel">
-              <h3>Evidencia disponible</h3>
-              {detail?.evidence.map((item) => (
-                <div className="gold-signal" key={item.evidenceId}>
-                  <i>•</i>
-                  <div>
-                    <strong>{item.supportedClaim}</strong>
-                    <p>
-                      {item.observedAt} ·{" "}
-                      {item.sourceReferenceIds.map(label).join(", ")}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </aside>
-        </div>
-        <QualityNote quality={detail?.quality} />
-      </div>
-    </div>
-  );
+      <section className="x-space" data-space-role="focus-context">
+        <aside className="x-universe" data-space-role="context">
+          <div className="x-section-label">GLOBAL CONTEXT</div><strong>{universe}</strong>
+          <p>Focus remains inside the observable technology universe.</p>
+          <div className="x-area-map">
+            {overview.areas.map(a=><button key={a.areaDomainId} className={a.areaDomainId===areaId?"selected":""} onClick={()=>navigate("/areas",{areaDomainId:a.areaDomainId})}><i/><span>{a.name}</span><small>{a.attentionState}</small></button>)}
+          </div>
+          <Quality quality={detail?.quality??overview.quality}/>
+        </aside>
 
-  const riskView = (
-    <div className="experience-viewport">
-      <div className="gold-page">
-        <Header
-          eyebrow="INVESTIGACIÓN"
-          title={risk?.riskFinding?.condition ?? "Risk Investigation"}
-          question={
-            risk?.riskFinding?.explanation ??
-            "Cargando explicación y evidencia."
-          }
-        />
-        <nav className="gold-tabs">
-          <b>Hallazgo</b>
-          <span>Evidencia</span>
-          <span>Línea de tiempo</span>
-          <span>Relaciones</span>
-          <span>Correlaciones</span>
-          <span>Acciones</span>
-          <span>Resultado</span>
-        </nav>
-        <div className="gold-metrics">
-          <Metric
-            tone="danger"
-            title="Ocurrencias"
-            value={risk?.evidence.length ?? 0}
-            note="Evidencia en el período"
-          />
-          <Metric
-            tone="warning"
-            title="Impacto estimado"
-            value="N/D"
-            note="No inferido por VECTOR"
-          />
-          <Metric
-            tone="purple"
-            title="Acciones"
-            value={risk?.improvementActions.length ?? 0}
-            note="Ejecución registrada"
-          />
-          <Metric
-            tone="danger"
-            title="Estado del riesgo"
-            value={risk?.outcomeVerifications[0]?.outcome ?? "Sin verificar"}
-            note="Resultado basado en evidencia"
-          />
-        </div>
-        <div className="gold-main-grid">
-          <section>
-            <div className="gold-panel">
-              <SectionTitle title="Línea de Tiempo del Riesgo" />
-              {risk?.evidence.map((item) => (
-                <div className="gold-timeline" key={item.evidenceId}>
-                  <time>{item.observedAt.slice(0, 10)}</time>
-                  <i />
-                  <div>
-                    <strong>{item.supportedClaim}</strong>
-                    <p>
-                      Fuente · {item.sourceReferenceIds.map(label).join(", ")}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="gold-panel">
-              <SectionTitle title="Evidencia Disponible" />
-              {risk?.evidence.map((item) => (
-                <div className="gold-evidence" key={item.evidenceId}>
-                  <b>FACT</b>
-                  <strong>{item.supportedClaim}</strong>
-                  <span>{item.sourceReferenceIds.map(label).join(", ")}</span>
-                </div>
-              ))}
-            </div>
-          </section>
-          <aside>
-            <div className="gold-intelligence">
-              <strong>✣ VECTOR Intelligence</strong>
-              <p>{risk?.riskFinding?.explanation}</p>
-              <small>Correlación temporal/contextual ≠ causalidad.</small>
-            </div>
-            <div className="gold-panel">
-              <SectionTitle title="Grafo de Relaciones" />
-              <div className="semantic-graph">
-                {graph?.graph.relationships.map((relation, index) => (
-                  <div
-                    className="semantic-edge"
-                    key={`${relation.predicate}-${index}`}
-                  >
-                      <span>{graphNodeLabel(relation.source.canonicalId)}</span>
-                    <b>{relation.predicate.replaceAll("_", " ")}</b>
-                      <span>{graphNodeLabel(relation.target.canonicalId)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="gold-panel">
-              <SectionTitle title="Acciones Asociadas" />
-              {risk?.commitments.map((commitment) => (
-                <div className="gold-action" key={commitment.commitmentId}>
-                  <strong>{commitment.declaration}</strong>
-                  <b>{commitment.statusContext}</b>
-                  {risk.improvementActions
-                    .filter(
-                      (item) => item.commitmentId === commitment.commitmentId,
-                    )
-                    .map((item) => (
-                      <p key={item.actionId}>
-                        {item.action} · {item.executionStatusContext}
-                      </p>
-                    ))}
-                </div>
-              ))}
-              {!risk?.commitments.length && (
-                <Empty>No hay compromisos asociados.</Empty>
-              )}
-            </div>
-          </aside>
-        </div>
-        <QualityNote quality={risk?.quality} />
-      </div>
-    </div>
-  );
+        <section className="x-focus" data-space-role="focus" data-investigated-subset={focus}>
+          <div className="x-focus-top"><div><div className="x-section-label">CURRENT FOCUS · {level.toUpperCase()}</div><h2>{focus}</h2></div><span className="x-mode">Representation · {cardinality}</span></div>
 
-  const view =
-    path === "areas"
-      ? areaView
-      : path === "commitments"
-        ? commitmentView
-        : path === "services"
-          ? serviceView
-          : path === "risks"
-            ? riskView
-            : panorama;
-  return createPortal(view, host);
+          {level==="ecosystem"&&<div className="x-field">
+            <div className="x-field-copy"><strong>Attention field</strong><p>Select an area. The universe stays visible while the focus narrows.</p></div>
+            <div className="x-nodes">{overview.areas.map(a=><button key={a.areaDomainId} className="x-node area" onClick={()=>navigate("/areas",{areaDomainId:a.areaDomainId})}><span>{a.name}</span><small>{overview.services.filter(s=>s.areaDomainId===a.areaDomainId).length} services</small></button>)}</div>
+          </div>}
+
+          {level==="area"&&<div className="x-field">
+            <div className="x-field-copy"><strong>{selectedArea?.name??"Area"} becomes the investigation space</strong><p>Services are the next semantic level; the selected area remains Near Context.</p></div>
+            <div className="x-nodes">{areaServices.map(s=><button key={s.serviceId} className="x-node service" onClick={()=>navigate(`/services/${encodeURIComponent(s.serviceId)}`,{areaDomainId:s.areaDomainId,serviceId:s.serviceId})}><span>{s.name}</span><small>{s.conditionContext}</small></button>)}</div>
+          </div>}
+
+          {level==="service"&&<div className="x-field">
+            <div className="x-field-copy"><strong>Service is the correlation anchor</strong><p>{detail?.service?.conditionContext}</p></div>
+            <div className="x-nodes">{risks.map(r=><button key={r.riskFindingId} className="x-node risk" onClick={()=>navigate(`/risks/${encodeURIComponent(r.riskFindingId)}`,{areaDomainId:detail?.service?.areaDomainId??"",serviceId:r.serviceId,riskFindingId:r.riskFindingId})}><span>{r.condition}</span><small>{r.explanation}</small></button>)}</div>
+            <div className="x-evidence-strip">{detail?.evidence.map(e=><article key={e.evidenceId}><b>{e.supportedClaim}</b><span>{evidenceTime(e)}</span><small>{e.sourceReferenceIds.map(label).join(", ")}</small></article>)}</div>
+          </div>}
+
+          {level==="condition"&&<div className="x-investigation">
+            <section className="x-explanation"><div className="x-section-label">EXPLANATION</div><h3>{selectedRisk?.condition??detail?.riskFinding?.condition}</h3><p>{selectedRisk?.explanation??detail?.riskFinding?.explanation}</p></section>
+            <section className="x-evidence" data-space-role="evidence"><div className="x-section-label">EVIDENCE · resolution: {evidenceResolution}</div>{detail?.evidence.map(e=><article key={e.evidenceId}><div><strong>{e.supportedClaim}</strong><span>{evidenceTime(e)}</span></div><small>Source · {e.sourceReferenceIds.map(label).join(", ")}</small></article>)}</section>
+            <section className="x-lens" data-relationship-lens="bounded-evidence-backed"><div className="x-section-label">RELATIONSHIP LENS · bounded 12 / 16</div>{graph?.graph.relationships.length?graph.graph.relationships.map((r,i)=><div className="x-edge" key={i}><span>{label(r.source.canonicalId)}</span><b>{r.predicate.replaceAll("_"," ")}</b><span>{label(r.target.canonicalId)}</span></div>):<p>No additional supported relationship is available.</p>}</section>
+            <section className="x-outcome"><div className="x-section-label">ACTION → VERIFIED OUTCOME</div>{detail?.commitments.map(c=><article key={c.commitmentId}><strong>{c.declaration}</strong><Badge>{c.statusContext??"UNKNOWN"}</Badge>{detail.improvementActions.filter(a=>a.commitmentId===c.commitmentId).map(a=><div key={a.actionId}><span>{a.action}</span><Badge>{a.executionStatusContext}</Badge>{detail.outcomeVerifications.filter(o=>o.actionId===a.actionId).map(o=><p key={o.verificationId}>OutcomeVerification · <b>{o.outcome}</b></p>)}</div>)}</article>)}{!detail?.commitments.length&&<p>No associated Commitment is present.</p>}<small>Execution is not outcome proof. COMPLETED does not imply IMPROVED.</small></section>
+          </div>}
+        </section>
+
+        <aside className="x-near" data-space-role="context">
+          <div className="x-section-label">NEAR CONTEXT</div><h3>{near}</h3>
+          <p>Semantic zoom changes represented granularity, not camera scale.</p>
+          <ol><li className={level==="ecosystem"?"active":""}>Ecosystem</li><li className={level==="area"?"active":""}>Area</li><li className={level==="service"?"active":""}>Service</li><li className={level==="condition"?"active":""}>Condition</li><li>Evidence</li></ol>
+          <div className="x-temporal" data-evidence-resolution={evidenceResolution}><b>Temporal projection</b><div><span>BEFORE</span><span>DURING</span><span>AFTER</span></div><small>Available only when source evidence supplies compatible periods. Correlation ≠ Causation.</small></div>
+        </aside>
+      </section>
+    </main>,host);
 }
