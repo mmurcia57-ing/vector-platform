@@ -19,9 +19,9 @@ body {
 #root {
   box-sizing: border-box;
   min-height: 100svh;
-  max-width: 70rem;
-  margin: 0 auto;
-  border-inline: 1px solid var(--border);
+  width: 100%;
+  max-width: none;
+  margin: 0;
 }
 
 h1 {
